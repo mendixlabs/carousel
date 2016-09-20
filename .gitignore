@@ -48,13 +48,13 @@ Temporary Items
 .apdisk
 
 test/deployment/
-test\.classpath
+test/.classpath
 test/.project
 test/*.lock
 test/*.launch
 
+
 !test/
-test/*
 !test/javasource/
 test/javasource/*
 !test/javasource/myfirstmodule/
