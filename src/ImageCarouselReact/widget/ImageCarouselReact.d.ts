@@ -1,21 +1,20 @@
 declare module ImageCarouselReact {
     
-	export interface IProps{        
-        caption: string;
-        title: string;
-        image: string;
-        buttonStyle: "default" | "primary" | "success" | "info" | "warning" | "danger" | "link";
-        cancelMicroflow: string;
-        processCancel: string;
-        cancelingCaption: string;
-        async: boolean;
-        blocking: boolean;
-        validate: boolean;
-        progressMessage: string;
-        confirm: boolean;
-        conQuestion: string;
-        conProceed: string;
-        conCancel: string;
+	export interface IProps{  
+    DataMicroflow?: string;
+    captionAttr?: string;
+    descriptionAttr?: string;
+    imageattr?: string;
+    jumpLocation?: string;
+    delay?: string;
+    duration?: string;
+    imageClick?: string;
+    width?: number;
+    height?: number;
+    border?: number;
+    borderColor?: string;
+    arrowBack?: string;
+    arrowFwd?: string;
     }
     export interface IState{
         context: {
