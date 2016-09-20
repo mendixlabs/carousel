@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <widget id="ImageCarouselReact.widget.ImageCarouselReact" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../xsd/widget.xsd">
     <name> ImageCarouselReact </name>
-    <description>Displays an image carousel based on URLS stored in the domain model</description>
+    <description>Displays an images carousel based on URLS stored in the domain model</description>
   
       <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2Fy
 ZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAfxJREFUeNqkk89LFGEcxp935t3WZmfD
