@@ -56,18 +56,19 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                 indicators: this.indicators,
                 interval: this.interval,
                 pauseOnHover: this.pauseOnHover,
-                slide?: this.slide,
-                width?: this.width,
+                slide: this.slide,
+                width: this.width,
         };
      }
     // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
     public postCreate() {
         logger.debug(this.id + ".postCreate !");
         ReactDOM.render(
-                <ImageCarousel
+            <ImageCarousel
                 widgetId={this.id} {...this.createProps()}
                 wrapper={this}
-                />, this.domNode);
+            />, this.domNode
+        );
     }
 }
 

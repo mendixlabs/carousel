@@ -7,7 +7,7 @@ declare var logger: mendix.logger;
 
 import IImageCarouselReactWrapper from "./../ImageCarouselReact"; // Wrapper
 
-interface IImageCarouselModelProps {
+interface IImageCarouselModelProps  {
     widgetId?: string;
     dataSourceMicroflow?: string;
     captionAttr?: string;
@@ -23,14 +23,13 @@ interface IImageCarouselModelProps {
 }
 
 interface IImageCarouselState {
-    data: Array<Object>;
+    data: Array<mendix.lib.MxObject>;
 }
 
 // Custom props 
-export interface IImageCarouselProps extends IImageCarouselModelProps {
+export interface IImageCarouselProps extends IImageCarouselModelProps, React.Props<ImageCarousel> {
     // helper props for MX / dojo   
     wrapper?: IImageCarouselReactWrapper;
-    ref?: (component: React.Component<IImageCarouselProps, IImageCarouselState>) => React.Component<IImageCarouselProps, IImageCarouselState>;
 }
 
 export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCarouselState> {
@@ -47,7 +46,7 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
             height: this.props.height,
             width: this.props.width,
         };
-    constructor(props: ImageCarousel) {
+    constructor(props: IImageCarouselProps) {
         super(props);
         // bind context
         this.getFileUrl = this.getFileUrl.bind(this);
@@ -55,9 +54,10 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
         this.mapCarouselData = this.mapCarouselData.bind(this);
         this.callMicroflow = this.callMicroflow.bind(this);
         this.getFileUrl = this.getFileUrl.bind(this);
+        this.onItemClick = this.onItemClick.bind(this);
 
         this.state = {
-            data: [],
+            data : [],
         };
     }
 
@@ -78,9 +78,9 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
                     actionname: actionMF,
                 },
             });
-      }
+        }
     }
-    public successCallback(obj: Array<{}>) {
+    public successCallback(obj: Array<mendix.lib.MxObject>) {
         logger.debug(this.props.widgetId + ": Microflow executed successfully");
         if (typeof obj !== "undefined" ) {
             this.setState({ data: obj });
@@ -91,14 +91,19 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
         const props = this.props;
         const data = this.state.data;
         if (data.length > 0) {
-        return data.map((itemObj: mendix.lib.MxObject) => {
-            const caption: string = itemObj.get(props.captionAttr) as string;
+        let test = data.map((itemObj) => {
+            // const caption: string = itemObj.get(props.captionAttr) as string; 
+            // const caption: string = itemObj.get(props.captionAttr);
+            const caption = itemObj.get(props.captionAttr) as string;
+            // const caption = String(itemObj.get(props.captionAttr));
+            const key = itemObj.getGuid();
+            const url = this.getFileUrl(itemObj.getGuid());
             return (
                 <ReactBootstrap.Carousel.Item
-                    onClick={() => this.callMicroflow(props.imageClick)}
-                    key={`${this.props.widgetId}_${caption}`}
+                    onClick={this.onItemClick}
+                    key={key}
                 >
-                    <img style={this.carouselStyle} alt={caption} src={this.getFileUrl(itemObj.getGuid())}/>
+                    <img style={this.carouselStyle} alt={caption} src={url}/>
                     <ReactBootstrap.Carousel.Caption>
                         <h3>{caption}</h3>
                         <p>{itemObj.get(props.descriptionAttr)}</p>
@@ -107,12 +112,15 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
             );
         });
         }
-        return (
+        let test = [].push (
+        (
             <div>
                 Loading ...
             </div>
-        );
+        ));
+        return  test;
      }
+
     public getFileUrl (objectId: string) {
         logger.debug(this.props.widgetId + "getFileUrl");
         let url: string;
@@ -138,6 +146,15 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
             </div>
         );
      }
+    private onItemClick() {
+        if (this.props.imageClick) {
+            this.callMicroflow(this.props.imageClick);
+        }
+        // if (this.props.openForm) {
+        //    this.openForm(this.props.openForm);
+        // }
+
+    }
 };
 
 export default ImageCarousel;
