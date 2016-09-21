@@ -21,6 +21,6 @@ declare module "ImageCarouselReact/lib/react.min"
 }
 
 declare module "ImageCarouselReact/lib/react-bootstrap" {
-	export * from "~react-bootstrap/index";
+	export = ReactBootstrap;
 }
 

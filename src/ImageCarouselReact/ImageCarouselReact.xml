@@ -24,7 +24,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <description>The entity which should be displayed in the carousel</description>
             </property>
 
-            <property key="DataMicroflow" type="microflow" required="true">
+            <property key="DataSourceMicroflow" type="microflow" required="true">
                 <caption> Data Source Microflow </caption>
                 <category>Data source</category>
                 <description>Returns images to display on Carousel.</description>
@@ -58,97 +58,52 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 </attributeTypes>			
             </property>
 
-            <property key="useNavigation" type="boolean" defaultValue="true">
+            <property key="controls" type="boolean" defaultValue="true">
                 <caption>Use image navigation</caption>
                 <category>Behavior</category>
-                <description>Use the image navigation. If the delay is set to 0, the navigation will still show up.</description>
+                <description>Use the image navigation.</description>
             </property>
 
-            <property key="useBullets" type="boolean" defaultValue="true">
-                <caption>Use Bullets</caption>
+            <property key="indicators" type="boolean" defaultValue="true">
+                <caption>Indicators</caption>
                 <category>Behavior</category>
-                <description>Use the bullets. (Not recommended for more than 6 images)</description>
+            <description>Indicators showing index of image on carousel</description>
             </property>
 
-            <property key="jumpLocation" type="enumeration" defaultValue="topright">
-                <caption>Location of the Bullets</caption>
-                <category>Behavior</category>
-            <description>The location of the bullets</description>
-                <enumerationValues>
-                    <enumerationValue key="topleft">Top left</enumerationValue>
-                    <enumerationValue key="topright">Top right</enumerationValue>
-                    <enumerationValue key="bottomleft">Bottom left</enumerationValue>
-                    <enumerationValue key="bottomright">Bottom right</enumerationValue>
-                </enumerationValues>
-            </property>
-
-            <property key="delay" type="integer" defaultValue="2000">
-                <caption>Delay</caption>
-                <category>Behavior</category>
-                <description>Delay until the carousel moves to the next image (in ms).</description>
-            </property>
-
-            <property key="duration" type="integer" defaultValue="1000">
-                <caption>Duration</caption>
+            <property key="Interval" type="integer" defaultValue="5000">
+                <caption>Interval</caption>
                 <category>Behavior</category>
                 <description>Duration of the transition effect (in ms)</description>
             </property>
-            <property key="imageClick" type="microflow" required="false" entityProperty="imageEntity">
+
+            <property key="pauseOnHover" type="boolean" defaultValue="true">
+                <caption>pauseOnHover</caption>
+                <category>Behavior</category>
+            <description>Pause the Slide on mouse Hover</description>
+            </property>
+
+            <property key="slide" type="boolean" defaultValue="true">
+                <caption>slide images</caption>
+                <category>Behavior</category>
+            <description>This makes the images slide when transitioning</description>
+            </property>
+
+            <property key="imageClick" type="microflow" required="false">
                 <caption>OnClick Image</caption>
                 <category>Behavior</category>
                 <description>Microflow to be triggered when an image is clicked.</description>
                 <returnType type="Void"/>
             </property>
 
-            <property key="width" type="integer" defaultValue="800">
+            <property key="width" type="integer" defaultValue="500">
                 <caption>Width</caption>
                 <category>Appearance</category>
                 <description>Width of the carousel in pixels.</description>
             </property>
-            <property key="height" type="integer" defaultValue="600">
+            <property key="height" type="integer" defaultValue="350">
                 <caption>Height</caption>
                 <category>Appearance</category>
                 <description>Height of the carousel in pixels.</description>
-            </property>
-            <property key="border" type="integer" defaultValue="1">
-                <caption>Border width</caption>
-                <category>Appearance</category>
-                <description>Width of the border around the carousel.</description>
-            </property>
-            <property key="borderStyle" type="enumeration" defaultValue="solid">
-                <caption>Border style</caption>
-                <category>Appearance</category>
-                <description>Style of the border around the carousel.</description>
-                <enumerationValues>
-                    <enumerationValue key="solid">Solid</enumerationValue>
-                    <enumerationValue key="dotted">Dotted</enumerationValue>
-                    <enumerationValue key="dashed">Dashed</enumerationValue>
-                    <enumerationValue key="double">Double</enumerationValue>
-                    <enumerationValue key="groove">Groove</enumerationValue>
-                    <enumerationValue key="ridge">Ridge</enumerationValue>
-                    <enumerationValue key="inset">Inset</enumerationValue>
-                    <enumerationValue key="outset">Outset</enumerationValue>
-                </enumerationValues>
-            </property>
-            <property key="borderColor" type="string" defaultValue="#000">
-                <caption>Border Color</caption>
-                <category>Appearance</category>
-                <description>The color of the  border around the carousel.</description>
-            </property>
-            <property key="jumperColor" type="string" defaultValue="#fff" required="false">
-                <caption>Navigation Color</caption>
-                <category>Appearance</category>
-                <description>The color of the image navigation</description>
-            </property>
-            <property key="arrowBack" type="string" required="false">
-                <caption>Arrow Image URL Back</caption>
-                <category>Appearance</category>
-                <description>The url for the arrowimage to use for navigating back.</description>
-            </property>
-            <property key="arrowFwd" type="string" required="false">
-                <caption>Arrow Image URL Fwd</caption>
-                <category>Appearance</category>
-                <description>The url for the arrowimage to use for navigating forward.</description>
             </property>
     </properties>
 </widget>
