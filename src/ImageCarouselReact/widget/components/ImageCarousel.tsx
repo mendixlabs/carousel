@@ -91,7 +91,7 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
         const props = this.props;
         const data = this.state.data;
         if (data.length > 0) {
-        let test = data.map((itemObj) => {
+        return data.map((itemObj) => {
             // const caption: string = itemObj.get(props.captionAttr) as string; 
             // const caption: string = itemObj.get(props.captionAttr);
             const caption = itemObj.get(props.captionAttr) as string;
@@ -112,13 +112,11 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
             );
         });
         }
-        let test = [].push (
-        (
+        return (
             <div>
                 Loading ...
             </div>
-        ));
-        return  test;
+        );
      }
 
     public getFileUrl (objectId: string) {
