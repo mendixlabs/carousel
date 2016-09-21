@@ -114,7 +114,7 @@ declare module mx {
 
 	}
     interface session {
-
+		getCSRFToken():string;
 	}
     interface ui {
 		action(name: string, params?: {progress: string, progressMsg:string}, scope?:any):void;

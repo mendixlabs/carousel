@@ -5,21 +5,15 @@
 /// <reference path="react/react-dom.d.ts" />
 /// <reference path="index.d.ts" />
 
-
-declare module "ImageCarouselReact/lib/react-dom"
-{
+declare module "ImageCarouselReact/lib/react-dom" {
 	export =  __React.__DOM;
 }
-
-declare module "ImageCarouselReact/lib/react"
-{
+declare module "ImageCarouselReact/lib/react" {
 	export = __React;
 }
-declare module "ImageCarouselReact/lib/react.min"
-{
+declare module "ImageCarouselReact/lib/react.min" {
 	export = __React;
 }
-
 declare module "ImageCarouselReact/lib/react-bootstrap" {
 	export = ReactBootstrap;
 }

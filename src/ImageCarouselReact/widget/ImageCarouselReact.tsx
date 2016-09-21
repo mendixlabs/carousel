@@ -1,5 +1,3 @@
-
-
 /*
  ImageCarouselReact
  ========================
@@ -24,8 +22,7 @@ import * as _WidgetBase from  "mxui/widget/_WidgetBase";
 
 import * as React from "ImageCarouselReact/lib/react";
 import ReactDOM = require("ImageCarouselReact/lib/react-dom");
-import { Carousel, CarouselProps } from "react-bootstrap/src/Carousel";
-
+// import { Carousel, CarouselProps } from "react-bootstrap/src/Carousel";
 
 import ReactBootstrap = require("ImageCarouselReact/lib/react-bootstrap");
 
@@ -34,7 +31,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private DataSourceMicroflow: string;
     private captionAttr: string;
     private descriptionAttr: string;
-    private imageattr: string;
+    // private imageattr: string;
     private controls: boolean;
     private indicators: boolean;
     private Interval: number;
@@ -71,7 +68,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
         logger.debug(obj);
          // const test = ReactBootstrap;
         const Carousel = ReactBootstrap.Carousel;
-        const Carouselprops: CarouselProps = {
+        const Carouselprops = {
             controls: this.controls,
             indicators: this.indicators,
             interval: this.Interval,
@@ -84,14 +81,14 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             width: this.width,
         };
         const item = () => {
-            return this.data.map((item: mendix.lib.MxObject) => {
-                const caption = item.get(this.captionAttr);
+            return this.data.map((itemObject: mendix.lib.MxObject) => {
+                const caption = String(itemObject.get(this.captionAttr));
                 return (
                     <Carousel.Item onClick={() => this.callMicroflow(this.imageClick)} key={`${this.id}_${caption}`}>
-                        <img style={carouselStyle} alt={caption} src={this.getFileUrl(item.getGuid())}/>
+                        <img style={carouselStyle} alt={caption} src={this.getFileUrl(itemObject.getGuid())}/>
                         <Carousel.Caption>
                             <h3>{caption}</h3>
-                            <p>{item.get(this.descriptionAttr)}</p>
+                            <p>{itemObject.get(this.descriptionAttr)}</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                 );
@@ -107,7 +104,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
         ReactDOM.render(<div style={carouselStyle}>{carouselInstance}</div>, this.domNode);
     }
     // call the microflow and returns data if any
-    public callMicroflow(actionMF: string, successCallback?: Function, failureCallback?: Function): void{
+    public callMicroflow(actionMF: string, successCallback?: Function, failureCallback?: Function): void {
         logger.debug(this.id + ".callMicroflow");
         if (actionMF !== "") {
         mx.data.action({
@@ -121,9 +118,9 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
         });
       }
     }
-    public getFileUrl (objectId: string) {
+    public getFileUrl (objectId: string): string {
         logger.debug(this.id + "getFileUrl");
-        let url: String;
+        let url: string;
         if (objectId) {
             url =  "file?target=window&guid=" + objectId + "&csrfToken=" + mx.session.getCSRFToken() + "&time=" + Date.now();
         }
