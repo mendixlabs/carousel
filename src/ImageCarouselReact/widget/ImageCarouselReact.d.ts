@@ -1,13 +1,13 @@
 declare module ImageCarouselReact {
     
 	export interface IProps{  
-        DataSourceMicroflow: string;
+        dataSourceMicroflow: string;
         captionAttr?: string;
         descriptionAttr?: string;
         imageattr?: string;
         controls?: boolean;
         indicators?: boolean;
-        Interval?: number;
+        interval?: number;
         pauseOnHover?: boolean;
         slide?: boolean;
         imageClick?: string;

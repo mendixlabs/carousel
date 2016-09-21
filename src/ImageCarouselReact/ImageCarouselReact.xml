@@ -24,7 +24,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <description>The entity which should be displayed in the carousel</description>
             </property>
 
-            <property key="DataSourceMicroflow" type="microflow" required="true">
+            <property key="dataSourceMicroflow" type="microflow" required="true">
                 <caption> Data Source Microflow </caption>
                 <category>Data source</category>
                 <description>Returns images to display on Carousel.</description>
@@ -70,7 +70,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             <description>Indicators showing index of image on carousel</description>
             </property>
 
-            <property key="Interval" type="integer" defaultValue="5000">
+            <property key="interval" type="integer" defaultValue="5000">
                 <caption>Interval</caption>
                 <category>Behavior</category>
                 <description>Duration of the transition effect (in ms)</description>

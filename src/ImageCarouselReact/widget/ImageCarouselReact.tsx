@@ -24,111 +24,53 @@ import * as _WidgetBase from  "mxui/widget/_WidgetBase";
 
 import * as React from "ImageCarouselReact/lib/react";
 import ReactDOM = require("ImageCarouselReact/lib/react-dom");
-import { Carousel, CarouselProps } from "react-bootstrap/src/Carousel";
 
-
-import ReactBootstrap = require("ImageCarouselReact/lib/react-bootstrap");
+import ImageCarousel from "./components/ImageCarousel";
 
 export class ImageCarouselReactWrapper extends _WidgetBase {
     // Parameters configured in the Modeler
-    private DataSourceMicroflow: string;
+    private dataSourceMicroflow: string;
     private captionAttr: string;
     private descriptionAttr: string;
     private imageattr: string;
     private controls: boolean;
     private indicators: boolean;
-    private Interval: number;
+    private interval: number;
     private pauseOnHover: boolean;
     private slide: boolean;
     private imageClick: string;
     private width: number;
     private height: number;
-    // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
-    private data: Array<{}>;
-
     // The TypeScript Contructor, not the dojo consctuctor, move contructor work into widget prototype at bottom of the page. 
     constructor(args?: Object, elem?: HTMLElement) {
         // Do not add any default value here... it wil not run in dojo!     
         super() ;
         return new dojoImageCarouselReact(args, elem);
     }
+        public createProps() {
+            return { // TODO group properties on function like button.
+                captionAttr: this.captionAttr,
+                controls: this.controls,
+                dataSourceMicroflow: this.dataSourceMicroflow,
+                descriptionAttr: this.descriptionAttr,
+                height: this.height,
+                imageClick: this.imageClick,
+                imageattr: this.imageattr,
+                indicators: this.indicators,
+                interval: this.interval,
+                pauseOnHover: this.pauseOnHover,
+                slide: this.slide,
+                width: this.width,
+        };
+     }
     // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
     public postCreate() {
         logger.debug(this.id + ".postCreate !");
-        this.getFileUrl = this.getFileUrl.bind(this);
-        this.successCallback = this.successCallback.bind(this);
-        this.callMicroflow(this.DataSourceMicroflow, this.successCallback);
-    }
-    // mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed. Implement to do special tear-down work.
-    public uninitialize() {
-        logger.debug(this.id + ".uninitialize");
-        // Clean up listeners, helper objects, etc. There is no need to remove listeners added with this.connect / this.subscribe / this.own.
-        ReactDOM.unmountComponentAtNode(this.domNode);
-    }
-    public successCallback(obj: Array<{}>) {
-        logger.debug(this.id + ": Microflow executed successfully");
-        this.data = obj;
-        logger.debug(obj);
-         // const test = ReactBootstrap;
-        const Carousel = ReactBootstrap.Carousel;
-        const Carouselprops: CarouselProps = {
-            controls: this.controls,
-            indicators: this.indicators,
-            interval: this.Interval,
-            pauseOnHover: this.pauseOnHover,
-            slide: this.slide,
-        };
-
-        const carouselStyle = {
-            height: this.height,
-            width: this.width,
-        };
-        const item = () => {
-            return this.data.map((item: mendix.lib.MxObject) => {
-                const caption = item.get(this.captionAttr);
-                return (
-                    <Carousel.Item onClick={() => this.callMicroflow(this.imageClick)} key={`${this.id}_${caption}`}>
-                        <img style={carouselStyle} alt={caption} src={this.getFileUrl(item.getGuid())}/>
-                        <Carousel.Caption>
-                            <h3>{caption}</h3>
-                            <p>{item.get(this.descriptionAttr)}</p>
-                        </Carousel.Caption>
-                    </Carousel.Item>
-                );
-            });
-        };
-
-        const carouselInstance = (
-            <Carousel {...Carouselprops} >
-                {item()}
-            </Carousel>
-            );
-
-        ReactDOM.render(<div style={carouselStyle}>{carouselInstance}</div>, this.domNode);
-    }
-    // call the microflow and returns data if any
-    public callMicroflow(actionMF: string, successCallback?: Function, failureCallback?: Function): void{
-        logger.debug(this.id + ".callMicroflow");
-        if (actionMF !== "") {
-        mx.data.action({
-            callback: successCallback,
-            error: (error) => {
-                logger.error(this.id + ": An error occurred while executing microflow: " + error);
-            },
-            params: {
-                actionname: actionMF,
-            },
-        });
-      }
-    }
-    public getFileUrl (objectId: string) {
-        logger.debug(this.id + "getFileUrl");
-        let url: String;
-        if (objectId) {
-            url =  "file?target=window&guid=" + objectId + "&csrfToken=" + mx.session.getCSRFToken() + "&time=" + Date.now();
-        }
-        logger.debug(url);
-        return url;
+        ReactDOM.render(
+                <ImageCarousel
+                widgetId={this.id} {...this.createProps()}
+                wrapper={this}
+                />, this.domNode);
     }
 }
 

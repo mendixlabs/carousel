@@ -114,6 +114,7 @@ declare module mx {
 
 	}
     interface session {
+		getCSRFToken: Function;
 
 	}
     interface ui {
