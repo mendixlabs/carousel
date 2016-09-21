@@ -8,8 +8,8 @@ declare var logger: mendix.logger;
 import IImageCarouselReactWrapper from "./../ImageCarouselReact"; // Wrapper
 
 interface IImageCarouselModelProps {
-    widgetId: string;
-    dataSourceMicroflow: string;
+    widgetId?: string;
+    dataSourceMicroflow?: string;
     captionAttr?: string;
     descriptionAttr?: string;
     controls?: boolean;
@@ -22,14 +22,18 @@ interface IImageCarouselModelProps {
     height?: number;
 }
 
+interface IImageCarouselState {
+    data: Array<Object>;
+}
+
 // Custom props 
 export interface IImageCarouselProps extends IImageCarouselModelProps {
     // helper props for MX / dojo   
-    wrapper? : IImageCarouselReactWrapper;
-    ref?: (component: React.Component<IImageCarouselProps>) => React.Component<IImageCarouselProps>;
+    wrapper?: IImageCarouselReactWrapper;
+    ref?: (component: React.Component<IImageCarouselProps, IImageCarouselState>) => React.Component<IImageCarouselProps, IImageCarouselState>;
 }
 
-export class ImageCarousel extends React.Component<IImageCarouselProps> {
+export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCarouselState> {
     public static defaultProps: IImageCarouselProps = {
         controls: true,
         height: 350,
@@ -39,7 +43,6 @@ export class ImageCarousel extends React.Component<IImageCarouselProps> {
         slide: true,
         width: 500,
     };
-    private data: Array<{}>;
     private carouselStyle = {
             height: this.props.height,
             width: this.props.width,
@@ -64,12 +67,12 @@ export class ImageCarousel extends React.Component<IImageCarouselProps> {
     }
     // call the microflow and returns data if any
     public callMicroflow(actionMF: string, successCallback?: Function, failureCallback?: Function): void{
-        logger.debug(this.id + ".callMicroflow");
+        logger.debug(this.props.widgetId + ".callMicroflow");
         if (actionMF !== "") {
             mx.data.action({
                 callback: successCallback,
                 error: (error) => {
-                    logger.error(this.id + ": An error occurred while executing microflow: " + error);
+                    logger.error(this.props.widgetId + ": An error occurred while executing microflow: " + error);
                 },
                 params: {
                     actionname: actionMF,
@@ -78,7 +81,7 @@ export class ImageCarousel extends React.Component<IImageCarouselProps> {
       }
     }
     public successCallback(obj: Array<{}>) {
-        logger.debug(this.id + ": Microflow executed successfully");
+        logger.debug(this.props.widgetId + ": Microflow executed successfully");
         if (typeof obj !== "undefined" ) {
             this.setState({ data: obj });
         }
@@ -89,11 +92,11 @@ export class ImageCarousel extends React.Component<IImageCarouselProps> {
         const data = this.state.data;
         if (data.length > 0) {
         return data.map((itemObj: mendix.lib.MxObject) => {
-            const caption = itemObj.get(props.captionAttr);
+            const caption: string = itemObj.get(props.captionAttr) as string;
             return (
                 <ReactBootstrap.Carousel.Item
                     onClick={() => this.callMicroflow(props.imageClick)}
-                    key={`${this.id}_${caption}`}
+                    key={`${this.props.widgetId}_${caption}`}
                 >
                     <img style={this.carouselStyle} alt={caption} src={this.getFileUrl(itemObj.getGuid())}/>
                     <ReactBootstrap.Carousel.Caption>
@@ -111,8 +114,8 @@ export class ImageCarousel extends React.Component<IImageCarouselProps> {
         );
      }
     public getFileUrl (objectId: string) {
-        logger.debug(this.id + "getFileUrl");
-        let url: String;
+        logger.debug(this.props.widgetId + "getFileUrl");
+        let url: string;
         if (objectId) {
             url =  "file?target=window&guid=" + objectId + "&csrfToken=" + mx.session.getCSRFToken() + "&time=" + Date.now();
         }
