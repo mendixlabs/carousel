@@ -10,14 +10,20 @@ define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReac
         function ImageCarousel(props) {
             _super.call(this, props);
             this.carouselStyle = {
-                height: this.height,
-                width: this.width,
+                height: this.props.height,
+                width: this.props.width,
             };
             this.getFileUrl = this.getFileUrl.bind(this);
             this.successCallback = this.successCallback.bind(this);
+            this.mapCarouselData = this.mapCarouselData.bind(this);
+            this.callMicroflow = this.callMicroflow.bind(this);
+            this.getFileUrl = this.getFileUrl.bind(this);
+            this.state = {
+                data: [],
+            };
         }
-        ImageCarousel.prototype.componentWillUnmount = function () {
-            logger.debug(this.props.widgetId + " .componentWillUnmount");
+        ImageCarousel.prototype.componentWillMount = function () {
+            logger.debug(this.props.widgetId + " .componentWillMount");
             this.callMicroflow(this.props.dataSourceMicroflow, this.successCallback);
         };
         ImageCarousel.prototype.callMicroflow = function (actionMF, successCallback, failureCallback) {
@@ -37,15 +43,22 @@ define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReac
         };
         ImageCarousel.prototype.successCallback = function (obj) {
             logger.debug(this.id + ": Microflow executed successfully");
-            this.data = obj;
-            this.mapCarouselData(this.data);
+            if (typeof obj !== "undefined") {
+                this.setState({ data: obj });
+            }
         };
-        ImageCarousel.prototype.mapCarouselData = function (data) {
+        ImageCarousel.prototype.mapCarouselData = function () {
             var _this = this;
-            return data.data.map(function (itemObj) {
-                var caption = itemObj.get(_this.captionAttr);
-                return (_this.CarouselItems = (React.createElement(ReactBootstrap.Carousel.Item, {onClick: function () { return _this.callMicroflow(_this.imageClick); }, key: _this.id + "_" + caption}, React.createElement("img", {style: _this.carouselStyle, alt: caption, src: _this.getFileUrl(itemObj.getGuid())}), React.createElement(ReactBootstrap.Carousel.Caption, null, React.createElement("h3", null, caption), React.createElement("p", null, itemObj.get(_this.descriptionAttr))))));
-            });
+            logger.debug(this.props.widgetId + ".mapCarouselDatagrunt");
+            var props = this.props;
+            var data = this.state.data;
+            if (data.length > 0) {
+                return data.map(function (itemObj) {
+                    var caption = itemObj.get(props.captionAttr);
+                    return (React.createElement(ReactBootstrap.Carousel.Item, {onClick: function () { return _this.callMicroflow(props.imageClick); }, key: _this.id + "_" + caption}, React.createElement("img", {style: _this.carouselStyle, alt: caption, src: _this.getFileUrl(itemObj.getGuid())}), React.createElement(ReactBootstrap.Carousel.Caption, null, React.createElement("h3", null, caption), React.createElement("p", null, itemObj.get(props.descriptionAttr)))));
+                });
+            }
+            return (React.createElement("div", null, "Loading ..."));
         };
         ImageCarousel.prototype.getFileUrl = function (objectId) {
             logger.debug(this.id + "getFileUrl");
@@ -57,9 +70,8 @@ define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReac
             return url;
         };
         ImageCarousel.prototype.render = function () {
-            var _this = this;
             logger.debug(this.props.widgetId + ".render");
-            return (React.createElement("div", {style: this.carouselStyle}, React.createElement(ReactBootstrap.Carousel, {controls: this.props.controls, indicators: this.props.indicators, interval: this.props.interval, pauseOnHover: this.props.pauseOnHover, slide: this.props.slide}, this.CarouselItems, React.createElement(ReactBootstrap.Carousel.Item, {onClick: function () { return _this.callMicroflow(_this.imageClick); }, key: this.id + "_" + caption}, React.createElement("img", {style: this.carouselStyle, alt: caption, src: "http://fullhdpictures.com/most-beautiful-landscape-wallpapers.html/city-landscape-wallpapers"}), React.createElement(ReactBootstrap.Carousel.Caption, null, React.createElement("h3", null, "Helo"), React.createElement("p", null, "Now"))))));
+            return (React.createElement("div", {style: this.carouselStyle}, React.createElement(ReactBootstrap.Carousel, {controls: this.props.controls, indicators: this.props.indicators, interval: this.props.interval, pauseOnHover: this.props.pauseOnHover, slide: this.props.slide}, this.mapCarouselData())));
         };
         ImageCarousel.defaultProps = {
             controls: true,
@@ -68,6 +80,7 @@ define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReac
             interval: 5000,
             pauseOnHover: true,
             slide: true,
+            width: 500,
         };
         return ImageCarousel;
     }(React.Component));

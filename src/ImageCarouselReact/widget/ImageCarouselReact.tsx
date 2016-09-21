@@ -1,5 +1,3 @@
-
-
 /*
  ImageCarouselReact
  ========================
@@ -25,6 +23,7 @@ import * as _WidgetBase from  "mxui/widget/_WidgetBase";
 import * as React from "ImageCarouselReact/lib/react";
 import ReactDOM = require("ImageCarouselReact/lib/react-dom");
 
+
 import ImageCarousel from "./components/ImageCarousel";
 
 export class ImageCarouselReactWrapper extends _WidgetBase {
@@ -32,7 +31,6 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private dataSourceMicroflow: string;
     private captionAttr: string;
     private descriptionAttr: string;
-    private imageattr: string;
     private controls: boolean;
     private indicators: boolean;
     private interval: number;
@@ -55,12 +53,11 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                 descriptionAttr: this.descriptionAttr,
                 height: this.height,
                 imageClick: this.imageClick,
-                imageattr: this.imageattr,
                 indicators: this.indicators,
                 interval: this.interval,
                 pauseOnHover: this.pauseOnHover,
-                slide: this.slide,
-                width: this.width,
+                slide?: this.slide,
+                width?: this.width,
         };
      }
     // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.

@@ -48,16 +48,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                      <attributeType name="String"/> 
                 </attributeTypes>
             </property>
-
-            <property key="imageattr" type="attribute" entityProperty="imageEntity" required="false">
-                <caption> Image URL </caption>
-                <category>Data source</category>
-                <description>This field provides the url of the image to be used.</description>
-                <attributeTypes>
-                    <attributeType name="String"/> 
-                </attributeTypes>			
-            </property>
-
+            
             <property key="controls" type="boolean" defaultValue="true">
                 <caption>Use image navigation</caption>
                 <category>Behavior</category>

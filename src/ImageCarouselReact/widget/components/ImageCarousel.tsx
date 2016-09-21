@@ -1,7 +1,6 @@
 import * as React from "ImageCarouselReact/lib/react";
 
-
-import ReactBootstrap = require("ImageCarouselReact/lib/react-bootstrap");
+import * as ReactBootstrap from "ImageCarouselReact/lib/react-bootstrap";
 
 declare var mx: mx.mx;
 declare var logger: mendix.logger;
@@ -13,7 +12,6 @@ interface IImageCarouselModelProps {
     dataSourceMicroflow: string;
     captionAttr?: string;
     descriptionAttr?: string;
-    imageattr?: string;
     controls?: boolean;
     indicators?: boolean;
     interval?: number;
@@ -39,21 +37,29 @@ export class ImageCarousel extends React.Component<IImageCarouselProps> {
         interval: 5000,
         pauseOnHover: true,
         slide: true,
+        width: 500,
     };
     private data: Array<{}>;
     private carouselStyle = {
-            height: this.height,
-            width: this.width,
+            height: this.props.height,
+            width: this.props.width,
         };
-    private CarouselItems: Object;
     constructor(props: ImageCarousel) {
         super(props);
+        // bind context
         this.getFileUrl = this.getFileUrl.bind(this);
         this.successCallback = this.successCallback.bind(this);
+        this.mapCarouselData = this.mapCarouselData.bind(this);
+        this.callMicroflow = this.callMicroflow.bind(this);
+        this.getFileUrl = this.getFileUrl.bind(this);
+
+        this.state = {
+            data: [],
+        };
     }
 
-    public componentWillUnmount () {
-        logger.debug(this.props.widgetId + " .componentWillUnmount");
+    public componentWillMount () {
+        logger.debug(this.props.widgetId + " .componentWillMount");
         this.callMicroflow(this.props.dataSourceMicroflow, this.successCallback);
     }
     // call the microflow and returns data if any
@@ -73,27 +79,36 @@ export class ImageCarousel extends React.Component<IImageCarouselProps> {
     }
     public successCallback(obj: Array<{}>) {
         logger.debug(this.id + ": Microflow executed successfully");
-        this.data = obj;
-        this.mapCarouselData(this.data);
+        if (typeof obj !== "undefined" ) {
+            this.setState({ data: obj });
+        }
     }
-    public mapCarouselData(data: Array<{}>){
-          return data.data.map((itemObj: mendix.lib.MxObject) => {
-                const caption = itemObj.get(this.captionAttr);
-                return (
-                this.CarouselItems = (
-                    <ReactBootstrap.Carousel.Item
-                        onClick={() => this.callMicroflow(this.imageClick)}
-                        key={`${this.id}_${caption}`}
-                    >
-                        <img style={this.carouselStyle} alt={caption} src={this.getFileUrl(itemObj.getGuid())}/>
-                        <ReactBootstrap.Carousel.Caption>
-                            <h3>{caption}</h3>
-                            <p>{itemObj.get(this.descriptionAttr)}</p>
-                        </ReactBootstrap.Carousel.Caption>
-                    </ReactBootstrap.Carousel.Item>
-                    )
-                );
-            });
+    public mapCarouselData() {
+        logger.debug(this.props.widgetId + ".mapCarouselDatagrunt");
+        const props = this.props;
+        const data = this.state.data;
+        if (data.length > 0) {
+        return data.map((itemObj: mendix.lib.MxObject) => {
+            const caption = itemObj.get(props.captionAttr);
+            return (
+                <ReactBootstrap.Carousel.Item
+                    onClick={() => this.callMicroflow(props.imageClick)}
+                    key={`${this.id}_${caption}`}
+                >
+                    <img style={this.carouselStyle} alt={caption} src={this.getFileUrl(itemObj.getGuid())}/>
+                    <ReactBootstrap.Carousel.Caption>
+                        <h3>{caption}</h3>
+                        <p>{itemObj.get(props.descriptionAttr)}</p>
+                    </ReactBootstrap.Carousel.Caption>
+                </ReactBootstrap.Carousel.Item>
+            );
+        });
+        }
+        return (
+            <div>
+                Loading ...
+            </div>
+        );
      }
     public getFileUrl (objectId: string) {
         logger.debug(this.id + "getFileUrl");
@@ -115,17 +130,7 @@ export class ImageCarousel extends React.Component<IImageCarouselProps> {
                 pauseOnHover={this.props.pauseOnHover}
                 slide={this.props.slide}
             >
-                {this.CarouselItems}
-                <ReactBootstrap.Carousel.Item
-                        onClick={() => this.callMicroflow(this.imageClick)}
-                        key={`${this.id}_${caption}`}
-                    >
-                        <img style={this.carouselStyle} alt={caption} src="http://fullhdpictures.com/most-beautiful-landscape-wallpapers.html/city-landscape-wallpapers"/>
-                        <ReactBootstrap.Carousel.Caption>
-                            <h3>Helo</h3>
-                            <p>Now</p>
-                        </ReactBootstrap.Carousel.Caption>
-                    </ReactBootstrap.Carousel.Item>
+                {this.mapCarouselData()}
             </ReactBootstrap.Carousel>
             </div>
         );
