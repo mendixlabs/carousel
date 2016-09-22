@@ -689,7 +689,7 @@ declare namespace ReactBootstrap {
     // <CarouselItem />
     interface CarouselItemProps extends React.HTMLProps<CarouselItem> {
         active?: boolean;
-        animtateIn?: boolean;
+        animateIn?: boolean;
         animateOut?: boolean;
         direction?: string;
         index?: number;

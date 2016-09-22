@@ -16,7 +16,7 @@
     "test",
 		"out",
 		"nbproject",
-		"typings/redux",
-		"src/ImageCarouselReact/lib"
+		"typings/redux"
+		// "src/ImageCarouselReact/lib"
   ]
 }

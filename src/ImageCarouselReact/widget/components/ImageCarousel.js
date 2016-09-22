@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
-define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReact/lib/react-bootstrap"], function (require, exports, React, ReactBootstrap) {
+define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReact/lib/react-bootstrap", "../../lib/autoBind"], function (require, exports, React, ReactBootstrap, autoBind_1) {
     "use strict";
     var ImageCarousel = (function (_super) {
         __extends(ImageCarousel, _super);
@@ -21,14 +21,8 @@ define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReac
                 height: this.props.height,
                 width: this.props.width,
             };
-            this.getFileUrl = this.getFileUrl.bind(this);
-            this.successCallback = this.successCallback.bind(this);
-            this.mapCarouselData = this.mapCarouselData.bind(this);
-            this.callMicroflow = this.callMicroflow.bind(this);
-            this.getFileUrl = this.getFileUrl.bind(this);
-            this.onItemClick = this.onItemClick.bind(this);
-            this.getCarouselData = this.getCarouselData.bind(this);
-            this.generateRandom = this.generateRandom.bind(this);
+            autoBind_1.default(this);
+            this.loaded = false;
             this.state = {
                 data: [],
                 dataStatic: [],
@@ -37,6 +31,22 @@ define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReac
         ImageCarousel.prototype.componentWillMount = function () {
             logger.debug(this.props.widgetId + " .componentWillMount");
             this.getCarouselData();
+        };
+        ImageCarousel.prototype.render = function () {
+            logger.debug(this.props.widgetId + ".render");
+            var carouselProps = {
+                controls: this.props.controls,
+                indicators: this.props.indicators,
+                interval: this.props.interval,
+                pauseOnHover: this.props.pauseOnHover,
+                slide: this.props.slide,
+            };
+            if (this.loaded || this.state.dataStatic.length > 0) {
+                return (React.createElement("div", {style: this.carouselStyle}, React.createElement(ReactBootstrap.Carousel, __assign({}, carouselProps), this.mapCarouselData())));
+            }
+            else {
+                return (React.createElement("div", {className: "glyphicon glyphicon-refresh glyphicon-spin", style: this.carouselStyle}, "Loading ..."));
+            }
         };
         ImageCarousel.prototype.callMicroflow = function (actionMF, constraint, successCallback, failureCallback) {
             var _this = this;
@@ -66,33 +76,50 @@ define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReac
         ImageCarousel.prototype.successCallback = function (obj) {
             logger.debug(this.props.widgetId + ": Microflow executed successfully");
             if (typeof obj !== "undefined") {
+                this.loaded = true;
                 this.setState({ data: obj, dataStatic: [] });
             }
         };
         ImageCarousel.prototype.mapCarouselData = function () {
             var _this = this;
             logger.debug(this.props.widgetId + ".mapCarouselDatagrunt");
-            var staticImageData = this.state.dataStatic;
+            var staticData = this.state.dataStatic;
             var data = this.state.data;
-            if (staticImageData.length > 0) {
-                return staticImageData.map(function (itemObj) {
+            var itemProps;
+            if (staticData.length > 0) {
+                return staticData.map(function (itemObj) {
                     var caption = itemObj.imgCaption;
-                    var key = _this.generateRandom();
-                    var url = itemObj.picture;
-                    var desc = itemObj.imgdescription;
-                    return (React.createElement(ReactBootstrap.Carousel.Item, {onClick: _this.onItemClick, key: key}, React.createElement("img", {style: _this.carouselStyle, alt: caption, src: url}), React.createElement(ReactBootstrap.Carousel.Caption, null, React.createElement("h3", null, caption), React.createElement("p", null, desc))));
+                    itemProps = {
+                        alt: caption,
+                        caption: caption,
+                        description: itemObj.imgdescription,
+                        imgStyle: _this.carouselStyle,
+                        key: _this.generateRandom(),
+                        onClick: _this.onItemClick,
+                        src: itemObj.picture,
+                    };
+                    return (_this.getCarouselItem(itemProps));
                 });
             }
             else if (data.length > 0) {
                 return data.map(function (itemObj) {
                     var props = _this.props;
                     var caption = itemObj.get(props.captionAttr);
-                    var key = itemObj.getGuid();
-                    var url = _this.getFileUrl(itemObj.getGuid());
-                    return (React.createElement(ReactBootstrap.Carousel.Item, {onClick: _this.onItemClick, key: key}, React.createElement("img", {style: _this.carouselStyle, alt: caption, src: url}), React.createElement(ReactBootstrap.Carousel.Caption, null, React.createElement("h3", null, caption), React.createElement("p", null, itemObj.get(props.descriptionAttr)))));
+                    itemProps = {
+                        alt: caption,
+                        caption: caption,
+                        description: itemObj.get(props.descriptionAttr),
+                        imgStyle: _this.carouselStyle,
+                        key: itemObj.getGuid(),
+                        onClick: _this.onItemClick,
+                        src: _this.getFileUrl(itemObj.getGuid()),
+                    };
+                    return (_this.getCarouselItem(itemProps));
                 });
             }
-            return (React.createElement("div", null, "Loading ..."));
+        };
+        ImageCarousel.prototype.getCarouselItem = function (itemProps) {
+            return (React.createElement(ReactBootstrap.Carousel.Item, {onClick: itemProps.onClick, key: itemProps.key}, React.createElement("img", {style: itemProps.imgStyle, alt: itemProps.alt, src: itemProps.src}), React.createElement(ReactBootstrap.Carousel.Caption, null, React.createElement("h3", null, itemProps.caption), React.createElement("p", null, itemProps.description))));
         };
         ImageCarousel.prototype.getFileUrl = function (objectId) {
             logger.debug(this.props.widgetId + "getFileUrl");
@@ -103,19 +130,9 @@ define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReac
             logger.debug(url);
             return url;
         };
-        ImageCarousel.prototype.render = function () {
-            logger.debug(this.props.widgetId + ".render");
-            var carouselProps = {
-                controls: this.props.controls,
-                indicators: this.props.indicators,
-                interval: this.props.interval,
-                pauseOnHover: this.props.pauseOnHover,
-                slide: this.props.slide,
-            };
-            return (React.createElement("div", {style: this.carouselStyle}, React.createElement(ReactBootstrap.Carousel, __assign({}, carouselProps), this.mapCarouselData())));
-        };
         ImageCarousel.prototype.onItemClick = function () {
             var _this = this;
+            logger.debug(this.props.widgetId + ".onItemClick");
             if (this.props.imageClick) {
                 this.callMicroflow(this.props.imageClick);
             }
@@ -128,6 +145,7 @@ define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReac
             }
         };
         ImageCarousel.prototype.getCarouselData = function () {
+            logger.debug(this.props.widgetId + ".getCarouselData");
             if (this.props.entityConstraint) {
                 this.callMicroflow("", this.props.entityConstraint, this.successCallback);
             }
@@ -135,7 +153,6 @@ define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReac
                 this.callMicroflow(this.props.dataSourceMicroflow, "", this.successCallback);
             }
             else if (this.props.imgcollection) {
-                logger.debug(this.props.widgetId + "Objects found");
                 if (this.props.imgcollection.length > 0) {
                     this.setState({ data: [], dataStatic: this.props.imgcollection });
                 }
@@ -160,4 +177,3 @@ define(["require", "exports", "ImageCarouselReact/lib/react", "ImageCarouselReac
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ImageCarousel;
 });
-//# sourceMappingURL=ImageCarousel.js.map
