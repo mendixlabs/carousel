@@ -132,5 +132,6 @@ declare module mx {
 		hideUnderlay(delay?:number):void;
 		resize():void;
 		isRtl():string;
+		openForm(path:string, args?:{location?:string, domNode?:HTMLElement, title?:string, context?:mendix.lib.MxContext, callback?:Function, error?:Function}, scope?:any): void
 	}
 }

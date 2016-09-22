@@ -7,23 +7,35 @@ declare var logger: mendix.logger;
 
 import IImageCarouselReactWrapper from "./../ImageCarouselReact"; // Wrapper
 
+export interface IStaticImages {
+    imgCaption?: string;
+    imgdescription?: string;
+    picture?: string;
+}
+
 interface IImageCarouselModelProps  {
+    imgcollection?: Array<IStaticImages>;
     widgetId?: string;
+    imageEntity?: string;
+    entityConstraint?: string;
     dataSourceMicroflow?: string;
     captionAttr?: string;
     descriptionAttr?: string;
     controls?: boolean;
     indicators?: boolean;
     interval?: number;
+    openPage?: string;
     pauseOnHover?: boolean;
     slide?: boolean;
     imageClick?: string;
     width?: number;
     height?: number;
+
 }
 
 interface IImageCarouselState {
     data: Array<mendix.lib.MxObject>;
+    dataStatic: Array<IStaticImages>;
 }
 
 // Custom props 
@@ -55,18 +67,21 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
         this.callMicroflow = this.callMicroflow.bind(this);
         this.getFileUrl = this.getFileUrl.bind(this);
         this.onItemClick = this.onItemClick.bind(this);
+        this.getCarouselData = this.getCarouselData.bind(this);
+        this.generateRandom = this.generateRandom.bind(this);
 
         this.state = {
             data : [],
+            dataStatic: [],
         };
     }
 
     public componentWillMount () {
         logger.debug(this.props.widgetId + " .componentWillMount");
-        this.callMicroflow(this.props.dataSourceMicroflow, this.successCallback);
+        this.getCarouselData();
     }
     // call the microflow and returns data if any
-    public callMicroflow(actionMF: string, successCallback?: Function, failureCallback?: Function): void{
+    public callMicroflow(actionMF?: string, constraint?: string, successCallback?: Function, failureCallback?: Function): void{
         logger.debug(this.props.widgetId + ".callMicroflow");
         if (actionMF !== "") {
             mx.data.action({
@@ -78,39 +93,66 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
                     actionname: actionMF,
                 },
             });
+        }else if (constraint !== "") {
+            const xpathString = "//" + this.props.imageEntity + this.props.entityConstraint;
+            mx.data.get({
+                callback: successCallback,
+                error: (error) => {
+                    logger.error(this.props.widgetId + ": An error occurred while retrieveing items: " + error);
+                },
+                xpath : xpathString ,
+            });
+
         }
     }
     public successCallback(obj: Array<mendix.lib.MxObject>) {
         logger.debug(this.props.widgetId + ": Microflow executed successfully");
         if (typeof obj !== "undefined" ) {
-            this.setState({ data: obj });
+            this.setState({ data: obj, dataStatic: [] });
         }
     }
     public mapCarouselData() {
         logger.debug(this.props.widgetId + ".mapCarouselDatagrunt");
-        const props = this.props;
+        const staticImageData = this.state.dataStatic;
         const data = this.state.data;
-        if (data.length > 0) {
-        return data.map((itemObj) => {
-            // const caption: string = itemObj.get(props.captionAttr) as string; 
-            // const caption: string = itemObj.get(props.captionAttr);
-            const caption = itemObj.get(props.captionAttr) as string;
-            // const caption = String(itemObj.get(props.captionAttr));
-            const key = itemObj.getGuid();
-            const url = this.getFileUrl(itemObj.getGuid());
-            return (
-                <ReactBootstrap.Carousel.Item
-                    onClick={this.onItemClick}
-                    key={key}
-                >
-                    <img style={this.carouselStyle} alt={caption} src={url}/>
-                    <ReactBootstrap.Carousel.Caption>
-                        <h3>{caption}</h3>
-                        <p>{itemObj.get(props.descriptionAttr)}</p>
-                    </ReactBootstrap.Carousel.Caption>
-                </ReactBootstrap.Carousel.Item>
-            );
-        });
+        if (staticImageData.length > 0) {
+                return staticImageData.map((itemObj) => {
+                    const caption = itemObj.imgCaption;
+                    const key = this.generateRandom();
+                    const url = itemObj.picture;
+                    const desc = itemObj.imgdescription;
+                    return (
+                        <ReactBootstrap.Carousel.Item
+                            onClick={this.onItemClick}
+                            key={key}
+                        >
+                            <img style={this.carouselStyle} alt={caption} src={url}/>
+                            <ReactBootstrap.Carousel.Caption>
+                                <h3>{caption}</h3>
+                                <p>{desc}</p>
+                            </ReactBootstrap.Carousel.Caption>
+                        </ReactBootstrap.Carousel.Item>
+                    );
+                });
+        }else if (data.length > 0) {
+                return data.map((itemObj) => {
+                    const props = this.props;
+                    const caption = itemObj.get(props.captionAttr) as string;
+                    const key = itemObj.getGuid();
+                    const url = this.getFileUrl(itemObj.getGuid());
+                    return (
+                        <ReactBootstrap.Carousel.Item
+                            onClick={this.onItemClick}
+                            key={key}
+                        >
+                            <img style={this.carouselStyle} alt={caption} src={url}/>
+                            <ReactBootstrap.Carousel.Caption>
+                                <h3>{caption}</h3>
+                                <p>{itemObj.get(props.descriptionAttr)}</p>
+                            </ReactBootstrap.Carousel.Caption>
+                        </ReactBootstrap.Carousel.Item>
+                    );
+                });
         }
         return (
             <div>
@@ -130,15 +172,16 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
     }
     public render() {
         logger.debug(this.props.widgetId + ".render");
+        const carouselProps = {
+              controls : this.props.controls,
+              indicators: this.props.indicators,
+              interval: this.props.interval,
+              pauseOnHover: this.props.pauseOnHover,
+              slide: this.props.slide,
+        };
         return (
             <div style={this.carouselStyle}>
-            <ReactBootstrap.Carousel
-                controls={this.props.controls}
-                indicators={this.props.indicators}
-                interval={this.props.interval}
-                pauseOnHover={this.props.pauseOnHover}
-                slide={this.props.slide}
-            >
+            <ReactBootstrap.Carousel {...carouselProps} >
                 {this.mapCarouselData()}
             </ReactBootstrap.Carousel>
             </div>
@@ -148,10 +191,29 @@ export class ImageCarousel extends React.Component<IImageCarouselProps, IImageCa
         if (this.props.imageClick) {
             this.callMicroflow(this.props.imageClick);
         }
-        // if (this.props.openForm) {
-        //    this.openForm(this.props.openForm);
-        // }
+        if (this.props.openPage) {
+            mx.ui.openForm(this.props.openPage, {
+                callback: () => {
+                    logger.debug(this.props.widgetId + "Page opened Successfully");
+                }
+            });
+         }
+    }
+    private getCarouselData() {
+        if (this.props.entityConstraint) {
+            this.callMicroflow("", this.props.entityConstraint, this.successCallback);
+        }else if (this.props.dataSourceMicroflow) {
+            this.callMicroflow(this.props.dataSourceMicroflow, "", this.successCallback);
+        }else if (this.props.imgcollection){
+            logger.debug(this.props.widgetId + "Objects found");
+            if (this.props.imgcollection.length > 0) {
+            this.setState({ data: [], dataStatic: this.props.imgcollection });
+        }
 
+     }
+    }
+       private generateRandom(): number {
+        return Math.floor(Math.random() * 10000);
     }
 };
 

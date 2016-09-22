@@ -28,6 +28,8 @@ import ImageCarousel from "./components/ImageCarousel";
 
 export class ImageCarouselReactWrapper extends _WidgetBase {
     // Parameters configured in the Modeler
+    private imageEntity: string;
+    private entityConstraint: string;
     private dataSourceMicroflow: string;
     private captionAttr: string;
     private descriptionAttr: string;
@@ -35,6 +37,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private indicators: boolean;
     private interval: number;
     private pauseOnHover: boolean;
+    private openPage: string;
     private slide: boolean;
     private imageClick: string;
     private width: number;
@@ -51,10 +54,13 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                 controls: this.controls,
                 dataSourceMicroflow: this.dataSourceMicroflow,
                 descriptionAttr: this.descriptionAttr,
+                entityConstraint: this.entityConstraint,
                 height: this.height,
                 imageClick: this.imageClick,
+                imageEntity: this.imageEntity,
                 indicators: this.indicators,
                 interval: this.interval,
+                openPage: this.openPage,
                 pauseOnHover: this.pauseOnHover,
                 slide: this.slide,
                 width: this.width,

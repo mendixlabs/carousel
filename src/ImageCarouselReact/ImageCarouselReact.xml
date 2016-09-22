@@ -24,14 +24,20 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <description>The entity which should be displayed in the carousel</description>
             </property>
 
-            <property key="dataSourceMicroflow" type="microflow" required="true">
+            <property key="entityConstraint" type="entityConstraint" entityProperty="imageEntity" required="false">
+			    <caption>Constraint</caption>
+			    <category>Data source</category>
+			    <description>Constraint on the carousel entity.</description>
+	        </property>
+
+            <property key="dataSourceMicroflow" type="microflow" required="false">
                 <caption> Data Source Microflow </caption>
                 <category>Data source</category>
                 <description>Returns images to display on Carousel.</description>
                 <returnType type="Object" entityProperty="imageEntity" isList="true"/>
 	        </property>
 
-            <property key="captionAttr" type="attribute" entityProperty="imageEntity">
+            <property key="captionAttr" type="attribute" entityProperty="imageEntity" required="false">
                 <caption> Caption </caption>
                 <category>Data source</category>
                 <description>This fields provides the caption of a carousel item</description> 
@@ -40,7 +46,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 </attributeTypes>
             </property>
 
-            <property key="descriptionAttr" type="attribute" entityProperty="imageEntity">
+            <property key="descriptionAttr" type="attribute" entityProperty="imageEntity" required="false">
                 <caption> Description </caption>
                 <category>Data source</category>
                 <description>This fields provides the Description of a carousel item</description> 
@@ -84,6 +90,12 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <category>Behavior</category>
                 <description>Microflow to be triggered when an image is clicked.</description>
                 <returnType type="Void"/>
+            </property>
+
+            <property key="openPage" type="form" required="false">
+                <caption>Show a Page</caption>
+                <category>Behavior</category>
+                <description>Opens a page when Image is Clicked</description> 
             </property>
 
             <property key="width" type="integer" defaultValue="500">
