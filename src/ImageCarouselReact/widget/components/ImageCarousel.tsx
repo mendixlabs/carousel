@@ -12,6 +12,25 @@ export interface IStaticImages {
     imgCaption?: string;
     imgdescription?: string;
     picture?: string;
+    imgClick?: string;
+    OpenPage?: string;
+    location?: string;
+}
+interface IShowpageProps {
+    pageName?: string;
+    location?: string;
+    context?: mendix.lib.MxContext;
+    callback?: Function;
+}
+interface IExecutionProps{
+    actionMF?: string;
+    constraint?: string;
+    successCallback?: Function;
+}
+interface IOnclickProps{
+    page?: string;
+    clickMF?: string;
+    location?: string;
 }
 
 interface ImageCarouselModelProps  {
@@ -26,6 +45,7 @@ interface ImageCarouselModelProps  {
     indicators?: boolean;
     interval?: number;
     openPage?: string;
+    location?: string;
     pauseOnHover?: boolean;
     slide?: boolean;
     imageClick?: string;
@@ -110,22 +130,22 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         }
      }
     // call the microflow and returns data if any
-    private callMicroflow(actionMF?: string, constraint?: string, successCallback?: Function, failureCallback?: Function): void {
-        logger.debug(this.props.widgetId + ".callMicroflow");
-        if (actionMF !== "") {
+    private executeAction(executionProps: IExecutionProps): void {
+        logger.debug(this.props.widgetId + ".executeAction");
+        if (executionProps.actionMF !== "") {
             mx.data.action({
-                callback: successCallback,
+                callback: executionProps.successCallback,
                 error: (error) => {
                     logger.error(this.props.widgetId + ": An error occurred while executing microflow: " + error);
                 },
                 params: {
-                    actionname: actionMF,
+                    actionname: executionProps.actionMF,
                 },
             });
-        }else if (constraint !== "") {
-            const xpathString = "//" + this.props.imageEntity + this.props.entityConstraint;
+        }else if (executionProps.constraint !== "") {
+            const xpathString = "//" + this.props.imageEntity + executionProps.constraint;
             mx.data.get({
-                callback: successCallback,
+                callback: executionProps.successCallback,
                 error: (error) => {
                     logger.error(this.props.widgetId + ": An error occurred while retrieveing items: " + error);
                 },
@@ -146,8 +166,14 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         const staticData = this.state.dataStatic;
         const data = this.state.data;
         let itemProps: ItemProps;
+        let  onClickProps: IOnclickProps;
         if (staticData.length > 0) {
             return staticData.map((itemObj) => {
+                onClickProps = {
+                    clickMF: itemObj.imgClick,
+                    location: itemObj.location,
+                    page: itemObj.OpenPage,
+                };
                 const caption = itemObj.imgCaption;
                 itemProps = {
                     alt: caption,
@@ -155,7 +181,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
                     description: itemObj.imgdescription,
                     imgStyle: this.carouselStyle,
                     key: this.generateRandom(),
-                    onClick: this.onItemClick,
+                    onClick: this.onItemClick.bind(this, onClickProps),
                     src: itemObj.picture,
                 };
                 return (this.getCarouselItem(itemProps));
@@ -200,25 +226,40 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         }
         return url;
     }
-    private onItemClick() {
+    private onItemClick(onClickProps?: IOnclickProps) {
         logger.debug(this.props.widgetId + ".onItemClick");
-        if (this.props.imageClick) {
-            this.callMicroflow(this.props.imageClick);
+        if (onClickProps.clickMF) {
+            this.executeAction({actionMF: onClickProps.clickMF});
+        }else if (onClickProps.page) {
+            this.showPage({callback: this.callback, location: onClickProps.location, pageName: onClickProps.page});
+        }else if (this.props.imageClick) {
+            this.executeAction({actionMF: this.props.imageClick});
+        } else if (this.props.openPage) {
+            this.showPage({callback: this.callback, location: this.props.location, pageName: this.props.openPage});
         }
-        if (this.props.openPage) {
-            mx.ui.openForm(this.props.openPage, {
-                callback: () => {
-                    logger.debug(this.props.widgetId + ": Page opened Successfully");
-                },
-            });
-         }
     }
+
+    private showPage(showPageProps: IShowpageProps){
+        mx.ui.openForm(showPageProps.pageName, {
+            callback: showPageProps.callback,
+            location: showPageProps.location,
+        });
+    }
+
+    private callback() {
+        logger.debug(this.props.widgetId + ": Page opened Successfully");
+    }
+
     private getCarouselData() {
         logger.debug(this.props.widgetId + ".getCarouselData");
-        if (this.props.entityConstraint) {
-            this.callMicroflow("", this.props.entityConstraint, this.successCallback);
-        } else if (this.props.dataSourceMicroflow) {
-            this.callMicroflow(this.props.dataSourceMicroflow, "", this.successCallback);
+        let executionProps: IExecutionProps;
+        if (this.props.entityConstraint || this.props.dataSourceMicroflow ) {
+             executionProps = {
+                actionMF: this.props.dataSourceMicroflow,
+                constraint: this.props.entityConstraint,
+                successCallback: this.successCallback,
+             };
+             this.executeAction(executionProps);
         } else if (this.props.imgcollection) {
             if (this.props.imgcollection.length > 0) {
             this.setState({ data: [], dataStatic: this.props.imgcollection });

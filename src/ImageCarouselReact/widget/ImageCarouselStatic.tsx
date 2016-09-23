@@ -38,6 +38,7 @@ export class ImageCarouselStaticWrapper extends _WidgetBase {
     private imageClick: string;
     private width: number;
     private height: number;
+    private location: string;
     // The TypeScript Contructor, not the dojo consctuctor, move contructor work into widget prototype at bottom of the page. 
     constructor(args?: Object, elem?: HTMLElement) {
         // Do not add any default value here... it wil not run in dojo!     
@@ -52,6 +53,7 @@ export class ImageCarouselStaticWrapper extends _WidgetBase {
                 imgcollection: this.imgcollection,
                 indicators: this.indicators,
                 interval: this.interval,
+                location: this.location,
                 openPage: this.openPage,
                 pauseOnHover: this.pauseOnHover,
                 slide: this.slide,

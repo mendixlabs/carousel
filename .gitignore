@@ -70,6 +70,5 @@ node_modules/
 *.tmp
 *.jshintrc
 src/ImageCarouselReact/widget/ImageCarouselReact.js
-src/ImageCarouselReact/widget/components/ImageCarouselReact.js
-src/ImageCarouselReact/widget/components/Button.js
-src/ImageCarouselReact/widget/components/Button.js
+src/ImageCarouselReact/widget/components/ImageCarousel.js
+src/ImageCarouselReact/widget/ImageCarouselStatic.js

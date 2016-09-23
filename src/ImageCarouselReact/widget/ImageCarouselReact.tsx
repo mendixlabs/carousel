@@ -42,6 +42,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private imageClick: string;
     private width: number;
     private height: number;
+    private location: string;
     // The TypeScript Contructor, not the dojo consctuctor, move contructor work into widget prototype at bottom of the page. 
     constructor(args?: Object, elem?: HTMLElement) {
         // Do not add any default value here... it wil not run in dojo!     
@@ -61,6 +62,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                 indicators: this.indicators,
                 interval: this.interval,
                 openPage: this.openPage,
+                openPageModal: this.location,
                 pauseOnHover: this.pauseOnHover,
                 slide: this.slide,
                 width: this.width,

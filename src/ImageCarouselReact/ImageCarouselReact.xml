@@ -56,7 +56,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             </property>
             
             <property key="controls" type="boolean" defaultValue="true">
-                <caption>Use image navigation</caption>
+                <caption>Use Image Navigation</caption>
                 <category>Behavior</category>
                 <description>Use the image navigation.</description>
             </property>
@@ -74,13 +74,13 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             </property>
 
             <property key="pauseOnHover" type="boolean" defaultValue="true">
-                <caption>pauseOnHover</caption>
+                <caption>Pause On Hover</caption>
                 <category>Behavior</category>
             <description>Pause the Slide on mouse Hover</description>
             </property>
 
             <property key="slide" type="boolean" defaultValue="true">
-                <caption>slide images</caption>
+                <caption>Slide Images</caption>
                 <category>Behavior</category>
             <description>This makes the images slide when transitioning</description>
             </property>
@@ -96,6 +96,17 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <caption>Show a Page</caption>
                 <category>Behavior</category>
                 <description>Opens a page when Image is Clicked</description> 
+            </property>
+
+            <property key="location" type="enumeration" defaultValue="content">
+                <caption> Location </caption>
+                <category>Behavior</category>
+                <description>location to open the form, either content, popup or modal </description>
+                <enumerationValues>
+                    <enumerationValue key="content">In content</enumerationValue>
+                    <enumerationValue key="popup">Popup</enumerationValue>
+                    <enumerationValue key="modal">Modal</enumerationValue>
+                </enumerationValues> 
             </property>
 
             <property key="width" type="integer" defaultValue="500">
