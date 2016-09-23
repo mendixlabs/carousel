@@ -103,14 +103,14 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
             );
         } else {
             return (
-                <div className={"glyphicon glyphicon-refresh glyphicon-spin"} style={this.carouselStyle}>
+                <div style={this.carouselStyle}>
                     Loading ...
                 </div>
             );
         }
      }
     // call the microflow and returns data if any
-    private callMicroflow(actionMF?: string, constraint?: string, successCallback?: Function, failureCallback?: Function): void{
+    private callMicroflow(actionMF?: string, constraint?: string, successCallback?: Function, failureCallback?: Function): void {
         logger.debug(this.props.widgetId + ".callMicroflow");
         if (actionMF !== "") {
             mx.data.action({
@@ -135,14 +135,14 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         }
     }
     private successCallback(obj: Array<mendix.lib.MxObject>) {
-        logger.debug(this.props.widgetId + ": Microflow executed successfully");
+        logger.debug(this.props.widgetId + ".successCallback");
         if (typeof obj !== "undefined" ) {
             this.loaded = true;
             this.setState({ data: obj, dataStatic: [] });
         }
     }
     private mapCarouselData() {
-        logger.debug(this.props.widgetId + ".mapCarouselDatagrunt");
+        logger.debug(this.props.widgetId + ".mapCarouselData");
         const staticData = this.state.dataStatic;
         const data = this.state.data;
         let itemProps: ItemProps;
@@ -178,6 +178,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         }
     }
     private getCarouselItem (itemProps: ItemProps) {
+        logger.debug(this.props.widgetId + ".getCarouselItem");
         return (
             <ReactBootstrap.Carousel.Item
                 onClick={itemProps.onClick}
@@ -192,12 +193,11 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         );
     }
     private getFileUrl (objectId: string) {
-        logger.debug(this.props.widgetId + "getFileUrl");
+        logger.debug(this.props.widgetId + ".getFileUrl");
         let url: string;
         if (objectId) {
             url =  "file?target=window&guid=" + objectId + "&csrfToken=" + mx.session.getCSRFToken() + "&time=" + Date.now();
         }
-        logger.debug(url);
         return url;
     }
     private onItemClick() {
@@ -208,8 +208,8 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         if (this.props.openPage) {
             mx.ui.openForm(this.props.openPage, {
                 callback: () => {
-                    logger.debug(this.props.widgetId + "Page opened Successfully");
-                }
+                    logger.debug(this.props.widgetId + ": Page opened Successfully");
+                },
             });
          }
     }

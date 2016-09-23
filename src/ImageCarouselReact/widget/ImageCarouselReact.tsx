@@ -68,13 +68,19 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
      }
     // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
     public postCreate() {
-        logger.debug(this.id + ".postCreate !");
+        logger.debug(this.id + ".postCreate");
         ReactDOM.render(
             <ImageCarousel
                 widgetId={this.id} {...this.createProps()}
                 wrapper={this}
             />, this.domNode
         );
+    }
+    // mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed. Implement to do special tear-down work.
+    public uninitialize() {
+        logger.debug(this.id + ".uninitialize");
+        // Clean up listeners, helper objects, etc. There is no need to remove listeners added with this.connect / this.subscribe / this.own.  
+        ReactDOM.unmountComponentAtNode(this.domNode);
     }
 }
 
