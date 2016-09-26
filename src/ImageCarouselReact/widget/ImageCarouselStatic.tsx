@@ -11,8 +11,10 @@
  
  Documentation
  ========================
-  ImageCarousel Widget displays an image carousel based on URLS stored in the domain model built with React-TypeScript . 
+  ImageCarousel Widget displays an image carousel based on URLS 
+  stored in the domain model built with React-TypeScript . 
  */
+// TODO Add comments to functions just like ImageCarouselReact.tsx
 
 import * as dojoDeclare from "dojo/_base/declare";
 import * as _WidgetBase from  "mxui/widget/_WidgetBase";
@@ -36,7 +38,8 @@ export class ImageCarouselStaticWrapper extends _WidgetBase {
     private width: number;
     private height: number;
     private location: string;
-    // The TypeScript Contructor, not the dojo consctuctor, move contructor work into widget prototype at bottom of the page. 
+    // The TypeScript Contructor, not the dojo consctuctor,
+    // move contructor work into widget prototype at bottom of the page. 
     constructor(args?: Object, elem?: HTMLElement) {
         // Do not add any default value here... it wil not run in dojo!     
         super() ;
@@ -70,9 +73,11 @@ export class ImageCarouselStaticWrapper extends _WidgetBase {
 
 // Declare widget's prototype the Dojo way
 // Thanks to https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/dojo/README.md
-let dojoImageCarouselReact = dojoDeclare("ImageCarouselReact.widget.ImageCarouselStatic", [_WidgetBase], (function(Source: any) {
+let dojoImageCarouselReact = dojoDeclare(
+    "ImageCarouselReact.widget.ImageCarouselStatic", [_WidgetBase], (function(Source: any) {
     let result: any = {};
-    // dojo.declare.constructor is called to construct the widget instance. Implement to initialize non-primitive properties.
+    // dojo.declare.constructor is called to construct the widget instance.
+    // Implement to initialize non-primitive properties.
     result.constructor = function() {
         logger.debug( this.id + ".constructor dojo");
     };
