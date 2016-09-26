@@ -43,6 +43,10 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private width: number;
     private height: number;
     // private location: string;
+    // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
+    private contextObj: mendix.lib.MxObject;
+    private handles: number[];
+    private imageCarouselComponent: ImageCarousel;
     /**
      * The TypeScript Contructor, not the dojo consctuctor,
      * move contructor work into widget prototype at bottom of the page. 
@@ -56,8 +60,10 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
      * Create properities for react component based on modeler configurations
      */
     public createProps(): ImageCarouselProps {
+        let contextId = this.contextObj ? this.contextObj.getGuid() : "";
         return {
             captionAttr: this.captionAttr,
+            contextId: contextId,
             controls: this.controls,
             dataSourceMicroflow: this.dataSourceMicroflow,
             descriptionAttr: this.descriptionAttr,
@@ -80,11 +86,18 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
      */
     public postCreate() {
         logger.debug(this.id + ".postCreate");
-        ReactDOM.render(
-            <ImageCarousel
-                widgetId={this.id} {...this.createProps()}
-            />, this.domNode
-        );
+        this.updateRendering();
+    }
+    /**
+     * mxui.widget._WidgetBase.update is called when context is changed or initialized. 
+     *
+     */
+    public update(obj: mendix.lib.MxObject, callback?: Function) {
+        logger.debug(this.id + ".update");
+        this.contextObj = obj;
+
+        this.updateRendering(callback);
+        this._resetSubscriptions();
     }
     /**
      * mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed.
@@ -96,6 +109,42 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
         // There is no need to remove listeners added with this.connect 
         // this.subscribe / this.own.  
         ReactDOM.unmountComponentAtNode(this.domNode);
+    }
+    private updateRendering(callback?: Function) {
+        ReactDOM.render(
+            <ImageCarousel
+                widgetId={this.id} {...this.createProps()}
+            />, this.domNode
+        );
+        if (callback) {
+            callback(); // TODO check if its possible to do the callback by React Dom Rendering
+        }
+    }
+    // Remove subscriptions
+    private _unsubscribe () {
+        if (this.handles) {
+            for (let handle of this.handles) {
+                mx.data.unsubscribe(handle);
+            }
+            this.handles = [];
+        }
+    }
+    // Reset subscriptions.
+    private _resetSubscriptions () {
+        logger.debug(this.id + "._resetSubscriptions");
+        // Release handles on previous object, if any.
+        this._unsubscribe();
+        // When a mendix object exists create subscribtions.
+        if (this.contextObj) {
+            let objectHandle = mx.data.subscribe({
+                callback: (guid) => {
+                    logger.debug(this.id + "._resetSubscriptions object subscription update MxId " + guid);
+                    this.updateRendering();
+                },
+                guid: this.contextObj.getGuid(),
+            });
+            this.handles = [objectHandle];
+        }
     }
 }
 

@@ -25,7 +25,9 @@ import ReactDOM = require("ImageCarouselReact/lib/react-dom");
 
 import IStaticImages from "./components/ImageCarousel";
 import ImageCarousel from "./components/ImageCarousel";
-
+/**
+ * Implementation of Dojo wrapper for react components
+ */
 export class ImageCarouselStaticWrapper extends _WidgetBase {
     // Parameters configured in the Modeler
     private imgcollection: Array<IStaticImages>;
@@ -39,15 +41,20 @@ export class ImageCarouselStaticWrapper extends _WidgetBase {
     private width: number;
     private height: number;
     private location: string;
-    // The TypeScript Contructor, not the dojo consctuctor,
-    // move contructor work into widget prototype at bottom of the page. 
+    /**
+     * The TypeScript Contructor, not the dojo consctuctor,
+     * move contructor work into widget prototype at bottom of the page. 
+     */ 
     constructor(args?: Object, elem?: HTMLElement) {
         // Do not add any default value here... it wil not run in dojo!     
         super() ;
         return new dojoImageCarouselReact(args, elem);
     }
-        public createProps() {
-            return { // TODO group properties on function like button.
+    /**
+     * Create properities for react component based on modeler configurations
+     */
+    public createProps() {
+            return {
                 controls: this.controls,
                 height: this.height,
                 imageClick: this.imageClick,
@@ -74,6 +81,7 @@ export class ImageCarouselStaticWrapper extends _WidgetBase {
 
 // Declare widget's prototype the Dojo way
 // Thanks to https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/dojo/README.md
+// tslint:disable : only-arrow-functions
 let dojoImageCarouselReact = dojoDeclare(
     "ImageCarouselReact.widget.ImageCarouselStatic", [_WidgetBase], (function(Source: any) {
     let result: any = {};

@@ -65,6 +65,7 @@ interface ItemProps extends ReactBootstrap.CarouselItemProps {
 // Custom props 
 export interface ImageCarouselProps extends ImageCarouselModelProps, React.Props<ImageCarousel> {
     // helper props for MX / dojo   
+    contextId?: string;
 }
 
 export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCarouselState> {
@@ -145,15 +146,17 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
                 },
             });
         }else if (executionProps.constraint !== "") {
-            const xpathString = "//" + this.props.imageEntity + executionProps.constraint;
-            mx.data.get({
-                callback: executionProps.successCallback,
-                error: (error) => {
-                    logger.error(this.props.widgetId + ": An error occurred while retrieveing items: " + error);
-                },
-                xpath : xpathString ,
-            });
-
+            const contraint = executionProps.constraint.replace("[%CurrentObject%]", this.props.contextId);
+            if (executionProps.constraint.indexOf("[%CurrentObject%]") !== -1 && this.props.contextId) {
+                const xpathString = "//" + this.props.imageEntity + contraint;
+                mx.data.get({
+                    callback: executionProps.successCallback,
+                    error: (error) => {
+                        logger.error(this.props.widgetId + ": An error occurred while retrieveing items: " + error);
+                    },
+                    xpath : xpathString ,
+                });
+            }
         }
     }
     /**
