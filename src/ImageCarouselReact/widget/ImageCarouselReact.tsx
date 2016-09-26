@@ -16,9 +16,10 @@
  */
 
 import * as dojoDeclare from "dojo/_base/declare";
-import * as _WidgetBase from  "mxui/widget/_WidgetBase";
 // tslint:disable-next-line : no-unused-variable
 import * as React from "ImageCarouselReact/lib/react";
+import * as _WidgetBase from  "mxui/widget/_WidgetBase";
+
 import ReactDOM = require("ImageCarouselReact/lib/react-dom");
 
 import { ImageCarousel, ImageCarouselProps } from "./components/ImageCarousel";
@@ -100,6 +101,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
 
 // Declare widget's prototype the Dojo way
 // Thanks to https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/dojo/README.md
+// tslint:disable : only-arrow-functions
 let dojoImageCarouselReact = dojoDeclare(
     "ImageCarouselReact.widget.ImageCarouselReact", [_WidgetBase], (function (Source: any) {
     let result: any = {};

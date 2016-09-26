@@ -17,9 +17,10 @@
 // TODO Add comments to functions just like ImageCarouselReact.tsx
 
 import * as dojoDeclare from "dojo/_base/declare";
+// tslint:disable-next-line : no-unused-variable
+import * as React from "ImageCarouselReact/lib/react";
 import * as _WidgetBase from  "mxui/widget/_WidgetBase";
 
-import * as React from "ImageCarouselReact/lib/react";
 import ReactDOM = require("ImageCarouselReact/lib/react-dom");
 
 import IStaticImages from "./components/ImageCarousel";
