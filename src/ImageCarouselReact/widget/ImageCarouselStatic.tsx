@@ -14,9 +14,6 @@
   ImageCarousel Widget displays an image carousel based on URLS stored in the domain model built with React-TypeScript . 
  */
 
-declare var mx: mx.mx;
-declare var logger: mendix.logger;
-
 import * as dojoDeclare from "dojo/_base/declare";
 import * as _WidgetBase from  "mxui/widget/_WidgetBase";
 

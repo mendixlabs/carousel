@@ -2,9 +2,6 @@ import * as React from "ImageCarouselReact/lib/react";
 
 import * as ReactBootstrap from "ImageCarouselReact/lib/react-bootstrap";
 
-declare var mx: mx.mx;
-declare var logger: mendix.logger;
-
 import autoBind from "../../lib/autoBind";
 import ImageCarouselReactWrapper from "./../ImageCarouselReact"; // Wrapper
 
@@ -19,15 +16,15 @@ export interface IStaticImages {
 interface IShowpageProps {
     pageName?: string;
     location?: string;
-    context?: mendix.lib.MxContext;
+    context?: string;
     callback?: Function;
 }
-interface IExecutionProps{
+interface IExecutionProps {
     actionMF?: string;
     constraint?: string;
     successCallback?: Function;
 }
-interface IOnclickProps{
+interface IOnclickProps {
     page?: string;
     clickMF?: string;
     location?: string;
@@ -189,6 +186,11 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         } else if (data.length > 0) {
             return data.map((itemObj) => {
                 const props = this.props;
+                onClickProps = {
+                    clickMF: this.props.imageClick,
+                    location: this.props.location,
+                    page: this.props.openPage,
+                };
                 const caption = itemObj.get(props.captionAttr) as string;
                 itemProps = {
                     alt: caption,
@@ -196,7 +198,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
                     description: itemObj.get(props.descriptionAttr) as string,
                     imgStyle: this.carouselStyle,
                     key: itemObj.getGuid(),
-                    onClick: this.onItemClick,
+                    onClick: this.onItemClick.bind(this, onClickProps),
                     src: this.getFileUrl(itemObj.getGuid()),
                 };
                 return (this.getCarouselItem(itemProps));
@@ -239,9 +241,10 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         }
     }
 
-    private showPage(showPageProps: IShowpageProps){
+    private showPage(showPageProps: IShowpageProps) {
         mx.ui.openForm(showPageProps.pageName, {
             callback: showPageProps.callback,
+           // context:
             location: showPageProps.location,
         });
     }
