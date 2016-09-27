@@ -1,7 +1,12 @@
 import * as React from "ImageCarouselReact/lib/react";
 
 import * as ReactBootstrap from "ImageCarouselReact/lib/react-bootstrap";
+
 import {Idata} from "./../ImageCarouselReact";
+
+import Carousel from "./Carousel";
+import CarouselCaption from "./CarouselCaption";
+import CarouselItem from "./CarouselItem";
 
 export interface IStaticImages {
     imgCaption?: string;
@@ -133,9 +138,9 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         if (this.props.data.length > 0) {
             return (
                 <div style={this.carouselStyle} className="{this.props.widgetId}">
-                    <ReactBootstrap.Carousel {...carouselProps} >
+                    <Carousel {...carouselProps} >
                         {itemProps.map((prop) => this.getCarouselItem(prop))}
-                    </ReactBootstrap.Carousel>
+                    </Carousel>
                 </div>
             );
         } else if (this.state.loading) {
@@ -154,16 +159,16 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
     private getCarouselItem (itemProps: ItemProps) {
         logger.debug(this.props.widgetId + ".getCarouselItem");
         return (
-            <ReactBootstrap.Carousel.Item
+            <CarouselItem
                 onClick={itemProps.onClick}
                 key={itemProps.key}
             >
                 <img style={itemProps.imgStyle} alt={itemProps.alt} src={itemProps.src}/>
-                <ReactBootstrap.Carousel.Caption>
+                <CarouselCaption>
                     <h3>{itemProps.caption}</h3>
                     <p>{itemProps.description}</p>
-                </ReactBootstrap.Carousel.Caption>
-            </ReactBootstrap.Carousel.Item>
+                </CarouselCaption>
+            </CarouselItem>
         );
     }
     /**
@@ -205,7 +210,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
             error: (error) => {
                 logger.error(this.props.widgetId + ": An error occurred while executing microflow: " + error);
             },
-            params: params,
+            params,
         });
     }
     /**
@@ -219,7 +224,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
             context.setTrackEntity(this.props.imageEntity); // TODO should handle context entity?
         }
         mx.ui.openForm(showPageProps.pageName, {
-            context: context,
+            context,
             location: showPageProps.location,
         });
     }

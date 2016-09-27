@@ -10,7 +10,6 @@
  * An additional grant of patent rights can be found here:
  * https://github.com/facebook/react/blob/v0.12.0/PATENTS
  */
-
 const canUseDOM = !!(
   typeof window !== "undefined" &&
     window.document &&
@@ -22,22 +21,21 @@ const canUseDOM = !!(
  * transition/animation ends, based on the style property used to
  * define that event.
  */
-const EVENT_NAME_MAP = {
-  transitionend: {
-    "transition": "transitionend",
-    "WebkitTransition": "webkitTransitionEnd",
-    "MozTransition": "mozTransitionEnd",
-    "OTransition": "oTransitionEnd",
-    "msTransition": "MSTransitionEnd",
-  },
-
+const EVENT_NAME_MAP: any = {
   animationend: {
-    "animation": "animationend",
-    "WebkitAnimation": "webkitAnimationEnd",
-    "MozAnimation": "mozAnimationEnd",
-    "OAnimation": "oAnimationEnd",
-    "msAnimation": "MSAnimationEnd",
-  }
+    MozAnimation: "mozAnimationEnd",
+    OAnimation: "oAnimationEnd",
+    WebkitAnimation: "webkitAnimationEnd",
+    animation: "animationend",
+    msAnimation: "MSAnimationEnd",
+  },
+  transitionend: {
+    MozTransition: "mozTransitionEnd",
+    OTransition: "oTransitionEnd",
+    WebkitTransition: "webkitTransitionEnd",
+    msTransition: "MSTransitionEnd",
+    transition: "transitionend",
+  },
 };
 
 let endEvents: Array<string> = [];
@@ -79,16 +77,16 @@ if (canUseDOM) {
 // clean up. Also, these events are not triggered in older browsers
 // so we should be A-OK here.
 
-function addEventListener(node, eventName, eventListener) {
+function addEventListener(node: EventTarget, eventName: string, eventListener: EventListener) {
   node.addEventListener(eventName, eventListener, false);
 }
 
-function removeEventListener(node, eventName, eventListener) {
+function removeEventListener(node: EventTarget, eventName: string, eventListener: EventListener) {
   node.removeEventListener(eventName, eventListener, false);
 }
 
 const ReactTransitionEvents = {
-  addEndEventListener(node, eventListener) {
+  addEndEventListener(node: EventTarget, eventListener: EventListener) {
     if (endEvents.length === 0) {
       // If CSS transitions are not supported, trigger an "end animation"
       // event immediately.
@@ -100,14 +98,14 @@ const ReactTransitionEvents = {
     });
   },
 
-  removeEndEventListener(node, eventListener) {
+  removeEndEventListener(node: EventTarget, eventListener: EventListener) {
     if (endEvents.length === 0) {
       return;
     }
     endEvents.forEach(endEvent => {
       removeEventListener(node, endEvent, eventListener);
     });
-  }
+  },
 };
 
 export default ReactTransitionEvents;

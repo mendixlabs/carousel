@@ -158,7 +158,7 @@ function some(children: React.ReactChildren, func: Function, context: React.Comp
 }
 
 function toArray(children: React.ReactChildren) {
-  const result: Array<React.ReactElement<{}>> = [];
+  const result: Array<React.ReactElement<any> | string | number> = [];
 
   React.Children.forEach(children, child => {
     if (!React.isValidElement(child)) {
