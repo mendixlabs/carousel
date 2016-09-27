@@ -1,12 +1,7 @@
 import * as React from "ImageCarouselReact/lib/react";
 
 import * as ReactBootstrap from "ImageCarouselReact/lib/react-bootstrap";
-
-declare var mx: mx.mx;
-declare var logger: mendix.logger;
-
-import autoBind from "../../lib/autoBind";
-import ImageCarouselReactWrapper from "./../ImageCarouselReact"; // Wrapper
+import {Idata} from "./../ImageCarouselReact";
 
 export interface IStaticImages {
     imgCaption?: string;
@@ -18,26 +13,32 @@ export interface IStaticImages {
 }
 interface IShowpageProps {
     pageName?: string;
+    onClickEvent?: string;
     location?: string;
-    context?: mendix.lib.MxContext;
-    callback?: Function;
+    context?: string;
+    guid?: string;
 }
-interface IExecutionProps{
+interface IExecutionProps {
     actionMF?: string;
     constraint?: string;
     successCallback?: Function;
 }
-interface IOnclickProps{
+// TODO rework props interfaces.
+interface IOnclickProps {
+    guid?: string;
     page?: string;
     clickMF?: string;
     location?: string;
+    onClickEvent?: string;
 }
 
 interface ImageCarouselModelProps  {
     imgcollection?: Array<IStaticImages>;
     widgetId?: string;
     imageEntity?: string;
+    imageSource?: string;
     entityConstraint?: string;
+    data?: Idata[];
     dataSourceMicroflow?: string;
     captionAttr?: string;
     descriptionAttr?: string;
@@ -48,15 +49,17 @@ interface ImageCarouselModelProps  {
     location?: string;
     pauseOnHover?: boolean;
     slide?: boolean;
-    imageClick?: string;
+    imageClickMicroflow?: string;
+    imageClickObjectMicroflow?: string;
     width?: number;
     height?: number;
 
 }
 
 interface ImageCarouselState {
-    data: Array<mendix.lib.MxObject>;
-    dataStatic: Array<IStaticImages>;
+    hasData?: boolean;
+    loading?: boolean;
+    itemsProps?: ItemProps[];
 }
 
 interface ItemProps extends ReactBootstrap.CarouselItemProps {
@@ -71,38 +74,51 @@ interface ItemProps extends ReactBootstrap.CarouselItemProps {
 // Custom props 
 export interface ImageCarouselProps extends ImageCarouselModelProps, React.Props<ImageCarousel> {
     // helper props for MX / dojo   
-    wrapper?: ImageCarouselReactWrapper;
+    contextId?: string;
+    requiresContext?: boolean;
 }
 
 export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCarouselState> {
     public static defaultProps: ImageCarouselProps = {
         controls: true,
-        height: 350,
+        height: 350, // Default Height of both the Carousel and image in pixels
         indicators: true,
         interval: 5000, // in milliseconds
         pauseOnHover: true,
         slide: true, // seems faulty. Consider removing it
-        width: 500,
+        width: 500, // Default width of both the Carousel and image in pixels
     };
     private carouselStyle = {
+        height: this.props.height,
+        width: this.props.width,
+    };
+    private carouselItemStyle = {
         height: this.props.height,
         width: this.props.width,
     };
     private loaded: boolean;
     constructor(props: ImageCarouselProps) {
         super(props);
-        // bind context
-        autoBind(this);
+        // TODO Verify all binding manually to the functions
+        this.onItemClick = this.onItemClick.bind(this);
+        // this.setPropsFromObjects = this.setPropsFromObjects.bind(this);
         this.loaded = false;
         this.state = {
-            data : [],
-            dataStatic: [],
+            hasData: false,
+            itemsProps: [],
+            loading : true,
         };
     }
-
     public componentWillMount () {
         logger.debug(this.props.widgetId + " .componentWillMount");
-        this.getCarouselData();
+        this.checkConfig();
+    }
+    private checkConfig() {
+        // TODO implement config checks.
+    }
+    public componentWillUpdate () {
+        // logger.debug(this.props.widgetId + " .componentWillUpdate");
+        //  this.getCarouselData();
     }
     public render() {
         logger.debug(this.props.widgetId + ".render");
@@ -113,96 +129,28 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
               pauseOnHover: this.props.pauseOnHover,
               slide: this.props.slide,
         };
-        if (this.loaded || this.state.dataStatic.length > 0) {
+        const itemProps = this.getPropsFromData();
+        if (this.props.data.length > 0) {
             return (
-                <div style={this.carouselStyle}>
+                <div style={this.carouselStyle} className="{this.props.widgetId}">
                     <ReactBootstrap.Carousel {...carouselProps} >
-                        {this.mapCarouselData()}
+                        {itemProps.map((prop) => this.getCarouselItem(prop))}
                     </ReactBootstrap.Carousel>
                 </div>
             );
-        } else {
+        } else if (this.state.loading) {
             return (
-                <div style={this.carouselStyle}>
+                <div style={this.carouselStyle} className="{this.props.widgetId}">
                     Loading ...
                 </div>
             );
+        } else {
+            return <div className="{this.props.widgetId}"/>;
         }
      }
-    // call the microflow and returns data if any
-    private executeAction(executionProps: IExecutionProps): void {
-        logger.debug(this.props.widgetId + ".executeAction");
-        if (executionProps.actionMF !== "") {
-            mx.data.action({
-                callback: executionProps.successCallback,
-                error: (error) => {
-                    logger.error(this.props.widgetId + ": An error occurred while executing microflow: " + error);
-                },
-                params: {
-                    actionname: executionProps.actionMF,
-                },
-            });
-        }else if (executionProps.constraint !== "") {
-            const xpathString = "//" + this.props.imageEntity + executionProps.constraint;
-            mx.data.get({
-                callback: executionProps.successCallback,
-                error: (error) => {
-                    logger.error(this.props.widgetId + ": An error occurred while retrieveing items: " + error);
-                },
-                xpath : xpathString ,
-            });
-
-        }
-    }
-    private successCallback(obj: Array<mendix.lib.MxObject>) {
-        logger.debug(this.props.widgetId + ".successCallback");
-        if (typeof obj !== "undefined" ) {
-            this.loaded = true;
-            this.setState({ data: obj, dataStatic: [] });
-        }
-    }
-    private mapCarouselData() {
-        logger.debug(this.props.widgetId + ".mapCarouselData");
-        const staticData = this.state.dataStatic;
-        const data = this.state.data;
-        let itemProps: ItemProps;
-        let  onClickProps: IOnclickProps;
-        if (staticData.length > 0) {
-            return staticData.map((itemObj) => {
-                onClickProps = {
-                    clickMF: itemObj.imgClick,
-                    location: itemObj.location,
-                    page: itemObj.OpenPage,
-                };
-                const caption = itemObj.imgCaption;
-                itemProps = {
-                    alt: caption,
-                    caption,
-                    description: itemObj.imgdescription,
-                    imgStyle: this.carouselStyle,
-                    key: this.generateRandom(),
-                    onClick: this.onItemClick.bind(this, onClickProps),
-                    src: itemObj.picture,
-                };
-                return (this.getCarouselItem(itemProps));
-            });
-        } else if (data.length > 0) {
-            return data.map((itemObj) => {
-                const props = this.props;
-                const caption = itemObj.get(props.captionAttr) as string;
-                itemProps = {
-                    alt: caption,
-                    caption,
-                    description: itemObj.get(props.descriptionAttr) as string,
-                    imgStyle: this.carouselStyle,
-                    key: itemObj.getGuid(),
-                    onClick: this.onItemClick,
-                    src: this.getFileUrl(itemObj.getGuid()),
-                };
-                return (this.getCarouselItem(itemProps));
-            });
-        }
-    }
+    /**
+     * Creates a Carousel item based on the properties passed
+     */
     private getCarouselItem (itemProps: ItemProps) {
         logger.debug(this.props.widgetId + ".getCarouselItem");
         return (
@@ -218,57 +166,229 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
             </ReactBootstrap.Carousel.Item>
         );
     }
-    private getFileUrl (objectId: string) {
-        logger.debug(this.props.widgetId + ".getFileUrl");
-        let url: string;
-        if (objectId) {
-            url =  "file?target=window&guid=" + objectId + "&csrfToken=" + mx.session.getCSRFToken() + "&time=" + Date.now();
-        }
-        return url;
-    }
+    /**
+     * Handles the onlick for carousel items
+     */
     private onItemClick(onClickProps?: IOnclickProps) {
         logger.debug(this.props.widgetId + ".onItemClick");
-        if (onClickProps.clickMF) {
-            this.executeAction({actionMF: onClickProps.clickMF});
-        }else if (onClickProps.page) {
-            this.showPage({callback: this.callback, location: onClickProps.location, pageName: onClickProps.page});
-        }else if (this.props.imageClick) {
-            this.executeAction({actionMF: this.props.imageClick});
-        } else if (this.props.openPage) {
-            this.showPage({callback: this.callback, location: this.props.location, pageName: this.props.openPage});
+        if (onClickProps.onClickEvent === "microflow" && onClickProps.clickMF) {
+            this.clickMicroflow(onClickProps.clickMF, onClickProps.guid);
+        } else if (["content", "popup", "modal"].indexOf(onClickProps.onClickEvent) > -1 &&
+                    onClickProps.page) {
+            this.showPage({
+                guid: onClickProps.guid,
+                location: onClickProps.onClickEvent,
+                pageName: onClickProps.page,
+            });
+        } else {
+            logger.debug(this.props.widgetId + ".onItemClick ignored");
         }
     }
-
-    private showPage(showPageProps: IShowpageProps){
+    /**
+     * execute click event. 
+     * TODO add origin for close event on MF
+     */
+    private clickMicroflow(name: string, guid?: string) {
+        let params = {
+                actionname: name,
+                applyto: "none",
+                guids: [""],
+            };
+        if (guid) {
+            params.applyto = "selection";
+            params.guids = [guid];
+        }
+        mx.data.action({
+            callback: () => {
+                logger.debug(this.props.widgetId + ".clickMicroflow callback success");
+            },
+            error: (error) => {
+                logger.error(this.props.widgetId + ": An error occurred while executing microflow: " + error);
+            },
+            params: params,
+        });
+    }
+    /**
+     * Show a page, add context if any.
+     */
+    private showPage(showPageProps: IShowpageProps) {
+        let context: mendix.lib.MxContext = null;
+        if (showPageProps.guid) {
+            context = new mendix.lib.MxContext();
+            context.setTrackId(showPageProps.guid);
+            context.setTrackEntity(this.props.imageEntity); // TODO should handle context entity?
+        }
         mx.ui.openForm(showPageProps.pageName, {
-            callback: showPageProps.callback,
+            context: context,
             location: showPageProps.location,
         });
     }
 
-    private callback() {
-        logger.debug(this.props.widgetId + ": Page opened Successfully");
+    private getPropsFromData(): ItemProps[] {
+        logger.debug(this.props.widgetId + ".getCarouselItemsFromObject");
+        return this.props.data.map((item, index) => {
+            // TODO check if we need to pass the onClick event, and on the click event check what to execute.
+            return {
+                alt: item.caption,
+                caption: item.caption,
+                description: item.description,
+                imgStyle: this.carouselItemStyle,
+                key: item.guid ? item.guid : index,
+                onClick: this.onItemClick.bind(this, {
+                    clickMF: item.onClick.clickMicroflow,
+                    guid: item.onClick.guid,
+                    onClickEvent: item.onClick.onClickEvent,
+                    page: item.onClick.page,
+                }),
+                src: item.url,
+            };
+        });
     }
 
+    /*
+     * Formats and Returns the object url
+     
+    private getFileUrl (objectId: string) {
+        logger.debug(this.props.widgetId + ".getFileUrl");
+        let url: string;
+        if (objectId) {
+            url = "file?target=window&guid=" + objectId + "&csrfToken=" +
+                    mx.session.getCSRFToken() + "&time=" + Date.now();
+        }
+        return url;
+    } */
+
+    /*
+     * Get the data for the carousel, depending ot the sour tyep
+     
     private getCarouselData() {
         logger.debug(this.props.widgetId + ".getCarouselData");
-        let executionProps: IExecutionProps;
-        if (this.props.entityConstraint || this.props.dataSourceMicroflow ) {
-             executionProps = {
-                actionMF: this.props.dataSourceMicroflow,
-                constraint: this.props.entityConstraint,
-                successCallback: this.successCallback,
-             };
-             this.executeAction(executionProps);
-        } else if (this.props.imgcollection) {
-            if (this.props.imgcollection.length > 0) {
-            this.setState({ data: [], dataStatic: this.props.imgcollection });
+        if (this.props.imageSource === "xpath" ) {
+            this.getDataFromXpath();
+        } else if (this.props.imageSource === "microflow"  ) {
+             this.getDataFromMircroflow();
+        } else if (this.props.imageSource === "static"  ) {
+            this.getDataFromStatic();
+        } else {
+            logger.error(this.props.widgetId + ".getCarouselData unknow image source " + this.props.imageSource);
         }
-     }
     }
-       private generateRandom(): number {
-        return Math.floor(Math.random() * 10000);
+    /*
+     * retreive the carousel data based on data geth with xpath contraint if any.
+     * Could us [%CurrentObject%]
+    
+    private getDataFromXpath () {
+        logger.debug(this.props.widgetId + ".getDataFromXpath");
+        if (this.props.requiresContext && this.props.contextId === "") {
+            // case there is not context ID the xpath will fail, so it should always show no images.
+            logger.debug(this.props.widgetId + ".getDataFromXpath empty context");
+            this.setPropsFromObjects([]);
+        } else {
+            const contraint = this.props.entityConstraint.replace("[%CurrentObject%]", this.props.contextId);
+            const xpathString = "//" + this.props.imageEntity + contraint;
+            mx.data.get({
+                callback: this.setPropsFromObjects,
+                error: (error) => {
+                    logger.error(this.props.widgetId + ": An error occurred while retrieveing items: " + error);
+                },
+                xpath : xpathString,
+            });
+        }
     }
+    /*
+     * retreive the data based on the MF
+    
+    private getDataFromMircroflow() {
+        logger.debug(this.props.widgetId + ".getDataFromMircroflow");
+        if (this.props.requiresContext && this.props.contextId === "") {
+            // case there is not context ID the xpath will fail, so it should always show no images.
+            logger.debug(this.props.widgetId + ".getDataFromMircroflow, empy context");
+            this.setPropsFromObjects([]);
+        } else {
+            let params = {
+                actionname: this.props.dataSourceMicroflow,
+                applyto: "none",
+                guids: [""],
+            };
+            if (this.props.requiresContext) {
+                params.applyto = "selection";
+                params.guids = [this.props.contextId];
+            }
+            mx.data.action({
+                callback: this.setPropsFromObjects,
+                error: (error) => {
+                    logger.error(this.props.widgetId + ": An error occurred while executing microflow: " + error);
+                },
+                params: {
+                    actionname: this.props.dataSourceMicroflow,
+                },
+            });
+        }
+    }
+   
+    /*
+     * transforms mendix object into item properties ans set new state
+    
+    private setPropsFromObjects(objs: Array<mendix.lib.MxObject>): void {
+        logger.debug(this.props.widgetId + ".getCarouselItemsFromObject");
+        let  onClickProps: IOnclickProps;
+        let itemPropList: ItemProps[] = [];
+        itemPropList = objs.map((itemObj) => {
+            const props = this.props;
+            onClickProps = {
+                clickMF: this.props.imageClickMicroflow,
+                guid: itemObj.getGuid(),
+                location: this.props.location,
+                page: this.props.openPage,
+            };
+            const caption = itemObj.get(props.captionAttr) as string;
+            let itemProps: ItemProps = {
+                alt: caption,
+                caption,
+                description: itemObj.get(props.descriptionAttr) as string,
+                imgStyle: this.carouselItemStyle,
+                key: itemObj.getGuid(),
+                onClick: this.onItemClick.bind(this, onClickProps),
+                src: this.getFileUrl(itemObj.getGuid()),
+            };
+            return itemProps;
+        });
+        this.setState({
+            hasData: itemPropList.length > 0 ? true : false,
+            itemsProps: itemPropList,
+            loading: false,
+        });
+    }
+    /*
+     * iterate over modeler setting of the static images for props and set state
+     
+    private getDataFromStatic() {
+        logger.debug(this.props.widgetId + ".getPropsFromObjects");
+        let itemPropList: ItemProps[] = [];
+        itemPropList = this.props.imgcollection.map((itemObj, index) => {
+            let onClickProps = {
+                clickMF: itemObj.imgClick,
+                location: itemObj.location,
+                page: itemObj.OpenPage,
+            };
+            const caption = itemObj.imgCaption;
+            let itemProp: ItemProps = {
+                alt: caption,
+                caption,
+                description: itemObj.imgdescription,
+                imgStyle: this.carouselItemStyle,
+                key: index,
+                onClick: this.onItemClick.bind(this, onClickProps),
+                src: itemObj.picture,
+            };
+            return itemProp;
+        });
+        this.setState({
+            hasData: itemPropList.length > 0 ? true : false,
+            itemsProps: itemPropList,
+            loading: false,
+        });
+    } */
 };
 
 export default ImageCarousel;

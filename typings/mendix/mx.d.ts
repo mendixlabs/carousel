@@ -118,20 +118,51 @@ declare module mx {
 	}
 	
     interface ui {
+		/**
+		 * Executes a Microflow from the UI.
+		 * This is basically a wrapper around mx.data.action, giving the option of showing a progress bar while running the Microflow.
+		 */
 		action(name: string, params?: {progress: string, progressMsg:string}, scope?:any):void;
+		/**
+		 * Goes one step back in history, closing the current in content Form.
+		 */
 		back():void;
+		/**
+		 * Shows a confirmation dialog before calling a given function.
+		 */
 		confirmation(args: {content:string, proceed:string, cancel:string, handler:Function}):void;
+		/**
+		 * Shows an error message.
+		 */
 		error(msg:string, modal?: boolean): void;
+		/**
+		 * Shows a message for a fatal error in a modal dialog.
+		 */
 		exception(msg: string): void;
+		/**
+		 * Gets a template for a specific widget.
+		 */
 		getTemplate():HTMLElement;
+		/**
+		 * 
+		 */
 		showProgress():number;
+		/**
+		 * Hides the loading dialog.
+		 */
 		hideProgress(pid:number): void;
+		/**
+		 * Shows an information message.
+		 */
 		info(msg: string, modal: boolean): void;	
 		onError(error: Error):void;
 		showUnderlay(delay?:number):void;
 		hideUnderlay(delay?:number):void;
 		resize():void;
 		isRtl():string;
+		/**
+		 * Opens a form, either in content, in a DOM node or in a (modal) popup
+		 */
 		openForm(path:string, args?:{location?:string, domNode?:HTMLElement, title?:string, context?:mendix.lib.MxContext, callback?:Function, error?:Function}, scope?:any): void
 	}
 }

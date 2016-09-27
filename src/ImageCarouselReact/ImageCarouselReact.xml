@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget id="ImageCarouselReact.widget.ImageCarouselReact" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../xsd/widget.xsd">
-    <name> ImageCarouselReact </name>
+<widget id="ImageCarouselReact.widget.ImageCarouselReact" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../xsd/widget.xsd">
+    <name>Image Carousel React</name>
     <description>Displays an images carousel based on URLS stored in the domain model</description>
   
       <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2Fy
@@ -23,22 +23,79 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <category>Data source</category>
                 <description>The entity which should be displayed in the carousel</description>
             </property>
-
+            <property key="imageSource" type="enumeration" defaultValue="microflow">
+                <caption>Source</caption>
+                <category>Data source</category>
+                <description>Type of Source</description>                
+                <enumerationValues>
+                    <enumerationValue key="xpath">XPath</enumerationValue>
+                    <enumerationValue key="microflow">Microflow</enumerationValue>
+                    <enumerationValue key="static">Static</enumerationValue>
+                </enumerationValues> 
+            </property>
             <property key="entityConstraint" type="entityConstraint" entityProperty="imageEntity" required="false">
 			    <caption>Constraint</caption>
-			    <category>Data source</category>
+			    <category>Source - Xpath</category>
 			    <description>Constraint on the carousel entity.</description>
 	        </property>
-
             <property key="dataSourceMicroflow" type="microflow" required="false">
-                <caption> Data Source Microflow </caption>
-                <category>Data source</category>
+                <caption>Data Source Microflow </caption>
+                <category>Source - Microflow</category>
                 <description>Returns images to display on Carousel.</description>
                 <returnType type="Object" entityProperty="imageEntity" isList="true"/>
 	        </property>
+            <property key="staticImageCollection" type="object" isList="true" required="false">
+                <caption>Images To Display</caption>
+                <category>Source - Static</category>
+                <description>Picks images from the modeler and displays on carousel</description> 
+                <properties>
+                    <!-- Define the sub-properties here -->
+                    <property key="imgCaption" type="string" required="false">
+                        <caption>Image Caption</caption>
+                        <category>Data source</category>
+                        <description>Caption to display on the image</description>
+                    </property>
+                    <property key="imgDescription" type="string" required="false">
+                        <caption>Image Description</caption>
+                        <category>Data source</category>
+                        <description>Description to display on the image</description>
+                    </property>
+                    <property key="picture" type="image" required="true">
+                        <caption>Image/Picture</caption>
+                        <category>Data source</category>
+                        <description>Select an image to add.</description>
+                    </property>
 
+                    <property key="onClickEvent" type="enumeration" defaultValue="non">
+                        <caption>On Click</caption>
+                        <category>Behavior</category>
+                        <description>Location to open the form, either content, popup or Blocking Popup </description>
+                        <enumerationValues>
+                            <enumerationValue key="non">Do Nothing</enumerationValue>
+                            <enumerationValue key="microflow">Call Mircoflow</enumerationValue>
+                            <enumerationValue key="content">Open Page</enumerationValue>
+                            <enumerationValue key="popup">Popup</enumerationValue>
+                            <enumerationValue key="modal">Blocking Popup</enumerationValue>
+                        </enumerationValues> 
+                    </property>
+
+                     <property key="imageClickMicroflow" type="microflow" required="false">
+                        <caption>Call Microflow</caption>
+                        <category>Behavior</category>
+                        <description>Microflow to be triggered when an image is clicked.</description>
+                        <returnType type="Void"/>
+                    </property>
+
+                    <property key="openPage" type="form" required="false">
+                        <caption>Open Page</caption>
+                        <category>Behavior</category>
+                        <description>Opens a page when Image is Clicked</description> 
+                    </property>
+
+                </properties>
+            </property>
             <property key="captionAttr" type="attribute" entityProperty="imageEntity" required="false">
-                <caption> Caption </caption>
+                <caption>Caption</caption>
                 <category>Data source</category>
                 <description>This fields provides the caption of a carousel item</description> 
                 <attributeTypes>
@@ -47,7 +104,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             </property>
 
             <property key="descriptionAttr" type="attribute" entityProperty="imageEntity" required="false">
-                <caption> Description </caption>
+                <caption>Description</caption>
                 <category>Data source</category>
                 <description>This fields provides the Description of a carousel item</description> 
                 <attributeTypes>
@@ -57,56 +114,65 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             
             <property key="controls" type="boolean" defaultValue="true">
                 <caption>Use Image Navigation</caption>
-                <category>Behavior</category>
+                <category>Carousel</category>
                 <description>Use the image navigation.</description>
             </property>
 
             <property key="indicators" type="boolean" defaultValue="true">
                 <caption>Indicators</caption>
-                <category>Behavior</category>
+                <category>Carousel</category>
             <description>Indicators showing index of image on carousel</description>
             </property>
 
             <property key="interval" type="integer" defaultValue="5000">
                 <caption>Interval</caption>
-                <category>Behavior</category>
+                <category>Carousel</category>
                 <description>Duration of the transition effect (in ms)</description>
             </property>
 
             <property key="pauseOnHover" type="boolean" defaultValue="true">
                 <caption>Pause On Hover</caption>
-                <category>Behavior</category>
+                <category>Carousel</category>
             <description>Pause the Slide on mouse Hover</description>
             </property>
 
             <property key="slide" type="boolean" defaultValue="true">
                 <caption>Slide Images</caption>
-                <category>Behavior</category>
+                <category>Carousel</category>
             <description>This makes the images slide when transitioning</description>
             </property>
 
-            <property key="imageClick" type="microflow" required="false">
-                <caption>OnClick Image</caption>
+            <property key="onClickEvent" type="enumeration" defaultValue="non">
+                <caption>On Click</caption>
+                <category>Behavior</category>
+                <description>Location to open the form, either content, popup or Blocking Popup </description>
+                <enumerationValues>
+                    <enumerationValue key="non">Do Nothing</enumerationValue>
+                    <enumerationValue key="microflow">Call Mircoflow</enumerationValue>
+                    <enumerationValue key="content">Open Page</enumerationValue>
+                    <enumerationValue key="popup">Popup</enumerationValue>
+                    <enumerationValue key="modal">Blocking Popup</enumerationValue>
+                </enumerationValues> 
+            </property>
+
+            <!--  We could also use the context, however the image is more specific.
+            <property key="imageClickMicroflowContext" type="microflow" required="false">
+                <caption>OnClick Image Context</caption>
+                <category>Behavior</category>
+                <description>Microflow to be triggered when an image is clicked.</description>
+                <returnType type="Void"/>
+            </property> 
+            -->
+            <property key="imageClickMicroflow" type="microflow" required="false" entityProperty="imageEntity">
+                <caption>Call Microflow</caption>
                 <category>Behavior</category>
                 <description>Microflow to be triggered when an image is clicked.</description>
                 <returnType type="Void"/>
             </property>
-
             <property key="openPage" type="form" required="false">
-                <caption>Show a Page</caption>
+                <caption>Open Page</caption>
                 <category>Behavior</category>
                 <description>Opens a page when Image is Clicked</description> 
-            </property>
-
-            <property key="location" type="enumeration" defaultValue="content">
-                <caption> Location </caption>
-                <category>Behavior</category>
-                <description>location to open the form, either content, popup or modal </description>
-                <enumerationValues>
-                    <enumerationValue key="content">In content</enumerationValue>
-                    <enumerationValue key="popup">Popup</enumerationValue>
-                    <enumerationValue key="modal">Modal</enumerationValue>
-                </enumerationValues> 
             </property>
 
             <property key="width" type="integer" defaultValue="500">
