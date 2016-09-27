@@ -204,10 +204,12 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             logger.debug(this.id  + ".getDataFromMircroflow, empy context");
             this.setDataFromObjects(callback, []);
         } else {
-            let params = {
-                actionname: this.dataSourceMicroflow,
-                applyto: "none",
-                guids: [""],
+                    actionname: string,
+                    applyto?: string,
+                    guids?: string[],
+                } = {
+                    actionname: this.dataSourceMicroflow,
+                    applyto: "none",
             };
             if (this.requiresContext) {
                 params.applyto = "selection";

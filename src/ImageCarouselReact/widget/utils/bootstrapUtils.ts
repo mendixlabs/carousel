@@ -12,23 +12,23 @@ export interface IBootstrapProps extends IObject {
   bsRole?: string;
 }
 
-function isBsProp(propName: string) {
-  return (
-    propName === "bsClass" ||
-    propName === "bsSize" ||
-    propName === "bsStyle" ||
-    propName === "bsRole"
-  );
-}
+// function isBsProp(propName: string) {
+//   return (
+//     propName === "bsClass" ||
+//     propName === "bsSize" ||
+//     propName === "bsStyle" ||
+//     propName === "bsRole"
+//   );
+// }
 
-function getBsProps(props: IBootstrapProps) {
-  return {
-    bsClass: props.bsClass,
-    bsRole: props.bsRole,
-    bsSize: props.bsSize,
-    bsStyle: props.bsStyle,
-  };
-}
+// function getBsProps(props: IBootstrapProps) {
+//   return {
+//     bsClass: props.bsClass,
+//     bsRole: props.bsRole,
+//     bsSize: props.bsSize,
+//     bsStyle: props.bsStyle,
+//   };
+// }
 
 // function curry(fn: Function) {
 //   return (...args: Array<any>) => {
@@ -40,6 +40,15 @@ function getBsProps(props: IBootstrapProps) {
 //   };
 // }
 
+/**
+ * Returns a prefixed version of its parameters
+ * i.e props.bsClass + "-" + variant
+ * 
+ * @export
+ * @param {IBootstrapProps} props
+ * @param {string} [variant]
+ * @returns
+ */
 export function prefix(props: IBootstrapProps, variant?: string) {
   if (props.bsClass === null) {
     throw new Error("A `bsClass` prop is required for this component");
@@ -64,16 +73,16 @@ export function getClassSet(props: IBootstrapProps) {
   return classes;
 }
 
-export function splitBsPropsAndOmit(props: IBootstrapProps, omittedPropNames: Array<string>) {
-  const isOmittedProp: IObject = {};
-  omittedPropNames.forEach((propName: string) => { isOmittedProp[propName] = true; });
+// export function splitBsPropsAndOmit(props: IBootstrapProps, omittedPropNames: Array<string>) {
+//   const isOmittedProp: IObject = {};
+//   omittedPropNames.forEach((propName: string) => { isOmittedProp[propName] = true; });
 
-  const elementProps: IObject = {};
-  Object.entries(props).forEach(([propName, propValue]) => {
-    if (!isBsProp(propName) && !isOmittedProp[propName]) {
-      elementProps[propName] = propValue;
-    }
-  });
+//   const elementProps: IObject = {};
+//   Object.entries(props).forEach(([propName, propValue]) => {
+//     if (!isBsProp(propName) && !isOmittedProp[propName]) {
+//       elementProps[propName] = propValue;
+//     }
+//   });
 
-  return [getBsProps(props), elementProps];
-}
+//   return [getBsProps(props), elementProps];
+// }

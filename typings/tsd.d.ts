@@ -22,3 +22,4 @@ declare module "ImageCarouselReact/lib/react-bootstrap" {
 declare var mx: mx.mx;
 declare var logger: mendix.logger;
 
+
