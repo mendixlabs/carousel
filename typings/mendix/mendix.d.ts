@@ -26,6 +26,8 @@ declare module mendix {
 			hasTrackEntity(): boolean;
 			hasTrackId(): boolean;
 			hasTrackObject(): boolean;
+			setTrackId(guid:string):void;
+			setTrackEntity(entity:string):void;
 		}
 
 		class MxMetaObject {
