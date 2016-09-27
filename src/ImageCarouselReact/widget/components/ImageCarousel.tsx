@@ -2,7 +2,7 @@ import * as React from "ImageCarouselReact/lib/react";
 
 import * as ReactBootstrap from "ImageCarouselReact/lib/react-bootstrap";
 
-import {Idata} from "./../ImageCarouselReact";
+import { Idata } from "./../ImageCarouselReact";
 
 import Carousel from "./Carousel";
 import CarouselCaption from "./CarouselCaption";
@@ -37,7 +37,7 @@ interface IOnclickProps {
     onClickEvent?: string;
 }
 
-interface ImageCarouselModelProps  {
+interface ImageCarouselModelProps {
     imgcollection?: Array<IStaticImages>;
     widgetId?: string;
     imageEntity?: string;
@@ -111,28 +111,28 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         this.state = {
             hasData: false,
             itemsProps: [],
-            loading : true,
+            loading: true,
         };
     }
-    public componentWillMount () {
+    public componentWillMount() {
         logger.debug(this.props.widgetId + " .componentWillMount");
         this.checkConfig();
     }
     private checkConfig() {
         // TODO implement config checks.
     }
-    public componentWillUpdate () {
+    public componentWillUpdate() {
         // logger.debug(this.props.widgetId + " .componentWillUpdate");
         //  this.getCarouselData();
     }
     public render() {
         logger.debug(this.props.widgetId + ".render");
         const carouselProps = {
-              controls : this.props.controls,
-              indicators: this.props.indicators,
-              interval: this.props.interval,
-              pauseOnHover: this.props.pauseOnHover,
-              slide: this.props.slide,
+            controls: this.props.controls,
+            indicators: this.props.indicators,
+            interval: this.props.interval,
+            pauseOnHover: this.props.pauseOnHover,
+            slide: this.props.slide,
         };
         const itemProps = this.getPropsFromData();
         if (this.props.data.length > 0) {
@@ -150,20 +150,20 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
                 </div>
             );
         } else {
-            return <div className="{this.props.widgetId}"/>;
+            return <div className="{this.props.widgetId}" />;
         }
-     }
+    }
     /**
      * Creates a Carousel item based on the properties passed
      */
-    private getCarouselItem (itemProps: ItemProps) {
+    private getCarouselItem(itemProps: ItemProps) {
         logger.debug(this.props.widgetId + ".getCarouselItem");
         return (
             <CarouselItem
                 onClick={itemProps.onClick}
                 key={itemProps.key}
-            >
-                <img style={itemProps.imgStyle} alt={itemProps.alt} src={itemProps.src}/>
+                >
+                <img style={itemProps.imgStyle} alt={itemProps.alt} src={itemProps.src} />
                 <CarouselCaption>
                     <h3>{itemProps.caption}</h3>
                     <p>{itemProps.description}</p>
@@ -179,7 +179,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
         if (onClickProps.onClickEvent === "microflow" && onClickProps.clickMF) {
             this.clickMicroflow(onClickProps.clickMF, onClickProps.guid);
         } else if (["content", "popup", "modal"].indexOf(onClickProps.onClickEvent) > -1 &&
-                    onClickProps.page) {
+            onClickProps.page) {
             this.showPage({
                 guid: onClickProps.guid,
                 location: onClickProps.onClickEvent,
@@ -194,15 +194,14 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
      * TODO add origin for close event on MF
      */
     private clickMicroflow(name: string, guid?: string) {
-       let params: {
+        let params: {
             actionname: string,
             applyto?: string,
             guids?: string[],
-            } = {
-            actionname: name,
-            applyto: "none",
-            guids: [""],
-        };
+        } = {
+                actionname: name,
+                applyto: "none",
+            };
         if (guid) {
             params.applyto = "selection";
             params.guids = [guid];
