@@ -18,3 +18,7 @@ declare module "ImageCarouselReact/lib/react-bootstrap" {
 	export = ReactBootstrap;
 }
 
+// declare module "ImageCarouselReact/lib/classnames" {
+// 	export =  __React.__DOM;
+// }
+
