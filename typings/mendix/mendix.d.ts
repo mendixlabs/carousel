@@ -5,17 +5,36 @@ declare module mendix {
 			constructor(message: string, original: any);
 		}
 		class MxObject extends MxMetaObject {
+			/**
+			 * If attr is a reference attribute, sets it to the given object. If attr is a reference set attribute, adds the given object to it.
+			 * @param attr The reference attribute. Can refer to either a reference or reference set attribute.
+			 * @param guid GUID of the object to add to the reference
+			 */
 			addReference(attr: string, guid: string | number): boolean;
+			/**
+			 * Add an object to a reference set attribute.
+			 * @param attr the reference set attribute
+			 * @param guids GUIDs of the objects to add to the reference
+			 */
 			addReferences(attr: string, guids: string[] | number[]): boolean;
+			/**
+			 * Compare this MxObject to another MxObject and find out if they are the same.
+			 * This means they have the same Entity type and their attributes have the same value.
+			 */
 			compare(mxobj: mendix.lib.MxObject): boolean;
+			/**
+			 * Gets an object or value of an attribute, through a path from this object.
+			 * The result is passed to a callback and depends on the requested path:
+			 */
 			fetch(path: string, callback: Function): void;
+			/**
+			 * Returns the value of an attribute.
+			 * For reference attributes, use mendix/lib/MxObject#getReference and mendix/lib/MxObject#getReferences instead.
+			 */
 			get(attr: string): string | number | boolean; //add external big	
 			removeReferences(attr:string, guids: string[]): boolean;
 			set(attr: string, val: any): boolean;
 			FetchCallback(requested: any): void;
-			// setTrackEntity(entity: string): void;
-			// setTrackId(guid: string): void;
-			// setTrackObject(obj: mendix.lib.MxObject): void;
 		}
 
 		class MxContext {
@@ -28,6 +47,7 @@ declare module mendix {
 			hasTrackObject(): boolean;
 			setTrackId(guid:string):void;
 			setTrackEntity(entity:string):void;
+			setTrackObject(obj: mendix.lib.MxObject): void;
 		}
 
 		class MxMetaObject {
