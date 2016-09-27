@@ -200,7 +200,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         const props = this.props; // const should hold all properties without the ones above included
         const activeIndex = this.getActiveIndex();
 
-        const classes = Object.assign({}, getClassSet(props.bsProps), props.slide);
+        const classes = Object.assign({}, getClassSet(props.bsProps), {slide: props.slide});
 
         return (
             <div
@@ -238,17 +238,18 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         return ValidComponentChildren.map((children as React.ReactChildren),
             (child: (React.ReactChild), index: number) => {
                 const active = index === activeIndex;
-                const previousActive = slide && index === previousActiveIndex;
+                const previousActive = index === previousActiveIndex;
 
                 return (
                     React.cloneElement(child as React.ReactElement<any>, {
                         active,
                         animateIn: active && previousActiveIndex != null && slide,
-                        animateOut: previousActive,
+                        animateOut: slide && previousActive,
                         index,
                         direction,
                         onAnimateOutEnd: previousActive ?
                             this.handleItemAnimateOutEnd : null,
+                        slide,
                     })
                 );
             }
@@ -364,14 +365,8 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     private slide(index: number, e: ICarouselEvent, direction?: Direction) { // TODO: temporary any
         logger.debug(this.loggerNode + " .slide");
 
-        // TODO: Is this necessary? Seems like the only risk is if the component
-        // unmounts while handleItemAnimateOutEnd fires.
-        if (this.isUnmounted) {
-            return;
-        }
-
         const previousActiveIndex = this.getActiveIndex();
-        // direction = direction || this.getDirection(previousActiveIndex, index);
+        direction = direction || this.getDirection(previousActiveIndex, index);
 
         const { onSlide } = this.props;
 
@@ -386,7 +381,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         }
 
         if (this.props.activeIndex == null && index !== previousActiveIndex) {
-            if (this.state.previousActiveIndex === null) {
+            if (this.state.previousActiveIndex === null || !this.props.slide) {
                 // If currently animating don't activate the new index.
                 // TODO: look into queueing this canceled call and
                 // animating after the current animation has ended.
@@ -401,9 +396,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
 
     private waitForNext() {
         logger.debug(this.loggerNode + " .waitForNext");
-        const { slide, interval, activeIndex: activeIndexProp } = this.props;
+        const { interval, activeIndex: activeIndexProp } = this.props;
 
-        if (!this.isPaused && slide && interval && activeIndexProp == null) {
+        if (!this.isPaused && interval && activeIndexProp == null) {
             this.timeout = setTimeout(this.handleNext, interval);
         }
     }

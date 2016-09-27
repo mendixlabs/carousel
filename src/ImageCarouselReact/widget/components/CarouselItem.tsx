@@ -22,6 +22,7 @@ interface ICarouselItemProps extends React.Props<CarouselItem> {
   index?: number;
   className?: string;
   onClick?: React.EventHandler<React.MouseEvent>;
+  slide?: boolean;
 };
 
 interface ICarouselItemState {
@@ -35,6 +36,7 @@ class CarouselItem extends React.Component<ICarouselItemProps, ICarouselItemStat
     active: false,
     animateIn: false,
     animateOut: false,
+    slide: true,
   };
   private isUnmounted: boolean;
   private loggerNode: string;
@@ -65,9 +67,11 @@ class CarouselItem extends React.Component<ICarouselItemProps, ICarouselItemStat
     const prevActive = prevProps.active;
 
     if (!active && prevActive) {
-      TransitionEvents.addEndEventListener(
-        ReactDOM.findDOMNode(this), this.handleAnimateOutEnd
-      );
+      if (this.props.slide) {
+        TransitionEvents.addEndEventListener(
+          ReactDOM.findDOMNode(this), this.handleAnimateOutEnd
+        );
+      }
     }
 
     if (active !== prevActive) {
@@ -126,6 +130,10 @@ class CarouselItem extends React.Component<ICarouselItemProps, ICarouselItemStat
 
     this.setState({
       direction: this.props.direction === "prev" ? "right" : "left",
+    }, () => {
+      if (!this.props.slide) {
+        this.handleAnimateOutEnd();
+      }
     });
   }
 }
