@@ -1,6 +1,7 @@
 import * as React from "ImageCarouselReact/lib/react";
 
 import * as ReactBootstrap from "ImageCarouselReact/lib/react-bootstrap";
+
 import {Idata} from "./../ImageCarouselReact";
 
 export interface IStaticImages {

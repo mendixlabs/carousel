@@ -18,7 +18,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
 3Qd/BBgAioQXVN0jZskAAAAASUVORK5CYII=</icon>
 
      <properties>
-            <property key="imageEntity" type="entity">
+            <property key="imageEntity" type="entity" required="false">
                 <caption>Entity</caption>
                 <category>Data source</category>
                 <description>The entity which should be displayed in the carousel</description>

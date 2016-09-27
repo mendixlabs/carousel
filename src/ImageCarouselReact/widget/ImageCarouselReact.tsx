@@ -88,7 +88,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
         let contextId = this.contextObj ? this.contextObj.getGuid() : "";
         return {
             captionAttr: this.captionAttr,
-            contextId: contextId,
+            contextId,
             controls: this.controls,
             data: this.data,
             dataSourceMicroflow: this.dataSourceMicroflow,
@@ -140,6 +140,9 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
         this._unsubscribe();
         ReactDOM.unmountComponentAtNode(this.domNode);
     }
+    /**
+     *  called to render the interface 
+     */
     private updateRendering(callback?: Function) {
         logger.debug(this.id + ".updateRendering");
         ReactDOM.render(
@@ -151,6 +154,9 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             callback(); // TODO check if its possible to do the callback by React Dom Rendering
         }
     }
+    /**
+     * Determines which data source was specific and calls the respective method to get the Data 
+     */
     private updateData(callback: Function) {
         logger.debug(this.id + ".getCarouselData");
         if (this.imageSource === "xpath" ) {
@@ -212,12 +218,12 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                 error: (error) => {
                     logger.error(this.id  + ": An error occurred while executing microflow: " + error);
                 },
-                params: params,
+                params,
             });
         }
     }
     /**
-     * transforms mendix object into item properties ans set new state
+     * transforms mendix object into item properties and set new state
      */
     private setDataFromObjects(callback: Function, objs: mendix.lib.MxObject[]): void {
         logger.debug(this.id + ".getCarouselItemsFromObject");
@@ -294,7 +300,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                 let objectHandle = mx.data.subscribe({
                     callback: (guid) => {
                         logger.debug(this.id + "._resetSubscriptions object subscription update MxId " + guid);
-                        this.updateData(function() {
+                        this.updateData(() => {
                             this.updateRendering();
                         });
                     },

@@ -18,7 +18,7 @@ declare module "ImageCarouselReact/lib/react-bootstrap" {
 	export = ReactBootstrap;
 }
 
-// declare module "ImageCarouselReact/lib/classnames" {
-// 	export =  __React.__DOM;
-// }
+// Declaration of mendix global variables
+declare var mx: mx.mx;
+declare var logger: mendix.logger;
 
