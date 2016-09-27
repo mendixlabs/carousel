@@ -59,16 +59,10 @@ export interface ICarouselProps extends React.Props<Carousel> {
     wrap?: boolean;
     /**
      * Callback fired when the active item changes.
-     *
-     * ```js
-     * (eventKey: any) => any | (eventKey: any, event: Object) => any
-     * ```
-     *
-     * If this callback takes two or more arguments, the second argument will
-     * be a persisted event object with `direction` set to the direction of the
-     * transition.
+     * 
+     * First argument will is a persisted event object
      */
-    onSelect?: Function;
+    onTransition?: Function;
     onSlideEnd?: Function;
     /**
      * Index of the current image being showed on the carousel
@@ -123,6 +117,10 @@ export interface ICarouselState {
     activeIndex?: number;
     previousActiveIndex?: number;
     direction?: Direction;
+}
+
+export interface ICarouselEvent extends React.MouseEvent {
+    direction: Direction;
 }
 
 class Carousel extends React.Component<ICarouselProps, ICarouselState> {
@@ -269,7 +267,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             index = ValidComponentChildren.count(this.props.children as React.ReactChildren) - 1;
         }
 
-        this.select(index, e, "prev");
+        this.select(index, e);
     }
 
     private handleNext(e: React.MouseEvent) {
@@ -284,7 +282,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             index = 0;
         }
 
-        this.select(index, e, "next");
+        this.select(index, e);
     }
 
     private handleItemAnimateOutEnd() {
@@ -324,54 +322,39 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
 
         return prevIndex > index ? "prev" as Direction : "next" as Direction;
     }
-
-    private select(index: number, e: any, direction?: Direction) { // TODO: temporay any
+    /**
+     * EventHandler: Called when carousel transitions.
+     * It calls the onTransition prop and passes in the event object
+     * 
+     * @private
+     * @param {number} index
+     * @param {*} e
+     * @param {Direction} [direction]
+     * @returns
+     * 
+     * @memberOf Carousel
+     */
+    private select(index: number, e: React.MouseEvent) { // TODO: temporary any
         logger.debug(this.loggerNode + " .select");
-        clearTimeout(this.timeout);
-
-        // TODO: Is this necessary? Seems like the only risk is if the component
-        // unmounts while handleItemAnimateOutEnd fires.
-        if (this.isUnmounted) {
-            return;
-        }
 
         const previousActiveIndex = this.getActiveIndex();
-        direction = direction || this.getDirection(previousActiveIndex, index);
 
-        const { onSelect } = this.props;
+        const { onTransition } = this.props;
 
-        if (onSelect) {
-            if (onSelect.length > 1) {
-                // React SyntheticEvents are pooled, so we need to remove this event
-                // from the pool to add a custom property. To avoid unnecessarily
-                // removing objects from the pool, only do this when the listener
-                // actually wants the event.
-                if (e) {
-                    e.persist();
-                    e.direction = direction;
-                } else {
-                    e = { direction };
-                }
-
-                onSelect(index, e);
-            } else {
-                onSelect(index);
-            }
+        if (onTransition) {
+            onTransition(e);
         }
 
         if (this.props.activeIndex == null && index !== previousActiveIndex) {
-            if (this.state.previousActiveIndex != null) {
+            if (this.state.previousActiveIndex === null) {
                 // If currently animating don't activate the new index.
                 // TODO: look into queueing this canceled call and
                 // animating after the current animation has ended.
-                return;
-            }
-
-            this.setState({
+                this.setState({
                 activeIndex: index,
                 previousActiveIndex,
-                direction,
             });
+            }
         }
     }
 
@@ -407,7 +390,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
                 <li
                     key={index}
                     className={index === activeIndex ? "active" : null}
-                    onClick={e => this.select(index, e)}
+                    onClick={(e: ICarouselEvent) => this.select(index, e)}
                     />,
 
                 // Force whitespace between indicator elements. Bootstrap requires
