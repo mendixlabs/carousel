@@ -194,11 +194,15 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, ImageCaro
      * TODO add origin for close event on MF
      */
     private clickMicroflow(name: string, guid?: string) {
-        let params = {
-                actionname: name,
-                applyto: "none",
-                guids: [""],
-            };
+       let params: {
+            actionname: string,
+            applyto?: string,
+            guids?: string[],
+            } = {
+            actionname: name,
+            applyto: "none",
+            guids: [""],
+        };
         if (guid) {
             params.applyto = "selection";
             params.guids = [guid];
