@@ -60,9 +60,12 @@ export interface ICarouselProps extends React.Props<Carousel> {
     /**
      * Callback fired when the active item changes.
      * 
-     * First argument will is a persisted event object
+     * If this callback takes two or more arguments, the second argument will
+     * be a persisted event object with `direction` set to the direction of the
+     * transition.
+     * First argument is the target index i.e Index of the item that triggered it
      */
-    onTransition?: Function;
+    onSlide?: Function;
     onSlideEnd?: Function;
     /**
      * Index of the current image being showed on the carousel
@@ -218,6 +221,14 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             </div>
         );
     }
+    /**
+     * Gets only the children that are actual components and clones them with the required props
+     * 
+     * @private
+     * @returns
+     * 
+     * @memberOf Carousel
+     */
     private getValidComponentChildren() {
         logger.debug(this.loggerNode + " .getValidComponentChildren");
         const { slide, children } = this.props;
@@ -229,26 +240,42 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
                 const active = index === activeIndex;
                 const previousActive = slide && index === previousActiveIndex;
 
-                return React.cloneElement(child as React.ReactElement<any>, {
-                    active,
-                    animateIn: active && previousActiveIndex != null && slide,
-                    animateOut: previousActive,
-                    index,
-                    direction,
-                    onAnimateOutEnd: previousActive ?
-                        this.handleItemAnimateOutEnd : null,
-                });
+                return (
+                    React.cloneElement(child as React.ReactElement<any>, {
+                        active,
+                        animateIn: active && previousActiveIndex != null && slide,
+                        animateOut: previousActive,
+                        index,
+                        direction,
+                        onAnimateOutEnd: previousActive ?
+                            this.handleItemAnimateOutEnd : null,
+                    })
+                );
             }
         );
     }
-
+    /**
+     * EventHandler: Used to handle pauseOnHover feature
+     * Pauses slide
+     * 
+     * @private
+     * 
+     * @memberOf Carousel
+     */
     private handleMouseOver() {
         logger.debug(this.loggerNode + " .handleMouseOver");
         if (this.props.pauseOnHover) {
             this.pause();
         }
     }
-
+    /**
+     * EventHandler: Used to handle pauseOnHover feature.
+     * Re-plays slide if paused
+     * 
+     * @private
+     * 
+     * @memberOf Carousel
+     */
     private handleMouseOut() {
         logger.debug(this.loggerNode + " .handleMouseOut");
         if (this.isPaused) {
@@ -256,7 +283,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         }
     }
 
-    private handlePrev(e: React.MouseEvent) {
+    private handlePrev(e: ICarouselEvent) {
         logger.debug(this.loggerNode + " .handlePrev");
         let index = this.getActiveIndex() - 1;
 
@@ -267,10 +294,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             index = ValidComponentChildren.count(this.props.children as React.ReactChildren) - 1;
         }
 
-        this.select(index, e);
+        this.slide(index, e, "prev");
     }
 
-    private handleNext(e: React.MouseEvent) {
+    private handleNext(e: ICarouselEvent) {
         logger.debug(this.loggerNode + " .handleNext");
         let index = this.getActiveIndex() + 1;
         const count = ValidComponentChildren.count(this.props.children as React.ReactChildren);
@@ -282,7 +309,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             index = 0;
         }
 
-        this.select(index, e);
+        this.slide(index, e, "next");
     }
 
     private handleItemAnimateOutEnd() {
@@ -324,7 +351,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     }
     /**
      * EventHandler: Called when carousel transitions.
-     * It calls the onTransition prop and passes in the event object
+     * It calls the onSlide prop and passes in the current index & event object with transition direction added
      * 
      * @private
      * @param {number} index
@@ -334,15 +361,28 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
      * 
      * @memberOf Carousel
      */
-    private select(index: number, e: React.MouseEvent) { // TODO: temporary any
-        logger.debug(this.loggerNode + " .select");
+    private slide(index: number, e: ICarouselEvent, direction?: Direction) { // TODO: temporary any
+        logger.debug(this.loggerNode + " .slide");
+
+        // TODO: Is this necessary? Seems like the only risk is if the component
+        // unmounts while handleItemAnimateOutEnd fires.
+        if (this.isUnmounted) {
+            return;
+        }
 
         const previousActiveIndex = this.getActiveIndex();
+        // direction = direction || this.getDirection(previousActiveIndex, index);
 
-        const { onTransition } = this.props;
+        const { onSlide } = this.props;
 
-        if (onTransition) {
-            onTransition(e);
+        if (onSlide) {
+            // React SyntheticEvents are pooled, so we need to remove this event
+            // from the pool to add a custom property. To avoid unnecessarily
+            // removing objects from the pool, only do this when the listener
+            // actually wants the event.
+            e.persist();
+            e.direction = direction;
+            onSlide(e);
         }
 
         if (this.props.activeIndex == null && index !== previousActiveIndex) {
@@ -351,9 +391,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
                 // TODO: look into queueing this canceled call and
                 // animating after the current animation has ended.
                 this.setState({
-                activeIndex: index,
-                previousActiveIndex,
-            });
+                    activeIndex: index,
+                    previousActiveIndex,
+                    direction,
+                });
             }
         }
     }
@@ -380,22 +421,31 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         this.isPaused = false;
         this.waitForNext();
     }
-
+    /**
+     * Returns those dots at the bottom that represent the different carousel images
+     * 
+     * @private
+     * @param {React.ReactChildren} children
+     * @param {number} activeIndex
+     * @param {IBootstrapProps} bsProps
+     * @returns
+     * 
+     * @memberOf Carousel
+     */
     private renderIndicators(children: React.ReactChildren, activeIndex: number, bsProps: IBootstrapProps) {
         logger.debug(this.loggerNode + " .renderIndicators");
         let indicators: Array<JSX.Element> = [];
-
+        const style = {
+            marginRight: "5px", // adds spacing between indicators
+        };
         ValidComponentChildren.forEach(children, (child: React.ReactChild, index: number) => {
             indicators.push(
                 <li
                     key={index}
                     className={index === activeIndex ? "active" : null}
-                    onClick={(e: ICarouselEvent) => this.select(index, e)}
-                    />,
-
-                // Force whitespace between indicator elements. Bootstrap requires
-                // this for correct spacing of elements.
-                " "
+                    style={style}
+                    onClick={(e: ICarouselEvent) => this.slide(index, e)}
+                />
             );
         });
 
