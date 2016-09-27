@@ -27,11 +27,8 @@
     "grunt-contrib-copy": "~0.8.0",
     "grunt-contrib-watch": "~0.6.1",
     "load-grunt-tasks": "^3.1.0",
-    "typescript": "^2.0.2"
+    "typescript": "^2.0.3"
   },
   "dependencies": {
-    "react": "^15.3.2",
-    "react-addons-pure-render-mixin": "^15.3.2",
-    "react-autobind": "^1.0.6"
   }
 }
