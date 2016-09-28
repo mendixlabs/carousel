@@ -1,20 +1,31 @@
-declare module ImageCarouselReact {
-    
-	export interface IProps{
-        imageEntity?: string,
-        entityConstraint?: string,  
-        dataSourceMicroflow?: string;
-        captionAttr?: string;
-        descriptionAttr?: string;
-        controls?: boolean;
-        indicators?: boolean;
-        interval?: number;
+interface ModelProps {
+    imageEntity?: string;
+    imageSource?: "xpath" | "microflow" | "static";
+    entityConstraint?: string;
+    dataSourceMicroflow?: string;
+    staticImageCollection?: Array<{
+        imgCaption?: string;
+        imgDescription?: string;
+        picture?: string;
+        onClickEvent?: "non" | "microflow" | "content" | "popup" | "modal";
+        imageClickMicroflow?: string;
         openPage?: string;
-        pauseOnHover?: boolean;
-        slide?: boolean;
-        imageClick?: string;
-        width?: number;
-        height?: number;
-    }
+    }>;
+    captionAttr?: string;
+    descriptionAttr?: string;
+    controls?: boolean;
+    indicators?: boolean;
+    interval?: number;
+    pauseOnHover?: boolean;
+    slide?: boolean;
+    onClickEvent?: "non" | "microflow" | "content" | "popup" | "modal";
+    imageClickMicroflow?: string;
+    openPage?: string;
+    width?: number;
+    widthUnits?: "auto" | "pixels" | "percent" | "viewPort";
+    height?: number;
+    heightUnits?: "auto" | "pixels" | "percent" | "viewPort";
 
 }
+
+export default ModelProps;

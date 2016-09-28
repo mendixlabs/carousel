@@ -121,8 +121,30 @@ declare module mx {
 		/**
 		 * Executes a Microflow from the UI.
 		 * This is basically a wrapper around mx.data.action, giving the option of showing a progress bar while running the Microflow.
-		 */
-		action(name: string, params?: {progress: string, progressMsg:string}, scope?:any):void;
+		 * @param actionname name of the Microflow to execute
+		 * @param action set paramerters for call action.
+		 * @param action.progress If set, a progress indicator is shown while running the Microflow. When set to modal the indicator is modal, otherwise it is not.
+		 * @param scope in which to execute the callback and error callbacks
+		 */		
+		action(actionname: string, action: {			
+			progress?: string,
+			progressMsg?: string			
+			params?: {
+				applyto?: string,
+				guids?: string[],
+				xpath?: string,
+				constraints?: string,
+				sort?: any,
+				gridid?: string,
+			},
+			context?: any,
+			store?: any,
+			async?: boolean,
+			callback?: Function,
+			error?: (e:Error) => void,
+			onValidation?: Function,
+		}, scope?: any): void;
+
 		/**
 		 * Goes one step back in history, closing the current in content Form.
 		 */
