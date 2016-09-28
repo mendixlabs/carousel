@@ -29,7 +29,7 @@ class Glyphicon extends React.Component<IGlyphiconProps, {}> {
     const { glyph } = this.props;
     const props = this.props;
 
-    const classes = Object.assign({}, getClassSet(props.bsProps), {[prefix(props.bsProps, glyph)]: true}, );
+    const classes = Object.assign({}, getClassSet(props.bsProps), {[prefix(props.bsProps, glyph)]: true} );
 
     return (
       <span

@@ -61,20 +61,26 @@ class CarouselItem extends React.Component<ICarouselItemProps, ICarouselItemStat
     }
   }
 
+  public shouldComponentUpdate(nextProps: ICarouselItemProps) {
+    return this.props.slide || nextProps !== this.props;
+  }
+
   public componentDidUpdate(prevProps: ICarouselItemProps) {
     logger.debug(this.loggerNode + " .componentDidUpdate");
     const { active } = this.props;
     const prevActive = prevProps.active;
-
+    // Call or register slide end handler for previously active item
     if (!active && prevActive) {
       if (this.props.slide) {
         TransitionEvents.addEndEventListener(
           ReactDOM.findDOMNode(this), this.handleAnimateOutEnd
         );
+      } else {
+        this.handleAnimateOutEnd();
       }
     }
-
-    if (active !== prevActive) {
+    // animate transition
+    if (active !== prevActive && this.props.slide) {
       setTimeout(() => this.startAnimation(), 20);
     }
   }
@@ -110,7 +116,14 @@ class CarouselItem extends React.Component<ICarouselItemProps, ICarouselItemStat
         />
     );
   }
-
+  /**
+   * EventHandler: Called when animation/transition ends
+   * 
+   * @private
+   * @returns
+   * 
+   * @memberOf CarouselItem
+   */
   private handleAnimateOutEnd() {
     logger.debug(this.loggerNode + " .handleAnimateOutEnd");
     if (this.isUnmounted) {
@@ -121,7 +134,14 @@ class CarouselItem extends React.Component<ICarouselItemProps, ICarouselItemStat
       this.props.onAnimateOutEnd(this.props.index);
     }
   }
-
+  /**
+   * Triggers the slide animation in the specified direction 
+   * 
+   * @private
+   * @returns
+   * 
+   * @memberOf CarouselItem
+   */
   private startAnimation() {
     logger.debug(this.loggerNode + " .startAnimation");
     if (this.isUnmounted) {
@@ -130,10 +150,6 @@ class CarouselItem extends React.Component<ICarouselItemProps, ICarouselItemStat
 
     this.setState({
       direction: this.props.direction === "prev" ? "right" : "left",
-    }, () => {
-      if (!this.props.slide) {
-        this.handleAnimateOutEnd();
-      }
     });
   }
 }
