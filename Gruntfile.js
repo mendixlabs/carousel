@@ -12,6 +12,13 @@ module.exports = function (grunt) {
                     debounceDelay: 250,
                     livereload: true
                 }
+            },
+            xmlToTypedefinition: {
+                "files": ["./src/ImageCarouselReact/ImageCarouselReact.xml", "widget.xsl"],
+                "tasks": ["xsltproc"],
+                options: {
+                    debounceDelay: 250
+                }
             }
         },
         
@@ -69,14 +76,25 @@ module.exports = function (grunt) {
                     "./test/widgets/" + pkg.name + ".mpk"
                 ],
             out : "./out/**/*"                
-        }
+        },
+        xsltproc: {
+            options: {
+                stylesheet: 'widget.xsl'
+            },
+            compile: {
+                files: {
+                    "src/<%=pkgName%>/<%=name%>.d.ts" : ["src/" + pkg.name + "/" + pkg.name + ".xml"]
+                }
+            }
+        }        
     });
     
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.registerTask("default", ["watch"]);
+    grunt.loadNpmTasks("grunt-xsltproc");
+    grunt.registerTask("default", ["build", "watch:autoDeployUpdate"]);
     grunt.registerTask("distribute", ["clean:out", "copy:out", "compress:out", "copy:mpks" ]);
     grunt.registerTask(
             "clean build",
