@@ -47,7 +47,7 @@ export interface Idata {
 }
 
 export class ImageCarouselReactWrapper extends _WidgetBase {
-    // Require context will be overwritten wot "NoContext" version of the widget.
+    // Require context will be overwritten with "NoContext" version of the widget.
     private requiresContext: boolean;
     // Parameters configured in the Modeler
     private imageEntity: string;
@@ -67,11 +67,12 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private staticImageCollection: any[];
     private width: number;
     private height: number;
-    private onClickEvent: "non" | "microflowContext" | "microflowImage" | "content" | "popup" | "modal";
+    private onClickEvent: "non" | "microflow" | "content" | "popup" | "modal";
     // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
     private contextObj: mendix.lib.MxObject;
     private handles: number[];
     private data: Idata[];
+    private isLoading: boolean;
     /**
      * The TypeScript Contructor, not the dojo consctuctor,
      * move contructor work into widget prototype at bottom of the page. 
@@ -101,6 +102,8 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             imageSource: this.imageSource,
             indicators: this.indicators,
             interval: this.interval,
+            isLoading: this.isLoading,
+            onClickEvent: this.onClickEvent,
             openPage: this.openPage,
             // openPageModal: this.location, // TODO add to interface later
             pauseOnHover: this.pauseOnHover,
@@ -125,6 +128,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
         logger.debug(this.id + ".update");
         this.contextObj = obj;
         this.updateData(() => {
+            this.isLoading = false;
             this.updateRendering(callback);
         });
         this._resetSubscriptions();
@@ -159,14 +163,16 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
      */
     private updateData(callback: Function) {
         logger.debug(this.id + ".getCarouselData");
-        if (this.imageSource === "xpath" ) {
+        if (this.imageSource === "xpath" && this.imageEntity) {
             this.getDataFromXpath(callback);
-        } else if (this.imageSource === "microflow"  ) {
-             this.getDataFromMircroflow(callback);
+        } else if (this.imageSource === "microflow" && this.dataSourceMicroflow ) {
+            this.getDataFromMircroflow(callback);
         } else if (this.imageSource === "static"  ) {
             this.getDataFromStatic(callback);
         } else {
-            logger.error(this.id + ".getCarouselData unknow image source " + this.imageSource);
+            logger.error(this.id + ".getCarouselData unknow image source or error in widget configurations" +
+                         this.imageSource);
+            callback();
         }
     }
 
@@ -195,7 +201,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
         }
     }
     /**
-     * retreive the data based on the MF
+     * retreives the data based on the MircoFlow
      */
     private getDataFromMircroflow(callback: Function) {
         logger.debug(this.id  + ".getDataFromMircroflow");
@@ -304,6 +310,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                     callback: (guid) => {
                         logger.debug(this.id + "._resetSubscriptions object subscription update MxId " + guid);
                         this.updateData(() => {
+                            this.isLoading = false;
                             this.updateRendering();
                         });
                     },
@@ -330,6 +337,7 @@ let dojoImageCarouselReact = dojoDeclare(
             this.requiresContext = true;
         }
         this.data = [];
+        this.isLoading = true;
     };
     for (let i in Source.prototype) {
         if (i !== "constructor" && Source.prototype.hasOwnProperty(i)) {
