@@ -1,15 +1,11 @@
 
-declare var logger: mendix.logger;
-
 import classNames = require("ImageCarouselReact/lib/classnames");
 import * as React from "ImageCarouselReact/lib/react";
-
 import { IBootstrapProps, prefix } from "../utils/bootstrapUtils";
 import ValidComponentChildren from "../utils/ValidComponentChildren"; // Gets children that are React components
 import Glyphicon from "./Glyphicon";
 
 // TODO: `slide` should be `animate`.
-
 // TODO: Use uncontrollable.
 
 export interface ICarouselProps extends React.Props<Carousel> {
@@ -258,16 +254,13 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     /**
      * Renders the navigation controls (Arrow Left / Arrow Right)
      *
-     * @private
-     * @param {boolean} wrap
+     * @param wrap this is the cool wrapper?
      * @param {React.ReactChildren} children
      * @param {number} activeIndex
-     * @param {JSX.Element} prevIcon
+     * @param prevIcon
      * @param {JSX.Element} nextIcon
      * @param {IBootstrapProps} bsProps
-     * @returns
      *
-     * @memberOf Carousel
      */
     private renderControls(
         wrap: boolean, children: React.ReactChildren, activeIndex: number,

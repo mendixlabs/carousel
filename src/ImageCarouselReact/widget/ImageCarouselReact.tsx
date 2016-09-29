@@ -19,9 +19,7 @@ import * as dojoDeclare from "dojo/_base/declare";
 // tslint:disable-next-line : no-unused-variable
 import * as React from "ImageCarouselReact/lib/react";
 import * as _WidgetBase from  "mxui/widget/_WidgetBase";
-
 import ReactDOM = require("ImageCarouselReact/lib/react-dom");
-
 import { ImageCarousel, ImageCarouselProps } from "./components/ImageCarousel";
 /**
  * Implementation of Dojo wrapper for react components
@@ -155,11 +153,13 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
         ReactDOM.render(
             <ImageCarousel
                 widgetId={this.id} {...this.createProps() }
-            />, this.domNode
+            />, this.domNode, function(){
+                // The ReactDOM.render calls back the optional updateRendering callback.
+                if (callback) {
+                    callback();
+                }
+            }
         );
-        if (callback) {
-            callback(); // TODO check if its possible to do the callback by React Dom Rendering
-        }
     }
     /**
      * Determines which data source was specific and calls the respective method to get the Data 
@@ -185,12 +185,14 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
      */
     private getDataFromXpath (callback: Function) {
         logger.debug(this.id  + ".getDataFromXpath");
-        if (this.requiresContext && !this.contextObj) {
+        if ((this.requiresContext && !this.contextObj) ||
+                (!this.requiresContext && this.entityConstraint.indexOf("[%CurrentObject%]") > -1 )) {
             // case there is not context ID the xpath will fail, so it should always show no images.
+            // or in case no conext is required, but the contraint contains CurrentObject. 
+            // That will also show an error in the config check.
             logger.debug(this.id  + ".getDataFromXpath empty context");
             this.setDataFromObjects(callback, []);
         } else {
-            // TODO throw error when non context version has a contraint with CurrentObject
             const guid = this.contextObj ? this.contextObj.getGuid() : "";
             const contraint = this.entityConstraint.replace("[%CurrentObject%]", guid);
             const xpathString = "//" + this.imageEntity + contraint;
@@ -247,7 +249,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                 onClick: {
                     clickMicroflow: this.imageClickMicroflow,
                     guid: itemObj.getGuid(),
-                    onClickEvent: this.onClickEvent, // TODO Use location for click event
+                    onClickEvent: this.onClickEvent,
                     page: this.openPage,
                 },
                 url: this.getFileUrl(itemObj.getGuid()),

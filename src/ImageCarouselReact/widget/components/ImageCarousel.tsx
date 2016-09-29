@@ -1,21 +1,10 @@
 import * as React from "ImageCarouselReact/lib/react";
-
 import { Idata } from "./../ImageCarouselReact";
-
 import Carousel from "./Carousel";
 import CarouselCaption from "./CarouselCaption";
 import {CarouselItem, ICarouselItemProps } from "./CarouselItem";
-
 import ImageCarouselModelProps from "./../../ImageCarouselReact.d";
 
-export interface IStaticImages {
-    imgCaption?: string;
-    imgdescription?: string;
-    picture?: string;
-    imgClick?: string;
-    OpenPage?: string;
-    location?: string;
-}
 interface IShowpageProps {
     pageName?: string;
     onClickEvent?: string;
@@ -23,12 +12,7 @@ interface IShowpageProps {
     context?: string;
     guid?: string;
 }
-interface IExecutionProps {
-    actionMF?: string;
-    constraint?: string;
-    successCallback?: Function;
-}
-// TODO rework props interfaces.
+
 interface IOnclickProps {
     guid?: string;
     page?: string;
@@ -46,9 +30,11 @@ interface ItemProps extends ICarouselItemProps {
     description: string;
 }
 
-// Custom props 
+/**
+ * All properties of Image Carousel, 
+ * Including all props from the modeler, and props from react.
+ */
 export interface ImageCarouselProps extends ImageCarouselModelProps, React.Props<ImageCarousel> {
-    // helper props for MX / dojo   
     contextId?: string;
     data?: Idata[];
     isLoading?: boolean;
@@ -83,7 +69,6 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
     private loaded: boolean;
     constructor(props: ImageCarouselProps) {
         super(props);
-        // TODO Verify all binding manually to the functions
         this.onItemClick = this.onItemClick.bind(this);
         // this.setPropsFromObjects = this.setPropsFromObjects.bind(this);
         this.loaded = false;
@@ -121,6 +106,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
                         " Image 'Source' is set to XPath and there is no 'Entity' selected");
         }
         // TODO check for configurations on static images for OnClick and Open Page
+        // TODO show error when non context version has a contraint with CurrentObject
     }
     /**
      * React Component method that renders the interface once the component has mounted
@@ -211,23 +197,20 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         }
     }
     /**
-     * Executes the Onclick event, call microflow . 
-     * TODO add origin for close event on MF
+     * Executes the Onclick event, call microflow.
      */
     private clickMicroflow(name: string, guid?: string) {
         let params: {
-            actionname: string,
             applyto?: string,
             guids?: string[],
         } = {
-                actionname: name,
                 applyto: "none",
             };
         if (guid) {
             params.applyto = "selection";
             params.guids = [guid];
         }
-        mx.data.action({
+        mx.ui.action(name, {
             callback: () => {
                 logger.debug(this.props.widgetId + ".clickMicroflow callback success");
             },
@@ -245,7 +228,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         if (showPageProps.guid) {
             context = new mendix.lib.MxContext();
             context.setTrackId(showPageProps.guid);
-            context.setTrackEntity(this.props.imageEntity); // TODO should handle context entity?
+            context.setTrackEntity(this.props.imageEntity);
         }
         mx.ui.openForm(showPageProps.pageName, {
             context,
@@ -258,7 +241,6 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
     private getPropsFromData(): ItemProps[] {
         logger.debug(this.props.widgetId + ".getCarouselItemsFromObject");
         return this.props.data.map((item, index) => {
-            // TODO check if we need to pass the onClick event, and on the click event check what to execute.
             return {
                 alt: item.caption,
                 caption: item.caption,

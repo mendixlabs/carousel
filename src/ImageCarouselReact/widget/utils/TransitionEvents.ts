@@ -57,7 +57,8 @@ function detectEvents() {
     delete EVENT_NAME_MAP.transitionend.transition;
   }
 
-  for (let baseEventName in EVENT_NAME_MAP) { // eslint-disable-line guard-for-in
+  // tslint:disable-next-line : forin
+  for (let baseEventName in EVENT_NAME_MAP) {
     let baseEvents = EVENT_NAME_MAP[baseEventName];
     for (let styleName in baseEvents) {
       if (styleName in style) {
