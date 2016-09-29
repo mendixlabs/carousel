@@ -473,7 +473,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
      *
      * @memberOf Carousel
      */
-    private slide(index: number, e: ICarouselEvent<HTMLElement>, direction?: Direction) { // TODO: temporary any
+    private slide(index: number, e: ICarouselEvent<HTMLElement>, direction?: Direction) {
         logger.debug(this.loggerNode + " .slide");
 
         const previousActiveIndex = this.getActiveIndex();
