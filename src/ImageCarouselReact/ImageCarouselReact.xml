@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget id="ImageCarouselReact.widget.ImageCarouselReact" version="1.0.0" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../xsd/widget.xsd">
+<widget id="ImageCarouselReact.widget.ImageCarouselReact" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../xsd/widget.xsd">
     <name>Image Carousel React</name>
     <description>Displays an images carousel based on URLS stored in the domain model</description>
   
@@ -18,11 +18,6 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
 3Qd/BBgAioQXVN0jZskAAAAASUVORK5CYII=</icon>
 
      <properties>
-            <property key="imageEntityxxxx" type="entity">
-                <caption>Entity</caption>
-                <category>Data source</category>
-                <description>The entity which should be displayed in the carousel</description>
-            </property>
             <property key="imageEntity" type="entity">
                 <caption>Entity</caption>
                 <category>Data source</category>

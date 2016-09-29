@@ -1,12 +1,10 @@
 import * as React from "ImageCarouselReact/lib/react";
 
-import * as ReactBootstrap from "ImageCarouselReact/lib/react-bootstrap";
-
 import { Idata } from "./../ImageCarouselReact";
 
 import Carousel from "./Carousel";
 import CarouselCaption from "./CarouselCaption";
-import CarouselItem from "./CarouselItem";
+import {CarouselItem, ICarouselItemProps } from "./CarouselItem";
 
 export interface IStaticImages {
     imgCaption?: string;
@@ -38,7 +36,7 @@ interface IOnclickProps {
 }
 
 interface ImageCarouselModelProps {
-    imgcollection?: Array<IStaticImages>;
+    staticImageCollection?: any[];
     widgetId?: string;
     imageEntity?: string;
     imageSource?: string;
@@ -63,7 +61,7 @@ interface ImageCarouselModelProps {
 
 }
 
-interface ItemProps extends ReactBootstrap.CarouselItemProps {
+interface ItemProps extends ICarouselItemProps {
     key: string | number;
     imgStyle: Object;
     alt: string;
@@ -127,7 +125,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " Image Source is set to MicroFlow and No Micoflow specified in Tab 'Source - Microflow' ");
         }
-        if (this.props.imageSource === "static" && !this.props.imgcollection) {
+        if (this.props.imageSource === "static" && !this.props.staticImageCollection) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " Image Source is set to Static and No Images specified in Tab 'Source - Static'");
         }

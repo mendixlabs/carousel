@@ -13,7 +13,7 @@ import { Direction } from "./Carousel";
 // TODO: This should use a timeout instead of TransitionEvents, or else just
 // not wait until transition end to trigger continuing animations.
 
-interface ICarouselItemProps extends React.Props<CarouselItem> {
+export interface ICarouselItemProps extends React.Props<CarouselItem> {
   active?: boolean;
   animateIn?: boolean;
   animateOut?: boolean;
@@ -31,7 +31,7 @@ interface ICarouselItemState {
 
 type ItemDirection = "right" | "left";
 
-class CarouselItem extends React.Component<ICarouselItemProps, ICarouselItemState> {
+export class CarouselItem extends React.Component<ICarouselItemProps, ICarouselItemState> {
   public static defaultProps: ICarouselItemProps = {
     active: false,
     animateIn: false,
