@@ -66,7 +66,7 @@ class SafeAnchor extends React.Component<IProps, {}> {
       />
     );
   }
-  private handleClick(event: React.MouseEvent) {
+  private handleClick(event: React.MouseEvent<HTMLElement>) {
     logger.debug(this.loggerNode + " .handleClick");
     const { disabled, href, onClick } = this.props;
 

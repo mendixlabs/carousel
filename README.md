@@ -7,16 +7,19 @@ Package file name: ImageCarouselReact.mpk
 
 ## Description
 
-Displays an images carousel based on URLS stored in the domain model
+Displays an images carousel either from the database or from the modeler
 
 ## Typical usage scenario
 
-* Display user images in a carousel
+* Displays Images in a carousel
 
 ## Features and limitations
 
-* Displays an images carousel based on URLS
-* Images are retrieved from the Database. (updated via MF) 
+* Static and dynamic images (From modeler or the database)
+* Use Navigations controls to move images
+* Auto Slide of images based on an Interval
+* Onclick Event to Images to call Microflow or Open Page
+* Height and Width configurations
 
 ## Installation
 

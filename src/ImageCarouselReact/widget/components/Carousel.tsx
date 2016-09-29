@@ -4,7 +4,7 @@ declare var logger: mendix.logger;
 import classNames = require("ImageCarouselReact/lib/classnames");
 import * as React from "ImageCarouselReact/lib/react";
 
-import { IBootstrapProps, getClassSet, prefix } from "../utils/bootstrapUtils";
+import { IBootstrapProps, prefix } from "../utils/bootstrapUtils";
 import ValidComponentChildren from "../utils/ValidComponentChildren"; // Gets children that are React components
 import Glyphicon from "./Glyphicon";
 
@@ -121,7 +121,7 @@ export interface ICarouselState {
     direction?: Direction;
 }
 
-export interface ICarouselEvent extends React.MouseEvent {
+export interface ICarouselEvent<T> extends React.MouseEvent<T> {
     direction: Direction;
 }
 
@@ -197,10 +197,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         const props = this.props;
         const { showIndicators, showControls, wrap, prevIcon, nextIcon, className, children, bsProps } = props;
         const activeIndex = this.getActiveIndex();
-        const classes = {slide: this.props.slide};
+        const classes: any = {slide: this.props.slide};
         classes[props.bsProps.bsClass] = true;
 
-        const count = ValidComponentChildren.count(children as React.ReactChildren);
         const indicators = showIndicators &&
                 this.renderIndicators(children as React.ReactChildren, activeIndex, bsProps);
         const controls = showControls &&
@@ -245,7 +244,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
                     key={index}
                     className={index === activeIndex ? "active" : null}
                     style={style}
-                    onClick={(e: ICarouselEvent) => this.slide(index, e)}
+                    onClick={(e: ICarouselEvent<HTMLLIElement>) => this.slide(index, e)}
                 />
             );
         });
@@ -373,7 +372,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
      *
      * @memberOf Carousel
      */
-    private handlePrev(e: ICarouselEvent) {
+    private handlePrev(e: ICarouselEvent<HTMLDivElement>) {
         logger.debug(this.loggerNode + " .handlePrev");
         let index = this.getActiveIndex() - 1;
 
@@ -395,7 +394,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
      *
      * @memberOf Carousel
      */
-    private handleNext(e: ICarouselEvent) {
+    private handleNext(e: ICarouselEvent<HTMLDivElement>) {
         logger.debug(this.loggerNode + " .handleNext");
         let index = this.getActiveIndex() + 1;
         const count = ValidComponentChildren.count(this.props.children as React.ReactChildren);
@@ -474,7 +473,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
      *
      * @memberOf Carousel
      */
-    private slide(index: number, e: ICarouselEvent, direction?: Direction) { // TODO: temporary any
+    private slide(index: number, e: ICarouselEvent<HTMLElement>, direction?: Direction) { // TODO: temporary any
         logger.debug(this.loggerNode + " .slide");
 
         const previousActiveIndex = this.getActiveIndex();
