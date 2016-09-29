@@ -7,7 +7,7 @@ Package file name: ImageCarouselReact.mpk
 
 ## Description
 
-Displays an images carousel either from the database or from the modeler
+Displays images in a carousel either from the database or from the modeler
 
 ## Typical usage scenario
 
@@ -23,7 +23,7 @@ Displays an images carousel either from the database or from the modeler
 
 ## Installation
 
-See the general instructions under _How to Install._
+See the general instructions under _Configuration._
 
 ## Dependencies
 
@@ -31,49 +31,52 @@ See the general instructions under _How to Install._
 
 
 ## Configuration
+* Create an entity that inherits from the System.image 
+  * Add String "Caption" attribute (Optional)
+  * Add String "Description" attribute (Optional)
 
+* For static Images, add the images directly to the widget from Source - Static Tab
 
 
 ## Properties
 * Data Source
-  * Entity
-  * Source
-  * Caption
-  * Description
+  * Entity;The entity with the images to display
+  * Source;Type of Source could be Xpath, Microflow or Static
+  * Caption;Based on attribe, caption shown on image
+  * Description;Based on attribe, Description shown on image
 * Source - Xpath
-  * Constraint
+  * Constraint;Constraint to image entity
 * Source - Microflow
-  * Data Source Microflow
+  * Data Source Microflow;Returns images for carousel
 * Source - Static
   * Images To Display
      - Data Source
-        Image Caption
-        Image Description
-        Image/Picture
+        - Image Caption;caption shown on image
+        - Image Description;Description shown on image
+        - Image/Picture;image to display on carousel
      - Behaviour
-        On Click
-        Call Microflow
-        Open Page
+        - On Click;what action to excute when image is clicked
+        - Call Microflow; Microflow to execute when image is clicked
+        - Open Page; Page to open when image is clicked
 * Carousel
-  * Use Image Navigation
-  * Indicators
-  * Interval
-  * On Click
-  * Pause On Hover
-  * Slide Images
+  * Use Image Navigation;Move to next image or back 
+  * Indicators;index of image in the carousel shown by the dots
+  * Interval;Duration of image transitions
+  * Pause On Hover:Pause image transitions on hover
+  * Slide Images;Move through images by sliding them
 * Appearance
-  * Width
-  * WidthUnits
-  * Height
-  * HeightUnits
+  * Width;width of the carousel
+  * WidthUnits;Measurement for width percent,pixels or auto
+  * Height;Height of the carousel
+  * HeightUnits;Measurement for Height percent,pixels or auto
 * Behaviour
-  * On Click
-  * Call Microflow
-  * Open Page
+  * On Click;what action to excute when image is clicked
+  * Call Microflow;Microflow to execute when image is clicked
+  * Open Page;Page to open when image is clicked
 
-Source and [Sample projects]at GitHub
+Source and [Sample project](https://github.com/akileng56/ImageCarouselReact/tree/master/test) at GitHub
 
-Please contribute fixes and extensions at
+Please contribute fixes and extensions at https://github.com/akileng56/ImageCarouselReact
 
 
 
