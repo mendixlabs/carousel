@@ -166,11 +166,11 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         if (type === "auto") {
             return "";
         }
-        if (type === "percent") {
-            return value + "%";
-        }
         if (isInner && type === "percent") {
             return "100%";
+        }
+        if (type === "percent") {
+            return value + "%";
         }
         return value;
     }
@@ -184,7 +184,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
                 onClick={itemProps.onClick}
                 key={itemProps.key}
                 >
-                <img style={itemProps.imgStyle} alt={itemProps.alt} src={itemProps.src} />
+                <img style={this.carouselItemStyle} alt={itemProps.alt} src={itemProps.src} />
                 <CarouselCaption>
                     <h3>{itemProps.caption}</h3>
                     <p>{itemProps.description}</p>
