@@ -109,6 +109,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             pauseOnHover: this.pauseOnHover,
             requiresContext: this.requiresContext,
             slide: this.slide,
+            staticImageCollection: this.staticImageCollection,
             width: this.width,
         };
     }

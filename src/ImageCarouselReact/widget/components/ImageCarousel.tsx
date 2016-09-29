@@ -38,7 +38,7 @@ interface IOnclickProps {
 }
 
 interface ImageCarouselModelProps {
-    imgcollection?: Array<IStaticImages>;
+    staticImageCollection?: any[];
     widgetId?: string;
     imageEntity?: string;
     imageSource?: string;
@@ -127,7 +127,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " Image Source is set to MicroFlow and No Micoflow specified in Tab 'Source - Microflow' ");
         }
-        if (this.props.imageSource === "static" && !this.props.imgcollection) {
+        if (this.props.imageSource === "static" && !this.props.staticImageCollection) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " Image Source is set to Static and No Images specified in Tab 'Source - Static'");
         }
