@@ -1,13 +1,9 @@
-declare var logger: mendix.logger;
 
 import classNames = require("ImageCarouselReact/lib/classnames");
-
 import * as React from "ImageCarouselReact/lib/react";
 import ReactDOM = require("ImageCarouselReact/lib/react-dom");
-
 import { IObject } from "../utils/bootstrapUtils";
 import TransitionEvents from "../utils/TransitionEvents";
-
 import { Direction } from "./Carousel";
 
 // TODO: This should use a timeout instead of TransitionEvents, or else just

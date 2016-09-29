@@ -1,15 +1,11 @@
 
-declare var logger: mendix.logger;
-
 import classNames = require("ImageCarouselReact/lib/classnames");
 import * as React from "ImageCarouselReact/lib/react";
-
 import { IBootstrapProps, prefix } from "../utils/bootstrapUtils";
 import ValidComponentChildren from "../utils/ValidComponentChildren"; // Gets children that are React components
 import Glyphicon from "./Glyphicon";
 
 // TODO: `slide` should be `animate`.
-
 // TODO: Use uncontrollable.
 
 export interface ICarouselProps extends React.Props<Carousel> {
