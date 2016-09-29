@@ -188,3 +188,6 @@ declare module mx {
 		openForm(path:string, args?:{location?:string, domNode?:HTMLElement, title?:string, context?:mendix.lib.MxContext, callback?:Function, error?:Function}, scope?:any): void
 	}
 }
+
+// Declaration of mendix global variables
+declare var mx: mx.mx;
