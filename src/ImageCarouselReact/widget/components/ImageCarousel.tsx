@@ -1,9 +1,11 @@
+
+import {Idata} from "./../ImageCarouselReact";
 import * as React from "ImageCarouselReact/lib/react";
-import { Idata } from "./../ImageCarouselReact";
-import Carousel from "./Carousel";
+
+import ImageCarouselModelProps from "./../../ImageCarouselReact.d";
+import Carousel, {ICarouselProps} from "./Carousel";
 import CarouselCaption from "./CarouselCaption";
 import {CarouselItem, ICarouselItemProps } from "./CarouselItem";
-import ImageCarouselModelProps from "./../../ImageCarouselReact.d";
 
 interface IShowpageProps {
     pageName?: string;
@@ -113,11 +115,11 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      */
     public render() {
         logger.debug(this.props.widgetId + ".render");
-        const carouselProps = {
-            controls: this.props.controls,
-            indicators: this.props.indicators,
+        const carouselProps: ICarouselProps = {
             interval: this.props.interval,
             pauseOnHover: this.props.pauseOnHover,
+            showControls: this.props.controls,
+            showIndicators: this.props.indicators,
             slide: this.props.slide,
         };
         const itemProps = this.getPropsFromData();
