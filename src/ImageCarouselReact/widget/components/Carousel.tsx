@@ -197,7 +197,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         const props = this.props;
         const { showIndicators, showControls, wrap, prevIcon, nextIcon, className, children, bsProps } = props;
         const activeIndex = this.getActiveIndex();
-        const classes: any = {slide: this.props.slide};
+        let classes: any = {slide: this.props.slide};
         classes[props.bsProps.bsClass] = true;
 
         const indicators = showIndicators &&
