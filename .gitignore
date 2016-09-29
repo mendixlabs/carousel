@@ -55,11 +55,12 @@ test/*.launch
 
 
 !test/
+test/*
 !test/javasource/
 test/javasource/*
-!test/javasource/myfirstmodule/
-test/javasource/myfirstmodule/*
-!test/javasource/myfirstmodule/actions
+!test/javasource/*/
+test/javasource/*/*
+!test/javasource/*/actions
 
 
 out/
