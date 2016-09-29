@@ -25,11 +25,11 @@ class CarouselCaption extends React.Component<ICaptionProps, {}> {
     logger.debug(this.loggerNode + " .render");
     const { className, bsProps } = this.props;
     const classes = getClassSet(bsProps);
-    const props = Object.assign({}, {children: this.props.children}, this.props.elementProps);
+    const children = {children: this.props.children};
 
     return (
       <div
-        {...props}
+        {...children}
         className={classNames(className, classes)}
       />
     );

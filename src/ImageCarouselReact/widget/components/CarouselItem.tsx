@@ -21,7 +21,7 @@ export interface ICarouselItemProps extends React.Props<CarouselItem> {
   onAnimateOutEnd?: Function;
   index?: number;
   className?: string;
-  onClick?: React.EventHandler<React.MouseEvent>;
+  onClick?: React.EventHandler<React.MouseEvent<HTMLElement>>;
   slide?: boolean;
 };
 
