@@ -1,4 +1,3 @@
-declare var logger: mendix.logger;
 
 import classNames = require("ImageCarouselReact/lib/classnames");
 import * as React from "ImageCarouselReact/lib/react";
