@@ -7,7 +7,6 @@ import * as React from "ImageCarouselReact/lib/react";
 import { IBootstrapProps, getClassSet, prefix } from "../utils/bootstrapUtils";
 import ValidComponentChildren from "../utils/ValidComponentChildren"; // Gets children that are React components
 import Glyphicon from "./Glyphicon";
-// import SafeAnchor from "./SafeAnchor";
 
 // TODO: `slide` should be `animate`.
 
@@ -17,49 +16,49 @@ export interface ICarouselProps extends React.Props<Carousel> {
     /**
      * Adds a CSS transition and animation effect when sliding from one item to the next.
      * Set to false if you do not want this effect
-     * 
+     *
      * @type {boolean}
      * @memberOf ICarouselProps
      */
     slide?: boolean;
     /**
      * Little dots at the bottom of each slide
-     * 
+     *
      * @type {boolean}
      * @memberOf ICarouselProps
      */
     showIndicators?: boolean;
     /**
      * Time between auto transitions
-     * 
+     *
      * @type {number}
      * @memberOf ICarouselProps
      */
     interval?: number;
     /**
      * Show or hide navigation controls
-     * 
+     *
      * @type {boolean}
      * @memberOf ICarouselProps
      */
     showControls?: boolean;
     /**
      * Pauses the carousel from transitioning when the mouse pointer enters the carousel
-     * 
+     *
      * @type {boolean}
      * @memberOf ICarouselProps
      */
     pauseOnHover?: boolean;
     /**
      * Specifies whether the carousel should go through all slides continuously, or stop at the last slide
-     * 
+     *
      * @type {boolean}
      * @memberOf ICarouselProps
      */
     wrap?: boolean;
     /**
      * Callback fired when the active item changes.
-     * 
+     *
      * If this callback takes two or more arguments, the second argument will
      * be a persisted event object with `direction` set to the direction of the
      * transition.
@@ -69,35 +68,35 @@ export interface ICarouselProps extends React.Props<Carousel> {
     onSlideEnd?: Function;
     /**
      * Index of the current image being showed on the carousel
-     * 
+     *
      * @type {number}
      * @memberOf ICarouselProps
      */
     activeIndex?: number;
     /**
      * Index of the image that should be shown first
-     * 
+     *
      * @type {number}
      * @memberOf ICarouselProps
      */
     defaultActiveIndex?: number;
     /**
      * Direction in which the carousel should auto-transition
-     * 
+     *
      * @type {Direction}
      * @memberOf ICarouselProps
      */
     direction?: Direction;
     /**
      * Icon for the "prev" navigation control
-     * 
+     *
      * @type {JSX.Element}
      * @memberOf ICarouselProps
      */
     prevIcon?: JSX.Element;
     /**
      * Icon for the "next" navigation control
-     * 
+     *
      * @type {JSX.Element}
      * @memberOf ICarouselProps
      */
@@ -106,7 +105,7 @@ export interface ICarouselProps extends React.Props<Carousel> {
     /**
      * Contains Base properties eg. Base CSS class and prefix for the component
      * Use only when you want to specify a non-bootstrap properties
-     * 
+     *
      * @type {string}
      * @memberOf ICarouselProps
      */
@@ -224,13 +223,13 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     }
     /**
      * Returns those dots at the bottom that represent the different carousel images
-     * 
+     *
      * @private
      * @param {React.ReactChildren} children
      * @param {number} activeIndex
      * @param {IBootstrapProps} bsProps
      * @returns
-     * 
+     *
      * @memberOf Carousel
      */
     private renderIndicators(children: React.ReactChildren, activeIndex: number, bsProps: IBootstrapProps) {
@@ -258,7 +257,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     }
     /**
      * Renders the navigation controls (Arrow Left / Arrow Right)
-     * 
+     *
      * @private
      * @param {boolean} wrap
      * @param {React.ReactChildren} children
@@ -267,7 +266,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
      * @param {JSX.Element} nextIcon
      * @param {IBootstrapProps} bsProps
      * @returns
-     * 
+     *
      * @memberOf Carousel
      */
     private renderControls(
@@ -302,10 +301,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     }
     /**
      * Gets only the children that are actual components and clones them with the required props
-     * 
+     *
      * @private
      * @returns
-     * 
+     *
      * @memberOf Carousel
      */
     private getValidComponentChildren() {
@@ -339,9 +338,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     /**
      * EventHandler: Used to handle pauseOnHover feature
      * Pauses slide
-     * 
+     *
      * @private
-     * 
+     *
      * @memberOf Carousel
      */
     private handleMouseOver() {
@@ -353,9 +352,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     /**
      * EventHandler: Used to handle pauseOnHover feature.
      * Re-plays slide if paused
-     * 
+     *
      * @private
-     * 
+     *
      * @memberOf Carousel
      */
     private handleMouseOut() {
@@ -366,11 +365,11 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     }
     /**
      * EventHandler: Called on manual back navigation
-     * 
+     *
      * @private
      * @param {ICarouselEvent} e
      * @returns
-     * 
+     *
      * @memberOf Carousel
      */
     private handlePrev(e: ICarouselEvent) {
@@ -388,11 +387,11 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     }
     /**
      * EventHandler: Called on manual forward navigation
-     * 
+     *
      * @private
      * @param {ICarouselEvent} e
      * @returns
-     * 
+     *
      * @memberOf Carousel
      */
     private handleNext(e: ICarouselEvent) {
@@ -413,9 +412,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
      * EventHandler: Called when item has completed sliding out
      * Resets direction and previousActiveIndex state and schedules next transition
      * Also calls custom onSlideEnd event if any.
-     * 
+     *
      * @private
-     * 
+     *
      * @memberOf Carousel
      */
     private handleItemAnimateOutEnd() {
@@ -433,10 +432,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     }
     /**
      * Returns the currenct active index
-     * 
+     *
      * @private
      * @returns
-     * 
+     *
      * @memberOf Carousel
      */
     private getActiveIndex() {
@@ -446,12 +445,12 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     }
     /**
      * Returns direction in which the carousel is swiping based on the indexes
-     * 
+     *
      * @private
      * @param {number} prevIndex
      * @param {number} index
      * @returns
-     * 
+     *
      * @memberOf Carousel
      */
     private getDirection(prevIndex: number, index: number) {
@@ -465,13 +464,13 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     /**
      * EventHandler: Called when carousel transitions.
      * It calls the onSlide prop and passes in the current index & event object with transition direction added
-     * 
+     *
      * @private
      * @param {number} index
      * @param {*} e
      * @param {Direction} [direction]
      * @returns
-     * 
+     *
      * @memberOf Carousel
      */
     private slide(index: number, e: ICarouselEvent, direction?: Direction) { // TODO: temporary any
@@ -507,9 +506,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     }
     /**
      * Schedules next transition
-     * 
+     *
      * @private
-     * 
+     *
      * @memberOf Carousel
      */
     private waitForNext() {

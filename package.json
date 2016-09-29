@@ -36,5 +36,6 @@
     "node-mendix-modeler-path": "https://github.com/JelteMX/node-mendix-modeler-path/archive/v1.0.0.tar.gz"
   },
   "dependencies": {
+    "grunt-xsltproc": "^0.6.1"
   }
 }

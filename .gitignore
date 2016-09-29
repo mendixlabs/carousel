@@ -65,6 +65,7 @@ test/javasource/myfirstmodule/*
 out/
 nbproject/
 node_modules/
+.idea
 *.bak
 *.map
 *.tmp

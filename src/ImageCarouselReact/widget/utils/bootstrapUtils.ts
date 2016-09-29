@@ -12,38 +12,10 @@ export interface IBootstrapProps extends IObject {
   bsRole?: string;
 }
 
-// function isBsProp(propName: string) {
-//   return (
-//     propName === "bsClass" ||
-//     propName === "bsSize" ||
-//     propName === "bsStyle" ||
-//     propName === "bsRole"
-//   );
-// }
-
-// function getBsProps(props: IBootstrapProps) {
-//   return {
-//     bsClass: props.bsClass,
-//     bsRole: props.bsRole,
-//     bsSize: props.bsSize,
-//     bsStyle: props.bsStyle,
-//   };
-// }
-
-// function curry(fn: Function) {
-//   return (...args: Array<any>) => {
-//     let last = args[args.length - 1];
-//     if (typeof last === "function") {
-//       return fn(...args);
-//     }
-//     return (Component: __React.Component<{}, {}>) => fn(...args, Component);
-//   };
-// }
-
 /**
  * Returns a prefixed version of its parameters
  * i.e props.bsClass + "-" + variant
- * 
+ *
  * @export
  * @param {IBootstrapProps} props
  * @param {string} [variant]
@@ -72,17 +44,3 @@ export function getClassSet(props: IBootstrapProps) {
 
   return classes;
 }
-
-// export function splitBsPropsAndOmit(props: IBootstrapProps, omittedPropNames: Array<string>) {
-//   const isOmittedProp: IObject = {};
-//   omittedPropNames.forEach((propName: string) => { isOmittedProp[propName] = true; });
-
-//   const elementProps: IObject = {};
-//   Object.entries(props).forEach(([propName, propValue]) => {
-//     if (!isBsProp(propName) && !isOmittedProp[propName]) {
-//       elementProps[propName] = propValue;
-//     }
-//   });
-
-//   return [getBsProps(props), elementProps];
-// }
