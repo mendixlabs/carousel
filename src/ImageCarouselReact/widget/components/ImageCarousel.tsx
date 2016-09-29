@@ -6,6 +6,8 @@ import Carousel from "./Carousel";
 import CarouselCaption from "./CarouselCaption";
 import {CarouselItem, ICarouselItemProps } from "./CarouselItem";
 
+import ImageCarouselModelProps from "./../../ImageCarouselReact.d";
+
 export interface IStaticImages {
     imgCaption?: string;
     imgdescription?: string;
@@ -35,32 +37,6 @@ interface IOnclickProps {
     onClickEvent?: string;
 }
 
-interface ImageCarouselModelProps {
-    staticImageCollection?: any[];
-    widgetId?: string;
-    imageEntity?: string;
-    imageSource?: string;
-    entityConstraint?: string;
-    data?: Idata[];
-    dataSourceMicroflow?: string;
-    captionAttr?: string;
-    descriptionAttr?: string;
-    controls?: boolean;
-    indicators?: boolean;
-    interval?: number;
-    onClickEvent?: string;
-    openPage?: string;
-    location?: string;
-    pauseOnHover?: boolean;
-    slide?: boolean;
-    imageClickMicroflow?: string;
-    imageClickObjectMicroflow?: string;
-    width?: number;
-    height?: number;
-    isLoading?: boolean;
-
-}
-
 interface ItemProps extends ICarouselItemProps {
     key: string | number;
     imgStyle: Object;
@@ -74,7 +50,10 @@ interface ItemProps extends ICarouselItemProps {
 export interface ImageCarouselProps extends ImageCarouselModelProps, React.Props<ImageCarousel> {
     // helper props for MX / dojo   
     contextId?: string;
+    data?: Idata[];
+    isLoading?: boolean;
     requiresContext?: boolean;
+    widgetId?: string;
 }
 
 export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
@@ -91,15 +70,15 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      * Height and width to be passed to the carousel Component/ the container for the items/images
      */
     private carouselStyle = {
-        height: this.props.height,
-        width: this.props.width,
+        height: this.getValueFromUnits(this.props.height, this.props.heightUnits),
+        width: this.getValueFromUnits(this.props.width, this.props.widthUnits),
     };
     /**
      * Height and width to be passed to the carousel items/images
      */
     private carouselItemStyle = {
-        height: this.props.height,
-        width: this.props.width,
+        height: this.getValueFromUnits(this.props.height, this.props.heightUnits, true),
+        width: this.getValueFromUnits(this.props.width, this.props.widthUnits, true),
     };
     private loaded: boolean;
     constructor(props: ImageCarouselProps) {
@@ -125,7 +104,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " Image Source is set to MicroFlow and No Micoflow specified in Tab 'Source - Microflow' ");
         }
-        if (this.props.imageSource === "static" && !this.props.staticImageCollection) {
+        if (this.props.imageSource === "static" && this.props.staticImageCollection.length < 1) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " Image Source is set to Static and No Images specified in Tab 'Source - Static'");
         }
@@ -142,10 +121,6 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
                         " Image 'Source' is set to XPath and there is no 'Entity' selected");
         }
         // TODO check for configurations on static images for OnClick and Open Page
-    }
-    public componentWillUpdate() {
-        // logger.debug(this.props.widgetId + " .componentWillUpdate");
-        //  this.getCarouselData();
     }
     /**
      * React Component method that renders the interface once the component has mounted
@@ -172,7 +147,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
             );
         } else if (this.props.isLoading) {
             // returned when its still loading
-            const classes = this.props.widgetId + " image-carousel-loading";
+            const classes = this.props.widgetId + " image-carousel-react image-carousel-loading";
             return (
                 <div style={this.carouselStyle} className={classes}>
                     Loading ...
@@ -180,9 +155,24 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
             );
         } else {
             // returned when there is no data/images
-            const classes = this.props.widgetId + " image-carousel-nodata";
+            const classes = this.props.widgetId + " image-carousel-react image-carousel-nodata";
             return (<div className={classes}> </div>);
         }
+    }
+    /**
+     * Processes the heights and width values depending on type of units
+     */
+    private getValueFromUnits(value: string|number, type: string, isInner?: boolean): number|string {
+        if (type === "auto") {
+            return "";
+        }
+        if (type === "percent") {
+            return value + "%";
+        }
+        if (isInner && type === "percent") {
+            return "100%";
+        }
+        return value;
     }
     /**
      * Creates a Carousel item based on the properties passed

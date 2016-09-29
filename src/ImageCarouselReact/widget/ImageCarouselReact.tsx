@@ -51,7 +51,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private requiresContext: boolean;
     // Parameters configured in the Modeler
     private imageEntity: string;
-    private imageSource: string;
+    private imageSource: "xpath" | "microflow" | "static";
     private entityConstraint: string;
     private dataSourceMicroflow: string;
     private captionAttr: string;
@@ -63,10 +63,11 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private openPage: string;
     private slide: boolean;
     private imageClickMicroflow: string;
-    private imageClickObjectMicroflow: string;
     private staticImageCollection: any[];
     private width: number;
     private height: number;
+    private widthUnits: "auto" | "pixels" | "percent" | "viewPort";
+    private heightUnits: "auto" | "pixels" | "percent" | "viewPort";
     private onClickEvent: "non" | "microflow" | "content" | "popup" | "modal";
     // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
     private contextObj: mendix.lib.MxObject;
@@ -96,8 +97,8 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             descriptionAttr: this.descriptionAttr,
             entityConstraint: this.entityConstraint,
             height: this.height,
+            heightUnits: this.heightUnits,
             imageClickMicroflow: this.imageClickMicroflow,
-            imageClickObjectMicroflow: this.imageClickObjectMicroflow,
             imageEntity: this.imageEntity,
             imageSource: this.imageSource,
             indicators: this.indicators,
@@ -111,6 +112,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             slide: this.slide,
             staticImageCollection: this.staticImageCollection,
             width: this.width,
+            widthUnits: this.widthUnits,
         };
     }
     /**

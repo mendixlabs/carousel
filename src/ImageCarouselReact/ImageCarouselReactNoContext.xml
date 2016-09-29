@@ -180,10 +180,35 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <category>Appearance</category>
                 <description>Width of the carousel in pixels.</description>
             </property>
+
+            <property key="widthUnits" type="enumeration" defaultValue="pixels">
+                <caption>Width Units</caption>
+                <category>Appearance</category>
+                <description></description>
+                <enumerationValues>
+                    <enumerationValue key="auto">Auto</enumerationValue>
+                    <enumerationValue key="pixels">Pixels</enumerationValue>
+                    <enumerationValue key="percent">Percent</enumerationValue>
+                    <enumerationValue key="viewPort">Percentage Viewport</enumerationValue>
+                </enumerationValues> 
+            </property>
+
             <property key="height" type="integer" defaultValue="350">
                 <caption>Height</caption>
                 <category>Appearance</category>
                 <description>Height of the carousel in pixels.</description>
+            </property>
+
+            <property key="heightUnits" type="enumeration" defaultValue="pixels">
+                <caption>Height Units</caption>
+                <category>Appearance</category>
+                <description></description>
+                <enumerationValues>
+                    <enumerationValue key="auto">Auto</enumerationValue>
+                    <enumerationValue key="pixels">Pixels</enumerationValue>
+                    <enumerationValue key="percent">Percent</enumerationValue>
+                    <enumerationValue key="viewPort">Percentage Viewport</enumerationValue>
+                </enumerationValues> 
             </property>
     </properties>
 </widget>
