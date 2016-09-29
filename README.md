@@ -35,13 +35,41 @@ See the general instructions under _How to Install._
 
 
 ## Properties
-* DataSource
-
+* Data Source
+  * Entity
+  * Source
+  * Caption
+  * Description
+* Source - Xpath
+  * Constraint
+* Source - Microflow
+  * Data Source Microflow
+* Source - Static
+  * Images To Display
+     - Data Source
+        Image Caption
+        Image Description
+        Image/Picture
+     - Behaviour
+        On Click
+        Call Microflow
+        Open Page
+* Carousel
+  * Use Image Navigation
+  * Indicators
+  * Interval
+  * On Click
+  * Pause On Hover
+  * Slide Images
 * Appearance
-
+  * Width
+  * WidthUnits
+  * Height
+  * HeightUnits
 * Behaviour
-
-## Source
+  * On Click
+  * Call Microflow
+  * Open Page
 
 Source and [Sample projects]at GitHub
 
