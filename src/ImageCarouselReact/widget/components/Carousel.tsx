@@ -254,16 +254,13 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     /**
      * Renders the navigation controls (Arrow Left / Arrow Right)
      *
-     * @private
-     * @param {boolean} wrap
+     * @param wrap this is the cool wrapper?
      * @param {React.ReactChildren} children
      * @param {number} activeIndex
-     * @param {JSX.Element} prevIcon
+     * @param prevIcon
      * @param {JSX.Element} nextIcon
      * @param {IBootstrapProps} bsProps
-     * @returns
      *
-     * @memberOf Carousel
      */
     private renderControls(
         wrap: boolean, children: React.ReactChildren, activeIndex: number,
