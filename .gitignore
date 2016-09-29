@@ -52,7 +52,8 @@ test/.classpath
 test/.project
 test/*.lock
 test/*.launch
-
+test/.svn/
+test/.mendix-cache/
 
 !test/
 test/*
