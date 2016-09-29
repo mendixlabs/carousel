@@ -1,10 +1,7 @@
 import classNames = require("ImageCarouselReact/lib/classnames");
 import * as React from "ImageCarouselReact/lib/react";
 
-import { IBootstrapProps, getClassSet, prefix } from "../utils/bootstrapUtils";
-
-// import { bsClass, getClassSet, prefix, splitBsProps }
-//   from './utils/bootstrapUtils';
+import { IBootstrapProps, prefix } from "../utils/bootstrapUtils";
 
 export interface IGlyphiconProps extends React.Props<Glyphicon> {
   /**
@@ -28,14 +25,12 @@ class Glyphicon extends React.Component<IGlyphiconProps, {}> {
     logger.debug(this.loggerNode + " .render");
     const { glyph } = this.props;
     const props = this.props;
-
-    const classes = Object.assign({}, getClassSet(props.bsProps), {[prefix(props.bsProps, glyph)]: true} );
+    let classes: any = {};
+    classes[props.bsProps.bsClass] = true;
+    classes[prefix(props.bsProps, glyph)] = true;
 
     return (
-      <span
-        {...props.elementProps}
-        className={classNames(props.className, classes)}
-      />
+      <span className={classNames(props.className, classes)} />
     );
   }
 }

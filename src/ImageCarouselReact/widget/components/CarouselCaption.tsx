@@ -3,7 +3,7 @@ declare var logger: mendix.logger;
 import classNames = require("ImageCarouselReact/lib/classnames");
 import * as React from "ImageCarouselReact/lib/react";
 
-import { IBootstrapProps, getClassSet } from "../utils/bootstrapUtils";
+import { IBootstrapProps, prefix } from "../utils/bootstrapUtils";
 
 interface ICaptionProps extends React.Props<CarouselCaption> {
   componentClass?: string;
@@ -24,7 +24,7 @@ class CarouselCaption extends React.Component<ICaptionProps, {}> {
   public render() {
     logger.debug(this.loggerNode + " .render");
     const { className, bsProps } = this.props;
-    const classes = getClassSet(bsProps);
+    const classes = prefix(bsProps);
     const children = {children: this.props.children};
 
     return (

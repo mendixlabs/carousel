@@ -3,14 +3,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 define(["require", "exports", "ImageCarouselReact/lib/classnames", "ImageCarouselReact/lib/react", "../utils/bootstrapUtils"], function (require, exports, classNames, React, bootstrapUtils_1) {
     "use strict";
     ;
@@ -24,9 +16,10 @@ define(["require", "exports", "ImageCarouselReact/lib/classnames", "ImageCarouse
             logger.debug(this.loggerNode + " .render");
             var glyph = this.props.glyph;
             var props = this.props;
-            var classes = Object.assign({}, bootstrapUtils_1.getClassSet(props.bsProps), (_a = {}, _a[bootstrapUtils_1.prefix(props.bsProps, glyph)] = true, _a));
-            return (React.createElement("span", __assign({}, props.elementProps, {className: classNames(props.className, classes)})));
-            var _a;
+            var classes = {};
+            classes[props.bsProps.bsClass] = true;
+            classes[bootstrapUtils_1.prefix(props.bsProps, glyph)] = true;
+            return (React.createElement("span", {className: classNames(props.className, classes)}));
         };
         Glyphicon.defaultProps = {
             bsProps: {
