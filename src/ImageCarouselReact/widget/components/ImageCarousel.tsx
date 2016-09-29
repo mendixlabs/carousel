@@ -1,12 +1,10 @@
 import * as React from "ImageCarouselReact/lib/react";
 
-import * as ReactBootstrap from "ImageCarouselReact/lib/react-bootstrap";
-
 import { Idata } from "./../ImageCarouselReact";
 
 import Carousel from "./Carousel";
 import CarouselCaption from "./CarouselCaption";
-import CarouselItem from "./CarouselItem";
+import {CarouselItem, ICarouselItemProps } from "./CarouselItem";
 
 export interface IStaticImages {
     imgCaption?: string;
@@ -63,7 +61,7 @@ interface ImageCarouselModelProps {
 
 }
 
-interface ItemProps extends ReactBootstrap.CarouselItemProps {
+interface ItemProps extends ICarouselItemProps {
     key: string | number;
     imgStyle: Object;
     alt: string;

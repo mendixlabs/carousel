@@ -133,3 +133,6 @@ declare module "mendix/logger"
 	var logger: mendix.logger;
 	export = logger;
 }
+
+// Declaration of mendix global variables
+declare var logger: mendix.logger;
