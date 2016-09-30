@@ -153,7 +153,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
         ReactDOM.render(
             <ImageCarousel
                 widgetId={this.id} {...this.createProps() }
-            />, this.domNode, function(){
+            />, this.domNode, () => {
                 // The ReactDOM.render calls back the optional updateRendering callback.
                 if (callback) {
                     callback();

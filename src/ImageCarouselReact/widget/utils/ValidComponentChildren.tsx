@@ -15,15 +15,15 @@ import * as React from "ImageCarouselReact/lib/react";
  * @return {object} Object containing the ordered map of results.
  */
 function map(children: React.ReactChildren, func: Function, context?: React.Component<{}, {}>) {
-  let index = 0;
+    let index = 0;
 
-  return React.Children.map(children, child => {
-    if (!React.isValidElement(child)) {
-      return child;
-    }
+    return React.Children.map(children, child => {
+        if (!React.isValidElement(child)) {
+            return child;
+        }
 
-    return func.call(context, child, index++);
-  });
+        return func.call(context, child, index++);
+    });
 }
 
 /**
@@ -37,15 +37,15 @@ function map(children: React.ReactChildren, func: Function, context?: React.Comp
  * @param {*} context Context for context.
  */
 function forEach(children: React.ReactChildren, func: Function, context?: React.Component<{}, {}>) {
-  let index = 0;
+    let index = 0;
 
-  React.Children.forEach(children, child => {
-    if (!React.isValidElement(child)) {
-      return;
-    }
+    React.Children.forEach(children, child => {
+        if (!React.isValidElement(child)) {
+            return;
+        }
 
-    func.call(context, child, index++);
-  });
+        func.call(context, child, index++);
+    });
 }
 
 /**
@@ -55,17 +55,17 @@ function forEach(children: React.ReactChildren, func: Function, context?: React.
  * @returns {number}
  */
 function count(children: React.ReactChildren) {
-  let result = 0;
+    let result = 0;
 
-  React.Children.forEach(children, child => {
-    if (!React.isValidElement(child)) {
-      return;
-    }
+    React.Children.forEach(children, child => {
+        if (!React.isValidElement(child)) {
+            return;
+        }
 
-    ++result;
-  });
+        ++result;
+    });
 
-  return result;
+    return result;
 }
 
 /**
@@ -81,103 +81,103 @@ function count(children: React.ReactChildren) {
  * @returns {array} of children that meet the func return statement
  */
 function filter(children: React.ReactChildren, func: Function, context: React.Component<{}, {}>) {
-  let index = 0;
-  let result: Array<React.ReactChild> = [];
+    let index = 0;
+    let result: Array<React.ReactChild> = [];
 
-  React.Children.forEach(children, child => {
-    if (!React.isValidElement(child)) {
-      return;
-    }
+    React.Children.forEach(children, child => {
+        if (!React.isValidElement(child)) {
+            return;
+        }
 
-    if (func.call(context, child, index++)) {
-      result.push(child);
-    }
-  });
+        if (func.call(context, child, index++)) {
+            result.push(child);
+        }
+    });
 
-  return result;
+    return result;
 }
 
 function find(children: React.ReactChildren, func: Function, context?: React.Component<{}, {}>) {
-  let index = 0;
-  let result: React.ReactChild = undefined;
+    let index = 0;
+    let result: React.ReactChild = undefined;
 
-  React.Children.forEach(children, child => {
-    if (result) {
-      return;
-    }
-    if (!React.isValidElement(child)) {
-      return;
-    }
+    React.Children.forEach(children, child => {
+        if (result) {
+            return;
+        }
+        if (!React.isValidElement(child)) {
+            return;
+        }
 
-    if (func.call(context, child, index++)) {
-      result = child;
-    }
-  });
+        if (func.call(context, child, index++)) {
+            result = child;
+        }
+    });
 
-  return result;
+    return result;
 }
 
 function every(children: React.ReactChildren, func: Function, context: React.Component<{}, {}>) {
-  let index = 0;
-  let result = true;
+    let index = 0;
+    let result = true;
 
-  React.Children.forEach(children, child => {
-    if (!result) {
-      return;
-    }
-    if (!React.isValidElement(child)) {
-      return;
-    }
+    React.Children.forEach(children, child => {
+        if (!result) {
+            return;
+        }
+        if (!React.isValidElement(child)) {
+            return;
+        }
 
-    if (!func.call(context, child, index++)) {
-      result = false;
-    }
-  });
+        if (!func.call(context, child, index++)) {
+            result = false;
+        }
+    });
 
-  return result;
+    return result;
 }
 
 function some(children: React.ReactChildren, func: Function, context: React.Component<{}, {}>) {
-  let index = 0;
-  let result = false;
+    let index = 0;
+    let result = false;
 
-  React.Children.forEach(children, child => {
-    if (result) {
-      return;
-    }
-    if (!React.isValidElement(child)) {
-      return;
-    }
+    React.Children.forEach(children, child => {
+        if (result) {
+            return;
+        }
+        if (!React.isValidElement(child)) {
+            return;
+        }
 
-    if (func.call(context, child, index++)) {
-      result = true;
-    }
-  });
+        if (func.call(context, child, index++)) {
+            result = true;
+        }
+    });
 
-  return result;
+    return result;
 }
 
 function toArray(children: React.ReactChildren) {
-  const result: Array<React.ReactElement<any> | string | number> = [];
+    const result: Array<React.ReactElement<any> | string | number> = [];
 
-  React.Children.forEach(children, child => {
-    if (!React.isValidElement(child)) {
-      return;
-    }
+    React.Children.forEach(children, child => {
+        if (!React.isValidElement(child)) {
+            return;
+        }
 
-    result.push(child);
-  });
+        result.push(child);
+    });
 
-  return result;
+    return result;
 }
 
 export default {
-  map,
-  forEach,
-  count,
-  find,
-  filter,
-  every,
-  some,
-  toArray,
+    map,
+    forEach,
+    count,
+    find,
+    filter,
+    every,
+    some,
+    toArray,
 };

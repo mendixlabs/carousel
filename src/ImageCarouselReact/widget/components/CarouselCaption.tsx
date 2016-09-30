@@ -1,3 +1,10 @@
+/**
+ * Original code can be found at:
+ * https://github.com/react-bootstrap/react-bootstrap/blob/master/src/CarouselCaption.js
+ * 
+ * This code is under the MIT license found here:
+ * https://github.com/react-bootstrap/react-bootstrap/blob/master/LICENSE
+ */
 declare var logger: mendix.logger;
 
 import classNames = require("ImageCarouselReact/lib/classnames");
@@ -23,12 +30,12 @@ class CarouselCaption extends React.Component<ICaptionProps, {}> {
 
   public render() {
     logger.debug(this.loggerNode + " .render");
-    const { className, bsProps } = this.props;
+    const { className, bsProps, componentClass: Component } = this.props;
     const classes = prefix(bsProps);
     const children = {children: this.props.children};
 
     return (
-      <div
+      <Component
         {...children}
         className={classNames(className, classes)}
       />

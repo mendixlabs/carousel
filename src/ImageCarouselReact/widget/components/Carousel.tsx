@@ -1,4 +1,10 @@
-
+/**
+ * Original code can be found at:
+ * https://github.com/react-bootstrap/react-bootstrap/blob/master/src/Carousel.js
+ * 
+ * This code is under the MIT license found here:
+ * https://github.com/react-bootstrap/react-bootstrap/blob/master/LICENSE
+ */
 import { IBootstrapProps, prefix } from "../utils/bootstrapUtils";
 import ValidComponentChildren from "../utils/ValidComponentChildren";
 import Glyphicon from "./Glyphicon";
@@ -16,7 +22,7 @@ export interface ICarouselProps extends React.Props<Carousel> {
      * @type {boolean}
      * @memberOf ICarouselProps
      */
-    slide?: boolean;
+    slide?: boolean; // TODO: Animate
     /**
      * Little dots at the bottom of each slide
      *
@@ -185,7 +191,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     public componentWillUnmount() {
         logger.debug(this.loggerNode + " .componentWillUnmount");
         clearTimeout(this.timeout);
-        this.isUnmounted = true;
+        this.isUnmounted = true; // TODO: Clear out isUnmounted
     }
 
     public render() {
@@ -238,7 +244,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             indicators.push(
                 <li
                     key={index}
-                    className={index === activeIndex ? "active" : null}
+                    className={index === activeIndex ? "active" : null} // TODO: investigate empty string
                     style={style}
                     onClick={(e: ICarouselEvent<HTMLLIElement>) => this.slide(index, e)}
                 />
@@ -312,7 +318,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             (child: (React.ReactChild), index: number) => {
                 const active = index === activeIndex; // check if item is currently active
                 const previousActive = index === previousActiveIndex; // check if item was previously active
-
+                // TODO: Add documentation
                 return (
                     React.cloneElement(child as React.ReactElement<any>, {
                         active,
@@ -483,7 +489,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             e.direction = direction;
             onSlide(e);
         }
-
+        // TODO: documentation
         if (this.props.activeIndex == null && index !== previousActiveIndex) {
             if (this.state.previousActiveIndex === null || !this.props.slide) {
                 // If currently animating don't activate the new index.
