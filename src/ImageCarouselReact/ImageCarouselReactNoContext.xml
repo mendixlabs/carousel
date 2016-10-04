@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <widget id="ImageCarouselReact.widget.ImageCarouselReactNoContext" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../xsd/widget.xsd">
     <name>Carousel (No Context)</name>
-    <description>Displays images in a carousel either static or dynamic images</description>
+   <description>Displays images in a carousel either static or dynamic images</description>
   
       <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2Fy
 ZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAfxJREFUeNqkk89LFGEcxp935t3WZmfD
@@ -18,7 +18,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
 3Qd/BBgAioQXVN0jZskAAAAASUVORK5CYII=</icon>
 
      <properties>
-            <property key="imageEntity" type="entity" required="false">
+            <property key="imageEntity" type="entity">
                 <caption>Entity</caption>
                 <category>Data source</category>
                 <description>The entity which should be displayed in the carousel</description>
@@ -36,18 +36,18 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             <property key="entityConstraint" type="entityConstraint" entityProperty="imageEntity" required="false">
 			    <caption>Constraint</caption>
 			    <category>Source - XPath</category>
-			    <description>Constraint on the carousel entity</description>
+			    <description>Constraint on the carousel entity.</description>
 	        </property>
             <property key="dataSourceMicroflow" type="microflow" required="false">
                 <caption>Data source microflow </caption>
                 <category>Source - microflow</category>
-                <description>Returns images to display on carousel</description>
+                <description>Returns images to display on Carousel.</description>
                 <returnType type="Object" entityProperty="imageEntity" isList="true"/>
 	        </property>
             <property key="staticImageCollection" type="object" isList="true" required="false">
                 <caption>Images to display</caption>
                 <category>Source - static</category>
-                <description>Picks images from the modeler and displays on carousel</description> 
+                <description>Images to display on carousel</description> 
                 <properties>
                     <property key="imgCaption" type="string" required="false">
                         <caption>Image caption</caption>
@@ -153,6 +153,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                     <enumerationValue key="modal">Blocking pop-up</enumerationValue>
                 </enumerationValues> 
             </property>
+
             <property key="imageClickMicroflow" type="microflow" required="false" entityProperty="imageEntity">
                 <caption>Call microflow</caption>
                 <category>Behavior</category>
@@ -170,7 +171,6 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <category>Appearance</category>
                 <description>Width of the carousel</description>
             </property>
-
             <property key="widthUnits" type="enumeration" defaultValue="pixels">
                 <caption>Width units</caption>
                 <category>Appearance</category>
@@ -182,13 +182,11 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                     <enumerationValue key="viewPort">Percentage viewport</enumerationValue>
                 </enumerationValues> 
             </property>
-
             <property key="height" type="integer" defaultValue="350">
                 <caption>Height</caption>
                 <category>Appearance</category>
                 <description>Height of the carousel</description>
             </property>
-
             <property key="heightUnits" type="enumeration" defaultValue="pixels">
                 <caption>Height units</caption>
                 <category>Appearance</category>

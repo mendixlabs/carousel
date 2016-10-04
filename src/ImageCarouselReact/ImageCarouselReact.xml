@@ -117,11 +117,11 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <description>Use the carousel navigation</description>
             </property>
 
-            <!--<property key="indicators" type="boolean" defaultValue="true">
+            <property key="indicators" type="boolean" defaultValue="true">
                 <caption>Indicators</caption>
                 <category>Carousel</category>
             <description>Indicators showing index of image on carousel</description>
-            </property>-->
+            </property>
 
             <property key="interval" type="integer" defaultValue="5000">
                 <caption>Interval</caption>
@@ -129,11 +129,11 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <description>Duration of the transition effect (in ms)</description>
             </property>
 
-            <!--<property key="pauseOnHover" type="boolean" defaultValue="true">
+            <property key="pauseOnHover" type="boolean" defaultValue="true">
                 <caption>Pause on hover</caption>
                 <category>Carousel</category>
             <description>Pause the slide on mouse hover</description>
-            </property>-->
+            </property>
 
             <property key="slide" type="boolean" defaultValue="true">
                 <caption>Slide images</caption>
@@ -165,17 +165,6 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <category>Behavior</category>
                 <description>Opens a page when image is clicked</description> 
             </property>
-
-            <!--<property key="pageSettings" type="enumeration" defaultValue="none">
-                <caption>Page settings</caption>
-                <category>Behavior</category>
-                <description>Location to open the form, either content, pop-up or blocking pop-up </description>
-                <enumerationValues>
-                    <enumerationValue key="content">In content</enumerationValue>
-                    <enumerationValue key="popup">Pop-up</enumerationValue>
-                    <enumerationValue key="modal">Blocking pop-up</enumerationValue>
-                </enumerationValues> 
-            </property>-->
 
             <property key="width" type="integer" defaultValue="500">
                 <caption>Width</caption>
