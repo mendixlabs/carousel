@@ -14,7 +14,7 @@ test/javasource/*
 test/javasource/*/*
 !test/javasource/*/actions
 
-
+.vscode/
 out/
 nbproject/
 node_modules/
