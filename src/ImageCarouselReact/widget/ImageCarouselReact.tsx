@@ -1,31 +1,15 @@
-/*
- ImageCarouselReact
- ========================
- 
- @file      : ImageCarouselReact.js
- @version   : 1.0.0
- @author    : Akileng Isaac
- @date      : Tue, 20 Sept 2016
- @copyright : Flock of Birds 
- @license   : Apache License V2.0
- 
- Documentation
- ========================
-  ImageCarousel Widget displays an image carousel based on URLS 
-  stored in the domain model built with React-TypeScript . 
- */
-
 import * as dojoDeclare from "dojo/_base/declare";
 // tslint:disable-next-line : no-unused-variable
 import * as React from "ImageCarouselReact/lib/react";
 import * as _WidgetBase from  "mxui/widget/_WidgetBase";
 import ReactDOM = require("ImageCarouselReact/lib/react-dom");
+
 import { ImageCarousel, ImageCarouselProps } from "./components/ImageCarousel";
 /**
  * Implementation of Dojo wrapper for react components
  */
 
-export interface Idata {
+export interface IData {
     caption?: string;
     description?: string;
     /**
@@ -35,7 +19,7 @@ export interface Idata {
     onClick?: {
         clickMicroflow?: string,
         /**
-         * guid of the image or of the context, in case of MF context it is the contex guid
+         * guid of the image or of the context, in case of MF context it is the context guid
          */
         guid?: string,
         onClickEvent: string,
@@ -68,27 +52,19 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private heightUnits: "auto" | "pixels" | "percent" | "viewPort";
     private onClickEvent: "non" | "microflow" | "content" | "popup" | "modal";
     // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
-    private contextObj: mendix.lib.MxObject;
+    private contextObject: mendix.lib.MxObject;
     private handles: number[];
-    private data: Idata[];
+    private data: IData[];
     private isLoading: boolean;
-    /**
-     * The TypeScript Contructor, not the dojo consctuctor,
-     * move contructor work into widget prototype at bottom of the page. 
-     */
     constructor(args?: Object, elem?: HTMLElement) {
         // Do not add any default value here... it wil not run in dojo!     
         super() ;
         return new dojoImageCarouselReact(args, elem);
     }
-    /**
-     * Create properities for react component based on modeler configurations
-     */
     public createProps(): ImageCarouselProps {
-        let contextId = this.contextObj ? this.contextObj.getGuid() : "";
         return {
             captionAttr: this.captionAttr,
-            contextId,
+            contextId: this.contextObject ? this.contextObject.getGuid() : "",
             controls: this.controls,
             data: this.data,
             dataSourceMicroflow: this.dataSourceMicroflow,
@@ -104,7 +80,6 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             isLoading: this.isLoading,
             onClickEvent: this.onClickEvent,
             openPage: this.openPage,
-            // openPageModal: this.location, // TODO add to interface later
             pauseOnHover: this.pauseOnHover,
             requiresContext: this.requiresContext,
             slide: this.slide,
@@ -113,21 +88,17 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             widthUnits: this.widthUnits,
         };
     }
-    /**
-     * dijit._WidgetBase.postCreate is called after constructing the widget.
-     * React widget component, passing in all the props
-     */
     public postCreate() {
         logger.debug(this.id + ".postCreate");
         this.updateRendering();
     }
     /**
-     * mxui.widget._WidgetBase.update is called when context is changed or initialized. 
+     * called when context is changed or initialized. 
      *
      */
-    public update(obj: mendix.lib.MxObject, callback?: Function) {
+    public update(object: mendix.lib.MxObject, callback?: Function) {
         logger.debug(this.id + ".update");
-        this.contextObj = obj;
+        this.contextObject = object;
         this.updateData(() => {
             this.isLoading = false;
             this.updateRendering(callback);
@@ -135,13 +106,11 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
         this._resetSubscriptions();
     }
     /**
-     * mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed.
+     * called when the widget is destroyed.
      * will need to unmount react components
      */
     public uninitialize() {
         logger.debug(this.id + ".uninitialize");
-        // Clean up listeners, helper objects, etc. 
-        // There is no need to remove listeners added with this.connect 
         this._unsubscribe();
         ReactDOM.unmountComponentAtNode(this.domNode);
     }
@@ -167,53 +136,53 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private updateData(callback: Function) {
         logger.debug(this.id + ".getCarouselData");
         if (this.imageSource === "xpath" && this.imageEntity) {
-            this.getDataFromXpath(callback);
-        } else if (this.imageSource === "microflow" && this.dataSourceMicroflow ) {
-            this.getDataFromMircroflow(callback);
+            this.fetchDataFromXpath(callback);
+        } else if (this.imageSource === "microflow" && this.dataSourceMicroflow) {
+            this.fetchDataFromMicroflow(callback);
         } else if (this.imageSource === "static"  ) {
-            this.getDataFromStatic(callback);
+            this.fetchDataFromStatic();
+            callback();
         } else {
-            logger.error(this.id + ".getCarouselData unknow image source or error in widget configurations" +
+            logger.error(this.id + ".getCarouselData unknown image source or error in widget configuration" +
                          this.imageSource);
             callback();
         }
     }
 
     /**
-     * retreive the carousel data based on data geth with xpath contraint if any.
+     * retrieve the carousel data based on data got with xpath constraint if any.
      * Could us [%CurrentObject%]
      */
-    private getDataFromXpath (callback: Function) {
-        logger.debug(this.id  + ".getDataFromXpath");
-        if ((this.requiresContext && !this.contextObj) ||
+    private fetchDataFromXpath(callback: Function) {
+        logger.debug(this.id  + ".fetchDataFromXpath");
+        if ((this.requiresContext && !this.contextObject) ||
                 (!this.requiresContext && this.entityConstraint.indexOf("[%CurrentObject%]") > -1 )) {
             // case there is not context ID the xpath will fail, so it should always show no images.
             // or in case no conext is required, but the contraint contains CurrentObject. 
             // That will also show an error in the config check.
-            logger.debug(this.id  + ".getDataFromXpath empty context");
-            this.setDataFromObjects(callback, []);
+            logger.debug(this.id  + ".fetchDataFromXpath empty context");
+            this.setDataFromObjects([]);
+            callback();
         } else {
-            const guid = this.contextObj ? this.contextObj.getGuid() : "";
-            const contraint = this.entityConstraint.replace("[%CurrentObject%]", guid);
-            const xpathString = "//" + this.imageEntity + contraint;
+            const guid = this.contextObject ? this.contextObject.getGuid() : "";
+            const constraint = this.entityConstraint.replace("[%CurrentObject%]", guid);
+            const xpathString = "//" + this.imageEntity + constraint;
             mx.data.get({
                 callback: this.setDataFromObjects.bind(this, callback),
                 error: (error) => {
-                    logger.error(this.id + ": An error occurred while retrieveing items: " + error);
+                    logger.error(this.id + ": An error occurred while retrieving items: " + error);
                 },
                 xpath : xpathString,
             });
         }
     }
-    /**
-     * retreives the data based on the MircoFlow
-     */
-    private getDataFromMircroflow(callback: Function) {
-        logger.debug(this.id  + ".getDataFromMircroflow");
-        if (this.requiresContext && !this.contextObj) {
+    private fetchDataFromMicroflow(callback: Function) {
+        logger.debug(this.id  + ".fetchDataFromMicroflow");
+        if (this.requiresContext && !this.contextObject) {
             // case there is not context ID the xpath will fail, so it should always show no images.
-            logger.debug(this.id  + ".getDataFromMircroflow, empy context");
-            this.setDataFromObjects(callback, []);
+            logger.debug(this.id  + ".getDataFromMicroflow, empty context");
+            this.setDataFromObjects([]);
+            callback();
         } else {
             let params: {
                     actionname: string,
@@ -225,7 +194,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             };
             if (this.requiresContext) {
                 params.applyto = "selection";
-                params.guids = [this.contextObj.getGuid()];
+                params.guids = [this.contextObject.getGuid()];
             }
             mx.data.action({
                 callback: this.setDataFromObjects.bind(this, callback),
@@ -239,11 +208,11 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     /**
      * transforms mendix object into item properties and set new state
      */
-    private setDataFromObjects(callback: Function, objs: mendix.lib.MxObject[]): void {
+    private setDataFromObjects(objects: mendix.lib.MxObject[]): void {
         logger.debug(this.id + ".getCarouselItemsFromObject");
-        this.data = objs.map((itemObj) => {
-            let data: Idata;
-            data = {
+        this.data = objects.map((itemObj) => {
+            let data: IData;
+            return data = {
                 caption: this.captionAttr ? itemObj.get(this.captionAttr) as string : "",
                 description: this.descriptionAttr ? itemObj.get(this.descriptionAttr) as string : "",
                 onClick: {
@@ -254,14 +223,12 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                 },
                 url: this.getFileUrl(itemObj.getGuid()),
             };
-            return data;
         });
-        callback();
     }
     /**
-     * Formats and Returns the object url
+     * Returns a file url from the object Id.
      */
-    private getFileUrl (objectId: string) {
+    private getFileUrl(objectId: string) {
         logger.debug(this.id + ".getFileUrl");
         let url: string;
         if (objectId) {
@@ -273,24 +240,21 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     /**
      * iterate over modeler setting of the static images for props and set state
      */
-    private getDataFromStatic(callback: Function) {
+    private fetchDataFromStatic() {
         logger.debug(this.id  + ".getPropsFromObjects");
-        this.data = this.staticImageCollection.map((itemObj, index) => {
-            let data: Idata;
-            data = {
-                caption: itemObj.imgCaption,
-                description: itemObj.imgDescription,
+        this.data = this.staticImageCollection.map((itemObject, index): IData => {
+            return {
+                caption: itemObject.imgCaption,
+                description: itemObject.imgDescription,
                 onClick: {
-                    clickMicroflow: itemObj.imageClickMicroflow,
-                    guid: this.contextObj ? this.contextObj.getGuid() : "",
-                    onClickEvent: itemObj.onClickEvent,
-                    page: itemObj.openPage,
+                    clickMicroflow: itemObject.imageClickMicroflow,
+                    guid: this.contextObject ? this.contextObject.getGuid() : "",
+                    onClickEvent: itemObject.onClickEvent,
+                    page: itemObject.openPage,
                 },
-                url: itemObj.picture,
+                url: itemObject.picture,
             };
-            return data;
         });
-        callback();
     }
 
     // Remove subscriptions
@@ -309,8 +273,8 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             logger.debug(this.id + "._resetSubscriptions");
             // Release handles on previous object, if any.
             this._unsubscribe();
-            // When a mendix object exists create subscribtions.
-            if (this.contextObj) {
+            // When a mendix object exists create subscription
+            if (this.contextObject) {
                 let objectHandle = mx.data.subscribe({
                     callback: (guid) => {
                         logger.debug(this.id + "._resetSubscriptions object subscription update MxId " + guid);
@@ -319,7 +283,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                             this.updateRendering();
                         });
                     },
-                    guid: this.contextObj.getGuid(),
+                    guid: this.contextObject.getGuid(),
                 });
                 this.handles = [objectHandle];
             }

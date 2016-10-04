@@ -1,5 +1,5 @@
 
-import {Idata} from "./../ImageCarouselReact";
+import {IData} from "./../ImageCarouselReact";
 import * as React from "ImageCarouselReact/lib/react";
 
 import ImageCarouselModelProps from "./../../ImageCarouselReact.d";
@@ -7,7 +7,7 @@ import Carousel, {ICarouselProps} from "./Carousel";
 import CarouselCaption from "./CarouselCaption";
 import {CarouselItem, ICarouselItemProps } from "./CarouselItem";
 
-interface IShowpageProps {
+interface IShowPageProps {
     pageName?: string;
     onClickEvent?: string;
     location?: string;
@@ -38,7 +38,7 @@ interface ItemProps extends ICarouselItemProps {
  */
 export interface ImageCarouselProps extends ImageCarouselModelProps, React.Props<ImageCarousel> {
     contextId?: string;
-    data?: Idata[];
+    data?: IData[];
     isLoading?: boolean;
     requiresContext?: boolean;
     widgetId?: string;
@@ -89,7 +89,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
     private checkConfig() {
         if (this.props.imageSource === "microflow" && !this.props.dataSourceMicroflow) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
-                        " Image Source is set to MicroFlow and No Micoflow specified in Tab 'Source - Microflow' ");
+                        " Image Source is set to MicroFlow and No Microflow specified in Tab 'Source - Microflow' ");
         }
         if (this.props.imageSource === "static" && this.props.staticImageCollection.length < 1) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
@@ -108,7 +108,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
                         " Image 'Source' is set to XPath and there is no 'Entity' selected");
         }
         // TODO check for configurations on static images for OnClick and Open Page
-        // TODO show error when non context version has a contraint with CurrentObject
+        // TODO show error when non context version has a constraint with CurrentObject
     }
     /**
      * React Component method that renders the interface once the component has mounted
@@ -143,7 +143,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
             );
         } else {
             // returned when there is no data/images
-            const classes = this.props.widgetId + " image-carousel-react image-carousel-nodata";
+            const classes = this.props.widgetId + " image-carousel-react image-carousel-no-data";
             return (<div className={classes}> </div>);
         }
     }
@@ -181,7 +181,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         );
     }
     /**
-     * Handles the onlick for carousel items
+     * Handles the onclick for carousel items
      */
     private onItemClick(onClickProps?: IOnclickProps) {
         logger.debug(this.props.widgetId + ".onItemClick");
@@ -225,7 +225,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
     /**
      * Executes event show a page, adds context if any.
      */
-    private showPage(showPageProps: IShowpageProps) {
+    private showPage(showPageProps: IShowPageProps) {
         let context: mendix.lib.MxContext = null;
         if (showPageProps.guid) {
             context = new mendix.lib.MxContext();
@@ -238,7 +238,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         });
     }
     /**
-     * Creates an array of properities that we be used to create the Carousel items
+     * Creates an array of properties that we be used to create the Carousel items
      */
     private getPropsFromData(): ItemProps[] {
         logger.debug(this.props.widgetId + ".getCarouselItemsFromObject");

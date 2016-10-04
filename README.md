@@ -7,19 +7,19 @@ Package file name: ImageCarouselReact.mpk
 
 ## Description
 
-Displays images in a carousel either from the database or from the modeler
+Displays images in a carousel either static or dynamic images
 
 ## Typical usage scenario
 
-* Displays Images in a carousel
+* Displays images in a carousel
 
 ## Features and limitations
 
-* Static and dynamic images (From modeler or the database)
-* Use Navigations controls to move images
-* Auto Slide of images based on an Interval
-* Onclick Event to Images to call Microflow or Open Page
-* Height and Width configurations
+* Static and dynamic images.
+* Use navigation controls to move images
+* Auto slide of images based on an Interval
+* Onclick event to images to call microflow or open page
+* Height and width configurations
 
 ## Installation
 
@@ -27,56 +27,47 @@ See the general instructions under _Configuration._
 
 ## Dependencies
 
-* Mendix 6 Environment. Tested on 6.8.0
-
-
-## Configuration
-* Create an entity that inherits from the System.image 
-  * Add String "Caption" attribute (Optional)
-  * Add String "Description" attribute (Optional)
-
-* For static Images, add the images directly to the widget from Source - Static Tab
-
+* Mendix 6 environment. Tested on 6.8.0
 
 ## Properties
 * Data Source
-  * Entity;The entity with the images to display
-  * Source;Type of Source could be Xpath, Microflow or Static
-  * Caption;Based on attribe, caption shown on image
-  * Description;Based on attribe, Description shown on image
-* Source - Xpath
-  * Constraint;Constraint to image entity
+  * Entity; The entity with the images to display
+  * Source; Type of source could be XPath, Microflow or Static
+  * Caption; Based on attribute, caption shown on image
+  * Description; Based on attribute, description shown on image
+* Source - XPath
+  * Constraint; Constraint to image entity
 * Source - Microflow
-  * Data Source Microflow;Returns images for carousel
+  * Data Source Microflow; Returns images for carousel
 * Source - Static
   * Images To Display
      - Data Source
-        - Image Caption;caption shown on image
-        - Image Description;Description shown on image
-        - Image/Picture;image to display on carousel
-     - Behaviour
-        - On Click;what action to excute when image is clicked
+        - Image Caption; Caption shown on image
+        - Image Description; Description shown on image
+        - Image/Picture; Image to display on carousel
+     - Behavior
+        - On Click; what action to execute when image is clicked
         - Call Microflow; Microflow to execute when image is clicked
         - Open Page; Page to open when image is clicked
 * Carousel
-  * Use Image Navigation;Move to next image or back 
-  * Indicators;index of image in the carousel shown by the dots
-  * Interval;Duration of image transitions
-  * Pause On Hover:Pause image transitions on hover
-  * Slide Images;Move through images by sliding them
+  * Navigators; Show or hide navigators
+  * Indicators; Index of image in the carousel shown by the dots
+  * Interval; Duration of image transitions
+  * Pause On Hover: Pause image transitions on hover
+  * Slide Images; Move through images by sliding them
 * Appearance
-  * Width;width of the carousel
-  * WidthUnits;Measurement for width percent,pixels or auto
-  * Height;Height of the carousel
-  * HeightUnits;Measurement for Height percent,pixels or auto
-* Behaviour
-  * On Click;what action to excute when image is clicked
-  * Call Microflow;Microflow to execute when image is clicked
-  * Open Page;Page to open when image is clicked
+  * Width; Width of the carousel
+  * WidthUnits; Measurement for width percent,pixels or auto
+  * Height; Height of the carousel
+  * HeightUnits; Measurement for Height percent,pixels or auto
+* Behavior
+  * On Click; What action to execute when image is clicked
+  * Call Microflow; Microflow to execute when image is clicked
+  * Open Page; Page to open when image is clicked
 
-Source and [Sample project](https://github.com/akileng56/ImageCarouselReact/tree/master/test) at GitHub
+Source and [Sample project](https://github.com/mendixlabs/carousel/tree/master/test) at GitHub
 
-Please contribute fixes and extensions at https://github.com/akileng56/ImageCarouselReact
+Please contribute fixes and extensions at https://github.com/mendixlabs/carousel
 
 
 
