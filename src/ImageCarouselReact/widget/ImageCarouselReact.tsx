@@ -9,21 +9,16 @@ import { ImageCarousel, ImageCarouselProps } from "./components/ImageCarousel";
  * Implementation of Dojo wrapper for react components
  */
 
-export interface IData {
+export interface Data {
     caption?: string;
     description?: string;
-    /**
-     * guid of the image of image is originating from a object (not static)
-     */
     guid?: string;
     onClick?: {
         clickMicroflow?: string,
-        /**
-         * guid of the image or of the context, in case of MF context it is the context guid
-         */
-        guid?: string,
+        contextGuid?: string,
         onClickEvent: string,
         page?: string,
+        pageLocation?: string,
     };
     url: string;
 }
@@ -39,30 +34,30 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private captionAttr: string;
     private descriptionAttr: string;
     private controls: boolean;
-    private indicators: boolean;
     private interval: number;
-    private pauseOnHover: boolean;
-    private openPage: string;
     private slide: boolean;
-    private imageClickMicroflow: string;
     private staticImageCollection: any[];
-    private width: number;
-    private height: number;
-    private widthUnits: "auto" | "pixels" | "percent" | "viewPort";
-    private heightUnits: "auto" | "pixels" | "percent" | "viewPort";
-    private onClickEvent: "non" | "microflow" | "content" | "popup" | "modal";
+    private onClickEvent: "none" | "openPage" | "callMicroflow";
+    private callMicroflow: string;
+    private pageForm: string;
+    private pageLocation: "content" | "popup" | "modal";
+    private width?: number;
+    private widthUnits: "auto" | "pixels" | "percent";
+    private height?: number;
+    private heightUnits: "auto" | "pixels" | "percent";
     // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
     private contextObject: mendix.lib.MxObject;
     private handles: number[];
-    private data: IData[];
+    private data: Data[];
     private isLoading: boolean;
     constructor(args?: Object, elem?: HTMLElement) {
         // Do not add any default value here... it wil not run in dojo!     
         super() ;
-        return new dojoImageCarouselReact(args, elem);
+        return new DojoImageCarouselReact(args, elem);
     }
     public createProps(): ImageCarouselProps {
         return {
+            callMicroflow: this.callMicroflow,
             captionAttr: this.captionAttr,
             contextId: this.contextObject ? this.contextObject.getGuid() : "",
             controls: this.controls,
@@ -72,15 +67,13 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             entityConstraint: this.entityConstraint,
             height: this.height,
             heightUnits: this.heightUnits,
-            imageClickMicroflow: this.imageClickMicroflow,
             imageEntity: this.imageEntity,
             imageSource: this.imageSource,
-            indicators: this.indicators,
             interval: this.interval,
             isLoading: this.isLoading,
             onClickEvent: this.onClickEvent,
-            openPage: this.openPage,
-            pauseOnHover: this.pauseOnHover,
+            pageForm: this.pageForm,
+            pageLocation: this.pageLocation,
             requiresContext: this.requiresContext,
             slide: this.slide,
             staticImageCollection: this.staticImageCollection,
@@ -96,22 +89,21 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
      * called when context is changed or initialized. 
      *
      */
-    public update(object: mendix.lib.MxObject, callback?: Function) {
+    public update(object: mendix.lib.MxObject, callback: Function): void {
         logger.debug(this.id + ".update");
         this.contextObject = object;
         this.updateData(() => {
             this.isLoading = false;
             this.updateRendering(callback);
         });
-        this._resetSubscriptions();
+        this.resetSubscriptions();
     }
     /**
      * called when the widget is destroyed.
      * will need to unmount react components
      */
-    public uninitialize() {
+    public uninitialize(): void {
         logger.debug(this.id + ".uninitialize");
-        this._unsubscribe();
         ReactDOM.unmountComponentAtNode(this.domNode);
     }
     /**
@@ -119,21 +111,20 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
      */
     private updateRendering(callback?: Function) {
         logger.debug(this.id + ".updateRendering");
+        let props = this.createProps();
+        props.widgetId = this.id;
         ReactDOM.render(
-            <ImageCarousel
-                widgetId={this.id} {...this.createProps() }
-            />, this.domNode, () => {
-                // The ReactDOM.render calls back the optional updateRendering callback.
-                if (callback) {
-                    callback();
-                }
-            }
+            React.createElement(ImageCarousel, props)
+            , this.domNode
         );
+        if (callback) {
+            callback();
+        }
     }
     /**
      * Determines which data source was specific and calls the respective method to get the Data 
      */
-    private updateData(callback: Function) {
+    private updateData(callback: Function): void {
         logger.debug(this.id + ".getCarouselData");
         if (this.imageSource === "xpath" && this.imageEntity) {
             this.fetchDataFromXpath(callback);
@@ -148,91 +139,73 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             callback();
         }
     }
-
-    /**
-     * retrieve the carousel data based on data got with xpath constraint if any.
-     * Could us [%CurrentObject%]
-     */
-    private fetchDataFromXpath(callback: Function) {
-        logger.debug(this.id  + ".fetchDataFromXpath");
-        if ((this.requiresContext && !this.contextObject) ||
-                (!this.requiresContext && this.entityConstraint.indexOf("[%CurrentObject%]") > -1 )) {
+    private fetchDataFromXpath(callback: Function): void {
+        logger.debug(this.id  + ".getDataFromXpath");
+        const isMissingContext = (this.requiresContext && !this.contextObject) ||
+                                 (!this.requiresContext && this.entityConstraint.indexOf("[%CurrentObject%]") > -1 );
+        if (!isMissingContext) {
             // case there is not context ID the xpath will fail, so it should always show no images.
-            // or in case no conext is required, but the contraint contains CurrentObject. 
+            // or in case no context is required, but the constraint contains CurrentObject. 
             // That will also show an error in the config check.
-            logger.debug(this.id  + ".fetchDataFromXpath empty context");
-            this.setDataFromObjects([]);
-            callback();
-        } else {
             const guid = this.contextObject ? this.contextObject.getGuid() : "";
             const constraint = this.entityConstraint.replace("[%CurrentObject%]", guid);
             const xpathString = "//" + this.imageEntity + constraint;
             mx.data.get({
-                callback: this.setDataFromObjects.bind(this, callback),
-                error: (error) => {
-                    logger.error(this.id + ": An error occurred while retrieving items: " + error);
-                },
+                callback: this.setDataFromObjects.bind(this, callback), // is this callback right?
+                error: (error) => logger.error(this.id + ": An error occurred while retrieving items: " + error),
                 xpath : xpathString,
             });
+        } else {
+            logger.debug(this.id  + ".getDataFromXpath empty context");
+            this.setDataFromObjects(callback, []);
         }
     }
-    private fetchDataFromMicroflow(callback: Function) {
+    private fetchDataFromMicroflow(callback: Function): void {
         logger.debug(this.id  + ".fetchDataFromMicroflow");
         if (this.requiresContext && !this.contextObject) {
             // case there is not context ID the xpath will fail, so it should always show no images.
-            logger.debug(this.id  + ".getDataFromMicroflow, empty context");
-            this.setDataFromObjects([]);
-            callback();
+            logger.debug(this.id  + ".fetchDataFromMicroflow, empty context");
+            this.setDataFromObjects(callback, []);
         } else {
-            let params: {
-                    actionname: string,
-                    applyto?: string,
-                    guids?: string[],
-                } = {
-                    actionname: this.dataSourceMicroflow,
-                    applyto: "none",
-            };
-            if (this.requiresContext) {
-                params.applyto = "selection";
-                params.guids = [this.contextObject.getGuid()];
-            }
             mx.data.action({
                 callback: this.setDataFromObjects.bind(this, callback),
-                error: (error) => {
-                    logger.error(this.id  + ": An error occurred while executing microflow: " + error);
-                },
-                params,
+                error: (error) => logger.error(this.id  + ": An error occurred while executing microflow: " + error),
+                params: {actionname: this.dataSourceMicroflow,
+                         applyto: this.requiresContext ? "selection" : "none",
+                         guids: this.requiresContext ? [this.contextObject.getGuid()] : [],
+                        },
             });
         }
     }
     /**
      * transforms mendix object into item properties and set new state
      */
-    private setDataFromObjects(objects: mendix.lib.MxObject[]): void {
+    private setDataFromObjects(callback: Function, objects: mendix.lib.MxObject[]): void {
         logger.debug(this.id + ".getCarouselItemsFromObject");
-        this.data = objects.map((itemObj) => {
-            let data: IData;
-            return data = {
+        this.data = objects.map((itemObj): Data => {
+            return {
                 caption: this.captionAttr ? itemObj.get(this.captionAttr) as string : "",
                 description: this.descriptionAttr ? itemObj.get(this.descriptionAttr) as string : "",
                 onClick: {
-                    clickMicroflow: this.imageClickMicroflow,
-                    guid: itemObj.getGuid(),
+                    clickMicroflow: this.callMicroflow,
+                    contextGuid: itemObj.getGuid(),
                     onClickEvent: this.onClickEvent,
-                    page: this.openPage,
+                    page: this.pageForm,
+                    pageLocation: this.pageLocation,
                 },
                 url: this.getFileUrl(itemObj.getGuid()),
             };
         });
+        callback();
     }
     /**
-     * Returns a file url from the object Id.
+     * Returns a image url from the object Id.
      */
-    private getFileUrl(objectId: string) {
+    private getFileUrl(objectId: string): string {
         logger.debug(this.id + ".getFileUrl");
         let url: string;
-        if (objectId) {
-            url = "file?target=window&guid=" + objectId + "&csrfToken=" +
+        if (objectId !== null || typeof(objectId) !== "undefined") {
+            return url = "file?target=window&guid=" + objectId + "&csrfToken=" +
                     mx.session.getCSRFToken() + "&time=" + Date.now();
         }
         return url;
@@ -240,53 +213,38 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     /**
      * iterate over modeler setting of the static images for props and set state
      */
-    private fetchDataFromStatic() {
+    private fetchDataFromStatic(): void {
         logger.debug(this.id  + ".getPropsFromObjects");
-        this.data = this.staticImageCollection.map((itemObject, index): IData => {
+        this.data = this.staticImageCollection.map((itemObject, index): Data => {
             return {
                 caption: itemObject.imgCaption,
                 description: itemObject.imgDescription,
                 onClick: {
-                    clickMicroflow: itemObject.imageClickMicroflow,
-                    guid: this.contextObject ? this.contextObject.getGuid() : "",
+                    clickMicroflow: itemObject.callMicroflow,
+                    contextGuid: this.contextObject ? this.contextObject.getGuid() : "",
                     onClickEvent: itemObject.onClickEvent,
                     page: itemObject.openPage,
+                    pageLocation: itemObject.pageSettings,
                 },
-                url: itemObject.picture,
+                url: itemObject.pictureUrl ,
             };
         });
     }
-
-    // Remove subscriptions
-    private _unsubscribe () {
-        if (this.handles) {
-            for (let handle of this.handles) {
-                mx.data.unsubscribe(handle);
-            }
-            this.handles = [];
-        }
-    }
-    // Reset subscriptions.
-    private _resetSubscriptions () {
+    private resetSubscriptions(): void {
         // only run when widget is using context.
-        if (this.requiresContext) {
+        if (this.requiresContext && this.contextObject) {
             logger.debug(this.id + "._resetSubscriptions");
-            // Release handles on previous object, if any.
-            this._unsubscribe();
             // When a mendix object exists create subscription
-            if (this.contextObject) {
-                let objectHandle = mx.data.subscribe({
-                    callback: (guid) => {
-                        logger.debug(this.id + "._resetSubscriptions object subscription update MxId " + guid);
-                        this.updateData(() => {
-                            this.isLoading = false;
-                            this.updateRendering();
-                        });
-                    },
-                    guid: this.contextObject.getGuid(),
-                });
-                this.handles = [objectHandle];
-            }
+            this.subscribe({
+                callback: (guid: string) => {
+                    logger.debug(this.id + "._resetSubscriptions object subscription update MxId " + guid);
+                    this.updateData(() => {
+                        this.isLoading = false;
+                        this.updateRendering();
+                    });
+                },
+                guid: this.contextObject.getGuid(),
+            });
         }
     }
 }
@@ -294,8 +252,8 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
 // Declare widget's prototype the Dojo way
 // Thanks to https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/dojo/README.md
 // tslint:disable : only-arrow-functions
-let dojoImageCarouselReact = dojoDeclare(
-    "ImageCarouselReact.widget.ImageCarouselReact", [_WidgetBase], (function (Source: any) {
+const DojoImageCarouselReact = dojoDeclare(
+    "ImageCarouselReact.widget.ImageCarouselReact", [ _WidgetBase ], (function (Source: any) {
     let result: any = {};
     // dojo.declare.constructor is called to construct the widget instance.
     // Implement to initialize non-primitive properties.

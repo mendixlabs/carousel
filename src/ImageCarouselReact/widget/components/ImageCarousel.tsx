@@ -1,29 +1,29 @@
 
-import {IData} from "./../ImageCarouselReact";
+import {Data} from "./../ImageCarouselReact";
 import * as React from "ImageCarouselReact/lib/react";
 
 import ImageCarouselModelProps from "./../../ImageCarouselReact.d";
 import Carousel, {ICarouselProps} from "./Carousel";
 import CarouselCaption from "./CarouselCaption";
-import {CarouselItem, ICarouselItemProps } from "./CarouselItem";
+import {CarouselItem, CarouselItemProps } from "./CarouselItem";
 
-interface IShowPageProps {
+interface ShowPageProps {
     pageName?: string;
     onClickEvent?: string;
-    location?: string;
+    pageLocation?: string;
     context?: string;
     guid?: string;
 }
 
-interface IOnclickProps {
+interface OnclickProps {
     guid?: string;
     page?: string;
     clickMF?: string;
-    location?: string;
+    pageLocation?: string;
     onClickEvent?: string;
 }
 
-interface ItemProps extends ICarouselItemProps {
+interface ItemProps extends CarouselItemProps {
     key: string | number;
     imgStyle: Object;
     alt: string;
@@ -38,7 +38,7 @@ interface ItemProps extends ICarouselItemProps {
  */
 export interface ImageCarouselProps extends ImageCarouselModelProps, React.Props<ImageCarousel> {
     contextId?: string;
-    data?: IData[];
+    data?: Data[];
     isLoading?: boolean;
     requiresContext?: boolean;
     widgetId?: string;
@@ -48,9 +48,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
     public static defaultProps: ImageCarouselProps = {
         controls: true,
         height: 350, // Default Height of both the Carousel and image in pixels
-        indicators: true,
         interval: 5000, // in milliseconds
-        pauseOnHover: true,
         slide: true, // seems faulty. Consider removing it
         width: 500, // Default width of both the Carousel and image in pixels
     };
@@ -95,11 +93,11 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " Image Source is set to Static and No Images specified in Tab 'Source - Static'");
         }
-        if (this.props.onClickEvent === "microflow" && !this.props.imageClickMicroflow) {
+        if (this.props.onClickEvent === "callMicroflow" && !this.props.callMicroflow) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " 'On Click' call MicroFlow is set and there is no 'Call Microflow' Selected");
         }
-        if (["content", "popup", "modal"].indexOf(this.props.onClickEvent) > -1 && !this.props.openPage) {
+        if (this.props.onClickEvent === "openPage" && !this.props.pageForm) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " 'On Click' Open Page, Popup Blocking or Popup is set and there is no 'Open Page' Selected");
         }
@@ -117,9 +115,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         logger.debug(this.props.widgetId + ".render");
         const carouselProps: ICarouselProps = {
             interval: this.props.interval,
-            pauseOnHover: this.props.pauseOnHover,
             showControls: this.props.controls,
-            showIndicators: this.props.indicators,
             slide: this.props.slide,
         };
         const itemProps = this.getPropsFromData();
@@ -183,15 +179,14 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
     /**
      * Handles the onclick for carousel items
      */
-    private onItemClick(onClickProps?: IOnclickProps) {
+    private onItemClick(onClickProps?: OnclickProps) {
         logger.debug(this.props.widgetId + ".onItemClick");
-        if (onClickProps.onClickEvent === "microflow" && onClickProps.clickMF) {
+        if (onClickProps.onClickEvent === "callMicroflow" && onClickProps.clickMF) {
             this.clickMicroflow(onClickProps.clickMF, onClickProps.guid);
-        } else if (["content", "popup", "modal"].indexOf(onClickProps.onClickEvent) > -1 &&
-            onClickProps.page) {
+        } else if (onClickProps.onClickEvent === "openPage" && onClickProps.page) {
             this.showPage({
                 guid: onClickProps.guid,
-                location: onClickProps.onClickEvent,
+                pageLocation: onClickProps.pageLocation,
                 pageName: onClickProps.page,
             });
         } else {
@@ -225,7 +220,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
     /**
      * Executes event show a page, adds context if any.
      */
-    private showPage(showPageProps: IShowPageProps) {
+    private showPage(showPageProps: ShowPageProps) {
         let context: mendix.lib.MxContext = null;
         if (showPageProps.guid) {
             context = new mendix.lib.MxContext();
@@ -234,7 +229,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         }
         mx.ui.openForm(showPageProps.pageName, {
             context,
-            location: showPageProps.location,
+            location: showPageProps.pageLocation,
         });
     }
     /**
@@ -251,9 +246,10 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
                 key: item.guid ? item.guid : index,
                 onClick: this.onItemClick.bind(this, {
                     clickMF: item.onClick.clickMicroflow,
-                    guid: item.onClick.guid,
+                    guid: item.onClick.contextGuid,
                     onClickEvent: item.onClick.onClickEvent,
                     page: item.onClick.page,
+                    pageLocation: item.onClick.pageLocation,
                 }),
                 src: item.url,
             };
