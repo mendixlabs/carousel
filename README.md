@@ -21,10 +21,6 @@ Displays images in a carousel either static or dynamic images
 * Onclick event to images to call microflow or open page
 * Height and width configurations
 
-## Installation
-
-See the general instructions under _Configuration._
-
 ## Dependencies
 
 * Mendix 6 environment. Tested on 6.8.0
@@ -45,10 +41,11 @@ See the general instructions under _Configuration._
         - Image Caption; Caption shown on image
         - Image Description; Description shown on image
         - Image/Picture; Image to display on carousel
-     - Behavior
-        - On Click; what action to execute when image is clicked
-        - Call Microflow; Microflow to execute when image is clicked
-        - Open Page; Page to open when image is clicked
+     - Events
+        - On click; Which event to execute
+        - Microflow; Microflow to execute when image is clicked
+        - Page; Page to open when image is clicked
+        - Page settings; Open the page as In content, pop-up or blocking pop-up
 * Carousel
   * Navigators; Show or hide navigators
   * Indicators; Index of image in the carousel shown by the dots
@@ -60,10 +57,11 @@ See the general instructions under _Configuration._
   * WidthUnits; Measurement for width percent,pixels or auto
   * Height; Height of the carousel
   * HeightUnits; Measurement for Height percent,pixels or auto
-* Behavior
-  * On Click; What action to execute when image is clicked
-  * Call Microflow; Microflow to execute when image is clicked
-  * Open Page; Page to open when image is clicked
+* Events
+  * On click; Which event to execute
+  * Microflow; Microflow to execute when image is clicked
+  * Page; Page to open when image is clicked
+  * Page settings; Open the page as In content, pop-up or blocking pop-up
 
 Source and [Sample project](https://github.com/mendixlabs/carousel/tree/master/test) at GitHub
 
