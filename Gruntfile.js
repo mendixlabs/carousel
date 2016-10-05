@@ -124,7 +124,7 @@ module.exports = function (grunt) {
             },
             compile: {
                 files: {
-                    "src/<%=pkgName%>/<%=name%>.d.ts" : ["src/" + pkg.name + "/" + pkg.name + ".xml"]
+                    "src/ImageCarouselReact/ImageCarouselReact.d.ts" : ["src/ImageCarouselReact/ImageCarouselReact.xml"]
                 }
             }
         }        
