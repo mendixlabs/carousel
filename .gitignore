@@ -27,6 +27,7 @@ $RECYCLE.BIN/
 .DS_Store
 .AppleDouble
 .LSOverride
+.vscode
 
 # Thumbnails
 ._*
@@ -45,3 +46,40 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+test/deployment/
+test/.classpath
+test/.project
+test/*.lock
+test/*.launch
+test/.svn/
+test/.mendix-cache/
+
+!test/
+test/*
+!test/javasource/
+test/javasource/*
+!test/javasource/*/
+test/javasource/*/*
+!test/javasource/*/actions
+
+
+out/
+nbproject/
+node_modules/
+.idea
+*.bak
+*.map
+*.tmp
+*.jshintrc
+tslintOld.json
+src/ImageCarouselReact/widget/ImageCarouselReact.js
+src/ImageCarouselReact/widget/components/ImageCarousel.js
+src/ImageCarouselReact/widget/components/Carousel.js
+src/ImageCarouselReact/widget/components/CarouselItem.js
+src/ImageCarouselReact/widget/components/CarouselCaption.js
+src/ImageCarouselReact/widget/components/Glyphicon.js
+src/ImageCarouselReact/widget/components/SafeAnchor.js
+src/ImageCarouselReact/widget/utils/bootstrapUtils.js
+src/ImageCarouselReact/widget/utils/TransitionEvents.js
+src/ImageCarouselReact/widget/utils/StyleConfig.js
