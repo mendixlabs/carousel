@@ -120,22 +120,10 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 </attributeTypes>
             </property>
             
-            <property key="controls" type="boolean" defaultValue="true">
-                <caption>Navigators</caption>
-                <category>Carousel</category>
-                <description>Use the carousel navigation</description>
-            </property>
-            
             <property key="interval" type="integer" defaultValue="5000">
                 <caption>Interval</caption>
                 <category>Carousel</category>
                 <description>Duration of the transition effect (in ms)</description>
-            </property>
-            
-            <property key="slide" type="boolean" defaultValue="true">
-                <caption>Slide images</caption>
-                <category>Carousel</category>
-            <description>This makes the images slide when transitioning</description>
             </property>
 
             <property key="onClickEvent" type="enumeration" defaultValue="none">

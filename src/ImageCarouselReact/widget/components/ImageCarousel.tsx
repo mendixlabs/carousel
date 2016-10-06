@@ -46,10 +46,8 @@ export interface ImageCarouselProps extends ImageCarouselModelProps, React.Props
 
 export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
     public static defaultProps: ImageCarouselProps = {
-        controls: true,
         height: 350, // Default Height of both the Carousel and image in pixels
         interval: 5000, // in milliseconds
-        slide: true, // seems faulty. Consider removing it
         width: 500, // Default width of both the Carousel and image in pixels
     };
     /**
@@ -115,8 +113,6 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         logger.debug(this.props.widgetId + ".render");
         const carouselProps: ICarouselProps = {
             interval: this.props.interval,
-            showControls: this.props.controls,
-            slide: this.props.slide,
         };
         const itemProps = this.getPropsFromData();
         if (this.props.data.length > 0) {

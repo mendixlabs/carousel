@@ -33,9 +33,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private dataSourceMicroflow: string;
     private captionAttr: string;
     private descriptionAttr: string;
-    private controls: boolean;
     private interval: number;
-    private slide: boolean;
     private staticImageCollection: any[];
     private onClickEvent: "none" | "openPage" | "callMicroflow";
     private callMicroflow: string;
@@ -47,7 +45,6 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     private heightUnits: "auto" | "pixels" | "percent";
     // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
     private contextObject: mendix.lib.MxObject;
-    private handles: number[];
     private data: Data[];
     private isLoading: boolean;
     constructor(args?: Object, elem?: HTMLElement) {
@@ -60,7 +57,6 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             callMicroflow: this.callMicroflow,
             captionAttr: this.captionAttr,
             contextId: this.contextObject ? this.contextObject.getGuid() : "",
-            controls: this.controls,
             data: this.data,
             dataSourceMicroflow: this.dataSourceMicroflow,
             descriptionAttr: this.descriptionAttr,
@@ -74,8 +70,6 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
             onClickEvent: this.onClickEvent,
             pageForm: this.pageForm,
             pageLocation: this.pageLocation,
-            requiresContext: this.requiresContext,
-            slide: this.slide,
             staticImageCollection: this.staticImageCollection,
             width: this.width,
             widthUnits: this.widthUnits,

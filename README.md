@@ -47,11 +47,7 @@ Displays images in a carousel either static or dynamic images
         - Page; Page to open when image is clicked
         - Page settings; Open the page as In content, pop-up or blocking pop-up
 * Carousel
-  * Navigators; Show or hide navigators
-  * Indicators; Index of image in the carousel shown by the dots
   * Interval; Duration of image transitions
-  * Pause On Hover: Pause image transitions on hover
-  * Slide Images; Move through images by sliding them
 * Appearance
   * Width; Width of the carousel
   * WidthUnits; Measurement for width percent,pixels or auto
