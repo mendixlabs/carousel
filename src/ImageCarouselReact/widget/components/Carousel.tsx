@@ -56,7 +56,6 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         slide: true,
         wrap: true,
     };
-    private isUnmounted: boolean;
     private timeout: number;
     private isPaused: boolean;
     private loggerNode: string;
@@ -77,7 +76,6 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             direction: null,
             previousActiveIndex: null,
         };
-        this.isUnmounted = false;
     }
 
     public componentWillReceiveProps(nextProps: ICarouselProps) {
@@ -104,7 +102,6 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     public componentWillUnmount() {
         logger.debug(this.loggerNode + " .componentWillUnmount");
         clearTimeout(this.timeout);
-        this.isUnmounted = true; // TODO: Clear out isUnmounted
     }
 
     public render() {
