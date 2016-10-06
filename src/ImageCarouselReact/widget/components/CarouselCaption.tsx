@@ -9,7 +9,7 @@
 import classNames = require("ImageCarouselReact/lib/classnames");
 import * as React from "ImageCarouselReact/lib/react";
 
-import { IBootstrapProps, prefix } from "../utils/bootstrapUtils";
+import { prefix } from "../utils/bootstrapUtils";
 
 interface ICaptionProps extends React.Props<CarouselCaption> {
   componentClass?: string;
