@@ -10,18 +10,9 @@ export interface IBootstrapProps extends IObject {
   bsRole?: string;
 }
 
-/**
- * Returns a prefixed version of its parameters
- * i.e props.bsClass + "-" + variant
- *
- * @export
- * @param {IBootstrapProps} props
- * @param {string} [variant]
- * @returns
- */
-export function prefix(props: IBootstrapProps, variant?: string) {
-  if (props.bsClass === null) {
+export function prefix(bootstrapClass: string, variant?: string) {
+  if (bootstrapClass === null) {
     throw new Error("A `bsClass` prop is required for this component");
   }
-  return props.bsClass + (variant ? `-${variant}` : "");
+  return bootstrapClass + (variant ? `-${variant}` : "");
 }
