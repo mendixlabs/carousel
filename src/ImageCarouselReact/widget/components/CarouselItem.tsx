@@ -52,7 +52,6 @@ export class CarouselItem extends React.Component<ICarouselItemProps, ICarouselI
 
         this.isUnmounted = false;
     }
-
     public componentWillReceiveProps(nextProps: ICarouselItemProps) {
         logger.debug(this.loggerNode + " .componentWillReceiveProps");
         if (this.props.active !== nextProps.active) {
@@ -115,7 +114,6 @@ export class CarouselItem extends React.Component<ICarouselItemProps, ICarouselI
     }
     private startAnimation() {
         logger.debug(this.loggerNode + " .startAnimation");
-        // Can be unmounted because function is asychronous
         if (this.isUnmounted) {
             return;
         }
