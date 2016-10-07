@@ -12,7 +12,7 @@ import ReactDOM = require("ImageCarouselReact/lib/react-dom");
 import { IObject } from "../utils/bootstrapUtils";
 import { Direction } from "./Carousel";
 
-export interface ICarouselItemProps extends React.Props<CarouselItem> {
+export interface CarouselItemProps extends React.Props<CarouselItem> {
     active?: boolean;
     animateIn?: boolean;
     animateOut?: boolean;
@@ -22,16 +22,16 @@ export interface ICarouselItemProps extends React.Props<CarouselItem> {
     className?: string;
     onClick?: React.EventHandler<React.MouseEvent<HTMLElement>>;
     slide?: boolean;
-};
+}
 
-interface ICarouselItemState {
+interface CarouselItemState {
     direction: ItemDirection;
 }
 
 type ItemDirection = "right" | "left";
 
-export class CarouselItem extends React.Component<ICarouselItemProps, ICarouselItemState> {
-    public static defaultProps: ICarouselItemProps = {
+export class CarouselItem extends React.Component<CarouselItemProps, CarouselItemState> {
+    public static defaultProps: CarouselItemProps = {
         active: false,
         animateIn: false,
         animateOut: false,
@@ -39,7 +39,7 @@ export class CarouselItem extends React.Component<ICarouselItemProps, ICarouselI
     };
     private isUnmounted: boolean;
     private loggerNode: string;
-    constructor(props: ICarouselItemProps, context: CarouselItem) {
+    constructor(props: CarouselItemProps, context: CarouselItem) {
         super(props, context);
         this.loggerNode = "CarouselItem";
         logger.debug(this.loggerNode + " .constructor");
@@ -52,14 +52,14 @@ export class CarouselItem extends React.Component<ICarouselItemProps, ICarouselI
 
         this.isUnmounted = false;
     }
-    public componentWillReceiveProps(nextProps: ICarouselItemProps) {
+    public componentWillReceiveProps(nextProps: CarouselItemProps) {
         logger.debug(this.loggerNode + " .componentWillReceiveProps");
         if (this.props.active !== nextProps.active) {
             this.setState({ direction: null });
         }
     }
 
-    public componentDidUpdate(prevProps: ICarouselItemProps) {
+    public componentDidUpdate(prevProps: CarouselItemProps) {
         logger.debug(this.loggerNode + " .componentDidUpdate");
         const { active } = this.props;
         const prevActive = prevProps.active;

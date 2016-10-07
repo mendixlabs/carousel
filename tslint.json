@@ -1,7 +1,10 @@
 {
   "extends": "tslint:latest", // Widget dev rules base
   "rules": {
-    // Development rules mendix web modeler team
+    "interface-name": [
+      false,
+      "always-prefix"
+    ],
     "class-name": true,
     "comment-format": [
       true,

@@ -16,10 +16,13 @@ define(["require", "exports", "ImageCarouselReact/lib/classnames", "ImageCarouse
             logger.debug(this.loggerNode + " .render");
             var glyph = this.props.glyph;
             var props = this.props;
-            var classes = {};
-            classes[props.bootstrapClass] = true;
-            classes[bootstrapUtils_1.prefix(props.bootstrapClass, glyph)] = true;
+            var classes = (_a = {},
+                _a[props.bootstrapClass] = true,
+                _a[bootstrapUtils_1.prefix(props.bootstrapClass, glyph)] = true,
+                _a
+            );
             return (React.createElement("span", {className: classNames(props.className, classes)}));
+            var _a;
         };
         Glyphicon.defaultProps = {
             bootstrapClass: "glyphicon",

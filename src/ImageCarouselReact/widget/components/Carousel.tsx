@@ -11,7 +11,7 @@ import Glyphicon from "./Glyphicon";
 import classNames = require("ImageCarouselReact/lib/classnames");
 import * as React from "ImageCarouselReact/lib/react";
 
-export interface ICarouselProps extends React.Props<Carousel> {
+export interface CarouselProps extends React.Props<Carousel> {
     slide?: boolean;
     showIndicators?: boolean;
     /**
@@ -31,21 +31,21 @@ export interface ICarouselProps extends React.Props<Carousel> {
     className?: string;
     bootstrapClass?: string;
     elementProps?: {};
-};
+}
 export type Direction = "prev" | "next";
 
-export interface ICarouselState {
+export interface CarouselState {
     activeIndex?: number;
     previousActiveIndex?: number;
     direction?: Direction;
 }
 
-export interface ICarouselEvent<T> extends React.MouseEvent<T> {
+export interface CarouselEvent<T> extends React.MouseEvent<T> {
     direction: Direction;
 }
 
-class Carousel extends React.Component<ICarouselProps, ICarouselState> {
-    public static defaultProps: ICarouselProps = {
+class Carousel extends React.Component<CarouselProps, CarouselState> {
+    public static defaultProps: CarouselProps = {
         bootstrapClass: "carousel",
         interval: 5000,
         nextIcon: <Glyphicon glyph="chevron-right" />,
@@ -59,7 +59,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     private timeout: number;
     private isPaused: boolean;
     private loggerNode: string;
-    constructor(props: ICarouselProps, context: Carousel) {
+    constructor(props: CarouselProps, context: Carousel) {
         super(props, context);
         this.loggerNode = "Carousel";
         logger.debug(this.loggerNode + " .constructor");
@@ -78,7 +78,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         };
     }
 
-    public componentWillReceiveProps(nextProps: ICarouselProps) {
+    public componentWillReceiveProps(nextProps: CarouselProps) {
         logger.debug(this.loggerNode + " .componentWillReceiveProps");
         const activeIndex = this.getActiveIndex();
         if (nextProps.activeIndex != null && nextProps.activeIndex !== activeIndex) {
@@ -108,8 +108,10 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         const { showIndicators, showControls, wrap, prevIcon} = props;
         const { nextIcon, className, children, bootstrapClass } = props;
         const activeIndex = this.getActiveIndex();
-        let classes: any = {slide: this.props.slide};
-        classes[bootstrapClass] = true;
+        let classes: any = {
+            slide: this.props.slide,
+            [bootstrapClass]: true,
+        };
 
         const indicators = showIndicators &&
                 this.renderIndicators(children as React.ReactChildren, activeIndex, bootstrapClass);
@@ -136,16 +138,14 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     private renderIndicators(children: React.ReactChildren, activeIndex: number, bootstrapClass: string) {
         logger.debug(this.loggerNode + " .renderIndicators");
         let indicators: Array<JSX.Element> = [];
-        const style = {
-            marginRight: "5px",
-        };
+        const style = {marginRight: "5px"};
         ValidComponentChildren.forEach(children, (child: React.ReactChild, index: number) => {
             indicators.push(
                 <li
                     key={index}
-                    className={index === activeIndex ? "active" : null} // TODO: investigate empty string
+                    className={index === activeIndex ? "active" : null}
                     style={style}
-                    onClick={(e: ICarouselEvent<HTMLLIElement>) => this.slide(index, e)}
+                    onClick={(e: CarouselEvent<HTMLLIElement>) => this.slide(index, e)}
                 />
             );
         });
@@ -223,7 +223,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             this.play();
         }
     }
-    private handlePrev(e: ICarouselEvent<HTMLDivElement>) {
+    private handlePrev(event: CarouselEvent<HTMLDivElement>) {
         logger.debug(this.loggerNode + " .handlePrev");
         let index = this.getActiveIndex() - 1;
 
@@ -234,9 +234,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             index = ValidComponentChildren.count(this.props.children as React.ReactChildren) - 1;
         }
 
-        this.slide(index, e, "prev");
+        this.slide(index, event, "prev");
     }
-    private handleNext(e: ICarouselEvent<HTMLDivElement>) {
+    private handleNext(event: CarouselEvent<HTMLDivElement>) {
         logger.debug(this.loggerNode + " .handleNext");
         let index = this.getActiveIndex() + 1;
         const count = ValidComponentChildren.count(this.props.children as React.ReactChildren);
@@ -248,7 +248,7 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
             index = 0;
         }
 
-        this.slide(index, e, "next");
+        this.slide(index, event, "next");
     }
     private handleItemAnimateOutEnd() {
         logger.debug(this.loggerNode + " .handleItemAnimateOutEnd");
@@ -273,10 +273,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         if (prevIndex === index) {
             return null;
         }
-        const direction: Direction = prevIndex > index ? "prev" : "next";
-        return direction;
+        return (prevIndex > index ? "prev" : "next") as Direction;
     }
-    private slide(index: number, e: ICarouselEvent<HTMLElement>, direction?: Direction) {
+    private slide(index: number, event: CarouselEvent<HTMLElement>, direction?: Direction) {
         logger.debug(this.loggerNode + " .slide");
 
         const previousActiveIndex = this.getActiveIndex();
@@ -285,9 +284,9 @@ class Carousel extends React.Component<ICarouselProps, ICarouselState> {
         const { onSlide } = this.props;
 
         if (onSlide) {
-            e.persist();
-            e.direction = direction;
-            onSlide(e);
+            event.persist();
+            event.direction = direction;
+            onSlide(event);
         }
         if (this.props.activeIndex == null && index !== previousActiveIndex) {
             if (this.state.previousActiveIndex === null || !this.props.slide) {
