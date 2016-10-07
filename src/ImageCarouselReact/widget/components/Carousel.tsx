@@ -128,7 +128,7 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
             >
                 {indicators}
                 <div className={prefix(bootstrapClass, "inner")}>
-                    {this.getValidComponentChildren()}
+                    {this.getCarouselItems()}
                 </div>
                 {controls}
             </div>
@@ -186,8 +186,8 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
             ),
         ];
     }
-    private getValidComponentChildren() {
-        logger.debug(this.loggerNode + " .getValidComponentChildren");
+    private getCarouselItems() {
+        logger.debug(this.loggerNode + " .getCarouselItems");
         const { slide, children } = this.props;
         const { previousActiveIndex, direction } = this.state;
         const activeIndex = this.getActiveIndex();
