@@ -210,8 +210,8 @@ export class CarouselWrapper extends _WidgetBase {
                     clickMicroflow: itemObject.callMicroflow,
                     contextGuid: this.contextObject ? this.contextObject.getGuid() : "",
                     onClickEvent: itemObject.onClickEvent,
-                    page: itemObject.openPage,
-                    pageLocation: itemObject.pageSettings,
+                    page: itemObject.pageForm,
+                    pageLocation: itemObject.pageLocation,
                 },
                 url: itemObject.pictureUrl,
         }));

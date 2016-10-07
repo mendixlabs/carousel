@@ -89,7 +89,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                         <description>Page to be opened when the image is clicked</description> 
                     </property>
 
-                    <property key="location" type="enumeration" defaultValue="content">
+                    <property key="pageLocation" type="enumeration" defaultValue="content">
                         <caption>Location</caption>
                         <category>Events</category>
                         <description>Location to open the form, either content, pop-up or blocking pop-up</description>
