@@ -3,7 +3,7 @@ import { Data } from "./../Carousel";
 import * as React from "Carousel/lib/react";
 
 import ImageCarouselModelProps from "./../../Carousel.d";
-import Carousel, { ICarouselProps } from "./Carousel";
+import Carousel, { CarouselProps } from "./Carousel";
 import CarouselCaption from "./CarouselCaption";
 import { CarouselItem, CarouselItemProps } from "./CarouselItem";
 
@@ -111,7 +111,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      */
     public render() {
         logger.debug(this.props.widgetId + ".render");
-        const carouselProps: ICarouselProps = {
+        const carouselProps: CarouselProps = {
             interval: this.props.interval,
         };
         const itemProps = this.getPropsFromData();

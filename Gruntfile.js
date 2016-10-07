@@ -54,7 +54,7 @@ module.exports = function (grunt) {
                     livereload: true
                 }
             },
-            xmlToTypedefinition: {
+            xmlToTypeDefinition: {
                 "files": ["./src/Carousel/Carousel.xml", "widget.xsl"],
                 "tasks": ["xsltproc"],
                 options: {

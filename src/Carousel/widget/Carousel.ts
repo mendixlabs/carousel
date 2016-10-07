@@ -1,6 +1,8 @@
 import * as dojoDeclare from "dojo/_base/declare";
+
 // tslint:disable-next-line : no-unused-variable
 import * as React from "Carousel/lib/react";
+
 import * as _WidgetBase from  "mxui/widget/_WidgetBase";
 import ReactDOM = require("Carousel/lib/react-dom");
 
@@ -235,7 +237,7 @@ export class CarouselWrapper extends _WidgetBase {
     }
 }
 
-// Declare widget's prototype the Dojo way
+// Declare widget prototype the Dojo way
 // Thanks to https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/dojo/README.md
 // tslint:disable : only-arrow-functions
 const DojoCarousel = dojoDeclare(
