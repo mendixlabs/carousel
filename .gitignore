@@ -79,7 +79,4 @@ src/ImageCarouselReact/widget/components/Carousel.js
 src/ImageCarouselReact/widget/components/CarouselItem.js
 src/ImageCarouselReact/widget/components/CarouselCaption.js
 src/ImageCarouselReact/widget/components/Glyphicon.js
-src/ImageCarouselReact/widget/components/SafeAnchor.js
 src/ImageCarouselReact/widget/utils/bootstrapUtils.js
-src/ImageCarouselReact/widget/utils/TransitionEvents.js
-src/ImageCarouselReact/widget/utils/StyleConfig.js

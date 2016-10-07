@@ -1,10 +1,6 @@
 {
   "extends": "tslint:latest", // Widget dev rules base
   "rules": {
-    "interface-name": [
-      false,
-      "always-prefix"
-    ],
     "class-name": true,
     "comment-format": [
       true,
@@ -77,6 +73,10 @@
       "check-module",
       "check-separator",
       "check-type"
+    ],
+    "interface-name": [
+      false,
+      "always-prefix"
     ]
     // Rules for Widget development
   }
