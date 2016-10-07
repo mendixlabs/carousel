@@ -9,37 +9,35 @@
 import classNames = require("Carousel/lib/classnames");
 import * as React from "Carousel/lib/react";
 
-import { IBootstrapProps, prefix } from "../utils/bootstrapUtils";
+import { prefix } from "../utils/bootstrapUtils";
 
-interface ICaptionProps extends React.Props<CarouselCaption> {
-  componentClass?: string;
-  className?: string;
-  bsProps?: IBootstrapProps;
-  elementProps?: {};
-};
+interface CaptionProps extends React.Props<CarouselCaption> {
+    componentClass?: string;
+    className?: string;
+    bootstrapClass?: string;
+    elementProps?: {};
+}
 
-class CarouselCaption extends React.Component<ICaptionProps, {}> {
-  public static defaultProps: ICaptionProps = {
-    bsProps: {
-      bsClass: "carousel-caption",
-    },
-    componentClass: "div",
-  };
-  private loggerNode: string = "CarouselCaption";
+class CarouselCaption extends React.Component<CaptionProps, {}> {
+    public static defaultProps: CaptionProps = {
+        bootstrapClass: "carousel-caption",
+        componentClass: "div",
+    };
+    private loggerNode: string = "CarouselCaption";
 
-  public render() {
-    logger.debug(this.loggerNode + " .render");
-    const { className, bsProps, componentClass: Component } = this.props;
-    const classes = prefix(bsProps);
-    const children = {children: this.props.children};
+    public render() {
+        logger.debug(this.loggerNode + " .render");
+        const { className, bootstrapClass, componentClass: Component } = this.props;
+        const classes = prefix(bootstrapClass);
+        const children = { children: this.props.children };
 
-    return (
-      <Component
-        {...children}
-        className={classNames(className, classes)}
-      />
-    );
-  }
+        return (
+            <Component
+                {...children}
+                className={classNames(className, classes)}
+                />
+        );
+    }
 }
 
 export default CarouselCaption;

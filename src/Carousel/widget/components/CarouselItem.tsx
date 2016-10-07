@@ -10,11 +10,7 @@ import * as React from "Carousel/lib/react";
 import ReactDOM = require("Carousel/lib/react-dom");
 
 import { IObject } from "../utils/bootstrapUtils";
-// import TransitionEvents from "../utils/TransitionEvents";
 import { Direction } from "./Carousel";
-
-// TODO: This should use a timeout instead of TransitionEvents, or else just
-// not wait until transition end to trigger continuing animations.
 
 export interface CarouselItemProps extends React.Props<CarouselItem> {
     active?: boolean;
@@ -26,7 +22,7 @@ export interface CarouselItemProps extends React.Props<CarouselItem> {
     className?: string;
     onClick?: React.EventHandler<React.MouseEvent<HTMLElement>>;
     slide?: boolean;
-};
+}
 
 interface CarouselItemState {
     direction: ItemDirection;
@@ -47,7 +43,7 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
         super(props, context);
         this.loggerNode = "CarouselItem";
         logger.debug(this.loggerNode + " .constructor");
-        // bind context
+
         this.handleAnimateOutEnd = this.handleAnimateOutEnd.bind(this);
 
         this.state = {
@@ -63,28 +59,18 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
             this.setState({ direction: null });
         }
     }
-    // For performance reasons and can be removed without affecting the functionality
-    // Mendix will handle performance
-    public shouldComponentUpdate(nextProps: CarouselItemProps) {
-        return this.props.slide || nextProps !== this.props;
-    }
 
     public componentDidUpdate(prevProps: CarouselItemProps) {
         logger.debug(this.loggerNode + " .componentDidUpdate");
         const { active } = this.props;
         const prevActive = prevProps.active;
-        // Call or register slide end handler for previously active item
         if (!active && prevActive) {
             if (this.props.slide) {
-                // TransitionEvents.addEndEventListener(
-                //   ReactDOM.findDOMNode(this), this.handleAnimateOutEnd
-                // );
                 ReactDOM.findDOMNode(this).addEventListener("transitionend", this.handleAnimateOutEnd, false);
             } else {
                 this.handleAnimateOutEnd();
             }
         }
-        // animate transition
         if (active !== prevActive && this.props.slide) {
             setTimeout(() => this.startAnimation(), 20);
         }
@@ -106,10 +92,9 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
         const classes: IObject = {
             active: active && !animateIn || animateOut,
             item: true,
+            [direction]: direction && active && animateIn,
+            [this.state.direction]: this.state.direction && (animateIn || animateOut),
         };
-        // Alternative is Object.assign ... no support yet
-        classes[direction] = direction && active && animateIn;
-        classes[this.state.direction] = this.state.direction && (animateIn || animateOut);
 
         return (
             <div
@@ -118,14 +103,6 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
                 />
         );
     }
-    /**
-     * EventHandler: Called when animation/transition ends
-     * 
-     * @private
-     * @returns
-     * 
-     * @memberOf CarouselItem
-     */
     private handleAnimateOutEnd() {
         logger.debug(this.loggerNode + " .handleAnimateOutEnd");
         if (this.isUnmounted) {
@@ -136,17 +113,8 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
             this.props.onAnimateOutEnd(this.props.index);
         }
     }
-    /**
-     * Triggers the slide animation in the specified direction 
-     * 
-     * @private
-     * @returns
-     * 
-     * @memberOf CarouselItem
-     */
     private startAnimation() {
         logger.debug(this.loggerNode + " .startAnimation");
-        // Can be unmounted because function is asychronous
         if (this.isUnmounted) {
             return;
         }

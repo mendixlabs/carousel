@@ -22,7 +22,7 @@ node_modules/
 *.bak
 *.map
 *.tmp
-*.jshintrc
+
 src/Carousel/Carousel.d.ts
 src/Carousel/widget/Carousel.js
 src/Carousel/widget/components/ImageCarousel.js
