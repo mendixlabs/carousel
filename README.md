@@ -2,7 +2,7 @@
 Author: Akileng Isaac, Flock of Birds
 
 Type: Widget
-Latest Version: 1.0
+Latest Version: 0.1.1
 Package file name: Carousel.mpk
 
 ## Description

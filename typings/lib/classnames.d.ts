@@ -17,6 +17,6 @@ interface ClassNamesFn {
 
 declare var classNames: ClassNamesFn;
 
-declare module "ImageCarouselReact/lib/classnames" {
+declare module "Carousel/lib/classnames" {
 	export = classNames
 }

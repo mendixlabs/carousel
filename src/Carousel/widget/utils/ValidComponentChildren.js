@@ -1,4 +1,4 @@
-define(["require", "exports", "ImageCarouselReact/lib/react"], function (require, exports, React) {
+define(["require", "exports", "Carousel/lib/react"], function (require, exports, React) {
     "use strict";
     function map(children, func, context) {
         var index = 0;
