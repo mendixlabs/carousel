@@ -55,7 +55,7 @@ module.exports = function (grunt) {
                 }
             },
             xmlToTypedefinition: {
-                "files": ["./src/ImageCarouselReact/ImageCarouselReact.xml", "widget.xsl"],
+                "files": ["./src/Carousel/Carousel.xml", "widget.xsl"],
                 "tasks": ["xsltproc"],
                 options: {
                     debounceDelay: 250
@@ -124,7 +124,7 @@ module.exports = function (grunt) {
             },
             compile: {
                 files: {
-                    "src/ImageCarouselReact/ImageCarouselReact.d.ts" : ["src/ImageCarouselReact/ImageCarouselReact.xml"]
+                    "src/Carousel/Carousel.d.ts" : ["src/Carousel/Carousel.xml"]
                 }
             }
         }        

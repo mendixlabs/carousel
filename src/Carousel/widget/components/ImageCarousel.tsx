@@ -1,11 +1,11 @@
 
-import {Data} from "./../ImageCarouselReact";
-import * as React from "ImageCarouselReact/lib/react";
+import { Data } from "./../Carousel";
+import * as React from "Carousel/lib/react";
 
-import ImageCarouselModelProps from "./../../ImageCarouselReact.d";
-import Carousel, {ICarouselProps} from "./Carousel";
+import ImageCarouselModelProps from "./../../Carousel.d";
+import Carousel, { ICarouselProps } from "./Carousel";
 import CarouselCaption from "./CarouselCaption";
-import {CarouselItem, CarouselItemProps } from "./CarouselItem";
+import { CarouselItem, CarouselItemProps } from "./CarouselItem";
 
 interface ShowPageProps {
     pageName?: string;
@@ -15,7 +15,7 @@ interface ShowPageProps {
     guid?: string;
 }
 
-interface OnclickProps {
+interface OnClickProps {
     guid?: string;
     page?: string;
     clickMF?: string;
@@ -115,9 +115,9 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
             interval: this.props.interval,
         };
         const itemProps = this.getPropsFromData();
+        const classes = this.props.widgetId + " image-carousel-react";
         if (this.props.data.length > 0) {
-            // Returned when there is data/images
-            const classes = this.props.widgetId + " image-carousel-react";
+            // Has images
             return (
                 <div style={this.carouselStyle} className={classes}>
                     <Carousel {...carouselProps} >
@@ -126,32 +126,24 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
                 </div>
             );
         } else if (this.props.isLoading) {
-            // returned when its still loading
-            const classes = this.props.widgetId + " image-carousel-react image-carousel-loading";
+            // Images loading 
             return (
-                <div style={this.carouselStyle} className={classes}>
+                <div style={this.carouselStyle} className={classes + " image-carousel-loading"}>
                     Loading ...
                 </div>
             );
         } else {
-            // returned when there is no data/images
-            const classes = this.props.widgetId + " image-carousel-react image-carousel-no-data";
-            return (<div className={classes}> </div>);
+            // Has no images
+            return (<div className={classes + "image-carousel-no-data"}> </div>);
         }
     }
     /**
      * Processes the heights and width values depending on type of units
      */
     private getValueFromUnits(value: string|number, type: string, isInner?: boolean): number|string {
-        if (type === "auto") {
-            return "";
-        }
-        if (isInner && type === "percent") {
-            return "100%";
-        }
-        if (type === "percent") {
-            return value + "%";
-        }
+        if (type === "auto") { return ""; }
+        if (isInner && type === "percent") { return "100%"; }
+        if (type === "percent") { return value + "%"; }
         return value;
     }
     /**
@@ -160,25 +152,19 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
     private getCarouselItem(itemProps: ItemProps) {
         logger.debug(this.props.widgetId + ".getCarouselItem");
         return (
-            <CarouselItem
-                onClick={itemProps.onClick}
-                key={itemProps.key}
-                >
+            <CarouselItem onClick={itemProps.onClick} key={itemProps.key}>
                 <img style={this.carouselItemStyle} alt={itemProps.alt} src={itemProps.src} />
-                <CarouselCaption>
-                    <h3>{itemProps.caption}</h3>
-                    <p>{itemProps.description}</p>
-                </CarouselCaption>
+                <CarouselCaption> <h3>{itemProps.caption}</h3> <p>{itemProps.description}</p> </CarouselCaption>
             </CarouselItem>
         );
     }
     /**
      * Handles the onclick for carousel items
      */
-    private onItemClick(onClickProps?: OnclickProps) {
+    private onItemClick(onClickProps?: OnClickProps) {
         logger.debug(this.props.widgetId + ".onItemClick");
         if (onClickProps.onClickEvent === "callMicroflow" && onClickProps.clickMF) {
-            this.clickMicroflow(onClickProps.clickMF, onClickProps.guid);
+            this.executeMicroflow(onClickProps.clickMF, onClickProps.guid);
         } else if (onClickProps.onClickEvent === "openPage" && onClickProps.page) {
             this.showPage({
                 guid: onClickProps.guid,
@@ -192,21 +178,16 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
     /**
      * Executes the Onclick event, call microflow.
      */
-    private clickMicroflow(name: string, guid?: string) {
+    private executeMicroflow(name: string, guid?: string) {
         let params: {
             applyto?: string,
             guids?: string[],
         } = {
-                applyto: "none",
+                applyto: guid ? "selection" : "none",
+                guids: guid ? [guid] : [],
             };
-        if (guid) {
-            params.applyto = "selection";
-            params.guids = [guid];
-        }
         mx.ui.action(name, {
-            callback: () => {
-                logger.debug(this.props.widgetId + ".clickMicroflow callback success");
-            },
+            callback: () => { logger.debug(this.props.widgetId + ".clickMicroflow callback success"); },
             error: (error) => {
                 logger.error(this.props.widgetId + ": An error occurred while executing microflow: " + error);
             },
@@ -233,8 +214,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      */
     private getPropsFromData(): ItemProps[] {
         logger.debug(this.props.widgetId + ".getCarouselItemsFromObject");
-        return this.props.data.map((item, index) => {
-            return {
+        return this.props.data.map((item, index) => ({
                 alt: item.caption,
                 caption: item.caption,
                 description: item.description,
@@ -248,8 +228,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
                     pageLocation: item.onClick.pageLocation,
                 }),
                 src: item.url,
-            };
-        });
+        }));
     }
 };
 

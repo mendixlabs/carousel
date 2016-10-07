@@ -1,8 +1,8 @@
 import * as dojoDeclare from "dojo/_base/declare";
 // tslint:disable-next-line : no-unused-variable
-import * as React from "ImageCarouselReact/lib/react";
+import * as React from "Carousel/lib/react";
 import * as _WidgetBase from  "mxui/widget/_WidgetBase";
-import ReactDOM = require("ImageCarouselReact/lib/react-dom");
+import ReactDOM = require("Carousel/lib/react-dom");
 
 import { ImageCarousel, ImageCarouselProps } from "./components/ImageCarousel";
 /**
@@ -23,7 +23,7 @@ export interface Data {
     url: string;
 }
 
-export class ImageCarouselReactWrapper extends _WidgetBase {
+export class CarouselWrapper extends _WidgetBase {
     // Require context will be overwritten with "NoContext" version of the widget.
     private requiresContext: boolean;
     // Parameters configured in the Modeler
@@ -50,7 +50,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
     constructor(args?: Object, elem?: HTMLElement) {
         // Do not add any default value here... it wil not run in dojo!     
         super() ;
-        return new DojoImageCarouselReact(args, elem);
+        return new DojoCarousel(args, elem);
     }
     public createProps(): ImageCarouselProps {
         return {
@@ -176,8 +176,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
      */
     private setDataFromObjects(callback: Function, objects: mendix.lib.MxObject[]): void {
         logger.debug(this.id + ".getCarouselItemsFromObject");
-        this.data = objects.map((itemObj): Data => {
-            return {
+        this.data = objects.map((itemObj): Data => ({
                 caption: this.captionAttr ? itemObj.get(this.captionAttr) as string : "",
                 description: this.descriptionAttr ? itemObj.get(this.descriptionAttr) as string : "",
                 onClick: {
@@ -188,8 +187,7 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                     pageLocation: this.pageLocation,
                 },
                 url: this.getFileUrl(itemObj.getGuid()),
-            };
-        });
+        }));
         callback();
     }
     /**
@@ -197,20 +195,15 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
      */
     private getFileUrl(objectId: string): string {
         logger.debug(this.id + ".getFileUrl");
-        let url: string;
-        if (objectId !== null || typeof(objectId) !== "undefined") {
-            return url = "file?target=window&guid=" + objectId + "&csrfToken=" +
+        return "file?target=window&guid=" + objectId + "&csrfToken=" +
                     mx.session.getCSRFToken() + "&time=" + Date.now();
-        }
-        return url;
     }
     /**
      * iterate over modeler setting of the static images for props and set state
      */
     private fetchDataFromStatic(): void {
         logger.debug(this.id  + ".getPropsFromObjects");
-        this.data = this.staticImageCollection.map((itemObject, index): Data => {
-            return {
+        this.data = this.staticImageCollection.map((itemObject, index): Data => ({
                 caption: itemObject.imgCaption,
                 description: itemObject.imgDescription,
                 onClick: {
@@ -220,9 +213,8 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
                     page: itemObject.openPage,
                     pageLocation: itemObject.pageSettings,
                 },
-                url: itemObject.pictureUrl ,
-            };
-        });
+                url: itemObject.pictureUrl,
+        }));
     }
     private resetSubscriptions(): void {
         // only run when widget is using context.
@@ -246,8 +238,8 @@ export class ImageCarouselReactWrapper extends _WidgetBase {
 // Declare widget's prototype the Dojo way
 // Thanks to https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/dojo/README.md
 // tslint:disable : only-arrow-functions
-const DojoImageCarouselReact = dojoDeclare(
-    "ImageCarouselReact.widget.ImageCarouselReact", [ _WidgetBase ], (function (Source: any) {
+const DojoCarousel = dojoDeclare(
+    "Carousel.widget.Carousel", [ _WidgetBase ], (function (Source: any) {
     let result: any = {};
     // dojo.declare.constructor is called to construct the widget instance.
     // Implement to initialize non-primitive properties.
@@ -266,6 +258,6 @@ const DojoImageCarouselReact = dojoDeclare(
         }
     }
     return result;
-} (ImageCarouselReactWrapper)));
+} (CarouselWrapper)));
 
-export default ImageCarouselReactWrapper;
+export default CarouselWrapper;

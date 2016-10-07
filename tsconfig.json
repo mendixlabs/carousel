@@ -17,6 +17,6 @@
 		"out",
 		"nbproject",
 		"typings/redux"
-		// "src/ImageCarouselReact/lib"
+		// "src/Carousel/lib"
   ]
 }

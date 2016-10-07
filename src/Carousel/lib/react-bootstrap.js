@@ -2,7 +2,7 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("react"), require("react-dom"));
 	else if(typeof define === 'function' && define.amd)
-		define(["ImageCarouselReact/lib/react", "ImageCarouselReact/lib/react-dom"], factory);
+		define(["Carousel/lib/react", "Carousel/lib/react-dom"], factory);
 	else if(typeof exports === 'object')
 		exports["ReactBootstrap"] = factory(require("react"), require("react-dom"));
 	else

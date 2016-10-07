@@ -19,7 +19,7 @@
   } else if (typeof define === "function" && define.amd) {
         //AS: Custom define, use local libs
         //define(['react'], f);
-        define(["ImageCarouselReact/lib/react"], f);
+        define(["Carousel/lib/react"], f);
 
   // <script>
   } else {

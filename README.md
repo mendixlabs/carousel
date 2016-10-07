@@ -1,13 +1,13 @@
-# ImageCarouselReact
+# Carousel
 Author: Akileng Isaac, Flock of Birds
 
 Type: Widget
 Latest Version: 1.0
-Package file name: ImageCarouselReact.mpk
+Package file name: Carousel.mpk
 
 ## Description
 
-Displays images in a carousel either static or dynamic images
+Display images in a carousel either from static or dynamic data source
 
 ## Typical usage scenario
 

@@ -5,9 +5,9 @@
  * This code is under the MIT license found here:
  * https://github.com/react-bootstrap/react-bootstrap/blob/master/LICENSE
  */
-import classNames = require("ImageCarouselReact/lib/classnames");
-import * as React from "ImageCarouselReact/lib/react";
-import ReactDOM = require("ImageCarouselReact/lib/react-dom");
+import classNames = require("Carousel/lib/classnames");
+import * as React from "Carousel/lib/react";
+import ReactDOM = require("Carousel/lib/react-dom");
 
 import { IObject } from "../utils/bootstrapUtils";
 // import TransitionEvents from "../utils/TransitionEvents";

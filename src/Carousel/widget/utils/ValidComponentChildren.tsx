@@ -1,6 +1,6 @@
 // TODO: This module should be ElementChildren, and should use named exports.
 
-import * as React from "ImageCarouselReact/lib/react";
+import * as React from "Carousel/lib/react";
 
 /**
  * Iterates through children that are typically specified as `props.children`,

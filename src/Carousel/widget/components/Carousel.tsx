@@ -8,8 +8,8 @@
 import { IBootstrapProps, prefix } from "../utils/bootstrapUtils";
 import ValidComponentChildren from "../utils/ValidComponentChildren";
 import Glyphicon from "./Glyphicon";
-import classNames = require("ImageCarouselReact/lib/classnames");
-import * as React from "ImageCarouselReact/lib/react"; // Gets children that are React components
+import classNames = require("Carousel/lib/classnames");
+import * as React from "Carousel/lib/react"; // Gets children that are React components
 
 // TODO: `slide` should be `animate`.
 // TODO: Use uncontrollable.

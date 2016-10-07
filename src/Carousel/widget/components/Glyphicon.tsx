@@ -5,8 +5,8 @@
  * This code is under the MIT license found here:
  * https://github.com/react-bootstrap/react-bootstrap/blob/master/LICENSE
  */
-import classNames = require("ImageCarouselReact/lib/classnames");
-import * as React from "ImageCarouselReact/lib/react";
+import classNames = require("Carousel/lib/classnames");
+import * as React from "Carousel/lib/react";
 
 import { IBootstrapProps, prefix } from "../utils/bootstrapUtils";
 

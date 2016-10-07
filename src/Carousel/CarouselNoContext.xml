@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget id="ImageCarouselReact.widget.ImageCarouselReactNoContext" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../xsd/widget.xsd">
+<widget id="Carousel.widget.CarouselNoContext" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../xsd/widget.xsd">
     <name>Carousel (No Context)</name>
-   <description>Displays images in a carousel either static or dynamic images</description>
+   <description>Display images in a carousel either from static or dynamic data source</description>
   
       <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2Fy
 ZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAfxJREFUeNqkk89LFGEcxp935t3WZmfD
@@ -36,18 +36,18 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             <property key="entityConstraint" type="entityConstraint" entityProperty="imageEntity" required="false">
 			    <caption>Constraint</caption>
 			    <category>Source - XPath</category>
-			    <description>Constraint on the carousel entity.</description>
+			    <description>Constraint on the carousel entity</description>
 	        </property>
             <property key="dataSourceMicroflow" type="microflow" required="false">
                 <caption>Data source microflow </caption>
                 <category>Source - microflow</category>
-                <description>Returns images to display on Carousel.</description>
+                <description>Returns images to display in the carousel.</description>
                 <returnType type="Object" entityProperty="imageEntity" isList="true"/>
 	        </property>
             <property key="staticImageCollection" type="object" isList="true" required="false">
                 <caption>Images to display</caption>
                 <category>Source - static</category>
-                <description>Images to display on carousel</description> 
+                <description>Images to display in the carousel</description> 
                 <properties>
                     <property key="imgCaption" type="string" required="false">
                         <caption>Image caption</caption>
@@ -68,7 +68,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                     <property key="onClickEvent" type="enumeration" defaultValue="none">
                         <caption>On click</caption>
                         <category>Events</category>
-                        <description>Location to open the form, either content, pop-up or blocking pop-up </description>
+                        <description>Event to execute</description>
                         <enumerationValues>
                             <enumerationValue key="none">Do nothing</enumerationValue>
                             <enumerationValue key="openPage">Show a page</enumerationValue>
@@ -83,16 +83,16 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                         <returnType type="Void"/>
                     </property>
 
-                    <property key="openPage" type="form" required="false">
-                        <caption>Open page</caption>
+                    <property key="pageForm" type="form" required="false">
+                        <caption>Page</caption>
                         <category>Events</category>
-                        <description>Opens a page when image is clicked</description> 
+                        <description>Page to be opened when the image is clicked</description> 
                     </property>
 
-                    <property key="pageSettings" type="enumeration" defaultValue="content">
-                        <caption>Page settings</caption>
+                    <property key="location" type="enumeration" defaultValue="content">
+                        <caption>Location</caption>
                         <category>Events</category>
-                        <description>Location to open the form, either content, pop-up or blocking pop-up </description>
+                        <description>Location to open the form, either content, pop-up or blocking pop-up</description>
                         <enumerationValues>
                             <enumerationValue key="content">In content</enumerationValue>
                             <enumerationValue key="popup">Pop-up</enumerationValue>
@@ -105,7 +105,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             <property key="captionAttr" type="attribute" entityProperty="imageEntity" required="false">
                 <caption>Caption</caption>
                 <category>Data source</category>
-                <description>Caption of a carousel image</description> 
+                <description>Caption to display on the image</description> 
                 <attributeTypes>
                      <attributeType name="String"/> 
                 </attributeTypes>
@@ -114,12 +114,12 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             <property key="descriptionAttr" type="attribute" entityProperty="imageEntity" required="false">
                 <caption>Description</caption>
                 <category>Data source</category>
-                <description>Description of a carousel image</description> 
+                <description>Description to display on the image</description> 
                 <attributeTypes>
                      <attributeType name="String"/> 
                 </attributeTypes>
             </property>
-            
+
             <property key="interval" type="integer" defaultValue="5000">
                 <caption>Interval</caption>
                 <category>Carousel</category>
@@ -129,7 +129,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             <property key="onClickEvent" type="enumeration" defaultValue="none">
                 <caption>On click</caption>
                 <category>Events</category>
-                <description>Location to open the form, either content, pop-up or blocking pop-up </description>
+                <description>Event to execute</description>
                 <enumerationValues>
                     <enumerationValue key="none">Do nothing</enumerationValue>
                     <enumerationValue key="openPage">Show a page</enumerationValue>
@@ -146,13 +146,13 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             <property key="pageForm" type="form" required="false">
                 <caption>Page</caption>
                 <category>Events</category>
-                <description>Opens a page when image is clicked</description> 
+                <description>Page to be opened when the image is clicked</description> 
             </property>
 
             <property key="pageLocation" type="enumeration" defaultValue="content">
                 <caption>Location</caption>
                 <category>Events</category>
-                <description>Location to open the form, either content, pop-up or blocking pop-up </description>
+                <description>Location to open the form, either content, pop-up or blocking pop-up</description>
                 <enumerationValues>
                     <enumerationValue key="content">In content</enumerationValue>
                     <enumerationValue key="popup">Pop-up</enumerationValue>
