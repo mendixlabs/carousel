@@ -93,11 +93,11 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         }
         if (this.props.onClickEvent === "callMicroflow" && !this.props.callMicroflow) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
-                        " 'On Click' call MicroFlow is set and there is no 'Call Microflow' Selected");
+                        " 'On Click' call a microFlow is set and there is no 'Call Microflow' Selected");
         }
         if (this.props.onClickEvent === "openPage" && !this.props.pageForm) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
-                        " 'On Click' Open Page, Popup Blocking or Popup is set and there is no 'Open Page' Selected");
+                        " 'On Click' Show a page is set and there is no 'Page' Selected");
         }
         if (this.props.imageSource === "xpath" && !this.props.imageEntity) {
              mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
