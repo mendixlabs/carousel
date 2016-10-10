@@ -3,7 +3,7 @@
     <name>Carousel (No Context)</name>
    <description>Display images in a carousel either from static or dynamic data source</description>
   
-      <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2Fy
+     <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2Fy
 ZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAfxJREFUeNqkk89LFGEcxp935t3WZmfD
 XWTZRDTYgoTWS3aI6OgxKMRL+w9067A3uxTUOQqCDt50L160qGtdxBAhDx0ETaTW
 UduBmaJ1Z8aZebf3++4Uq7goNPDy/ph5Ps/3eb8Ma7fb+J+HP56fB0EYY3/nO/L8
@@ -36,12 +36,12 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             <property key="entityConstraint" type="entityConstraint" entityProperty="imageEntity" required="false">
 			    <caption>Constraint</caption>
 			    <category>Source - XPath</category>
-			    <description>Constraint on the carousel entity</description>
+			    <description>Constraint on the carousel entity.</description>
 	        </property>
             <property key="dataSourceMicroflow" type="microflow" required="false">
                 <caption>Data source microflow </caption>
                 <category>Source - microflow</category>
-                <description>Returns images to display in the carousel.</description>
+                <description>Returns images to display in the carousel</description>
                 <returnType type="Object" entityProperty="imageEntity" isList="true"/>
 	        </property>
             <property key="staticImageCollection" type="object" isList="true" required="false">
@@ -49,22 +49,22 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <category>Source - static</category>
                 <description>Images to display in the carousel</description> 
                 <properties>
-                    <property key="imgCaption" type="string" required="false">
-                        <caption>Image caption</caption>
+                    <property key="caption" type="string" required="false">
+                        <caption>Caption</caption>
                         <category>Data source</category>
                         <description>Caption to display on the image</description>
                     </property>
-                    <property key="imgDescription" type="string" required="false">
-                        <caption>Image description</caption>
+                    <property key="description" type="string" required="false">
+                        <caption>Description</caption>
                         <category>Data source</category>
                         <description>Description to display on the image</description>
                     </property>
                     <property key="pictureUrl" type="image" required="true">
-                        <caption>Image/picture</caption>
+                        <caption>Image</caption>
                         <category>Data source</category>
                         <description>Image to add to the carousel</description>
                     </property>
-                                        
+
                     <property key="onClickEvent" type="enumeration" defaultValue="none">
                         <caption>On click</caption>
                         <category>Events</category>
@@ -79,7 +79,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                      <property key="callMicroflow" type="microflow" required="false">
                         <caption>Call microflow</caption>
                         <category>Events</category>
-                        <description>Microflow to be triggered when an image is clicked</description>
+                        <description>Microflow to be triggered when the image is clicked</description>
                         <returnType type="Void"/>
                     </property>
 
@@ -119,7 +119,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                      <attributeType name="String"/> 
                 </attributeTypes>
             </property>
-
+            
             <property key="interval" type="integer" defaultValue="5000">
                 <caption>Interval</caption>
                 <category>Carousel</category>
@@ -146,7 +146,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             <property key="pageForm" type="form" required="false">
                 <caption>Page</caption>
                 <category>Events</category>
-                <description>Page to be opened when the image is clicked</description> 
+                <description>Page to be opened when image is clicked</description> 
             </property>
 
             <property key="pageLocation" type="enumeration" defaultValue="content">
