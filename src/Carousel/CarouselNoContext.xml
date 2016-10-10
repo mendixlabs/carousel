@@ -36,7 +36,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             <property key="entityConstraint" type="entityConstraint" entityProperty="imageEntity" required="false">
 			    <caption>Constraint</caption>
 			    <category>Source - XPath</category>
-			    <description>Constraint on the carousel entity.</description>
+			    <description>Constraint on the carousel entity</description>
 	        </property>
             <property key="dataSourceMicroflow" type="microflow" required="false">
                 <caption>Data source microflow </caption>
