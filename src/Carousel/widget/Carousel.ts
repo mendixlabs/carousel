@@ -80,7 +80,6 @@ export class CarouselWrapper extends _WidgetBase {
         };
     }
     public postCreate() {
-        logger.debug(this.id + ".postCreate");
         this.convertStringPropsToEnum();
         this.updateRendering();
     }
@@ -113,7 +112,6 @@ export class CarouselWrapper extends _WidgetBase {
      *
      */
     public update(object: mendix.lib.MxObject, callback: Function): void {
-        logger.debug(this.id + ".update");
         this.contextObject = object;
         this.updateData(() => {
             this.isLoading = false;
@@ -126,14 +124,12 @@ export class CarouselWrapper extends _WidgetBase {
      * will need to unmount react components
      */
     public uninitialize(): void {
-        logger.debug(this.id + ".uninitialize");
         unmountComponentAtNode(this.domNode);
     }
     /**
      *  called to render the interface 
      */
     private updateRendering(callback?: Function) {
-        logger.debug(this.id + ".updateRendering");
         let props = this.createProps();
         props.widgetId = this.id;
         render(
@@ -147,7 +143,6 @@ export class CarouselWrapper extends _WidgetBase {
      * Determines which data source was specific and calls the respective method to get the Data 
      */
     private updateData(callback: Function): void {
-        logger.debug(this.id + ".getCarouselData");
         if (this.imageSourceEnum === ImageSource.xpath && this.imageEntity) {
             this.fetchDataFromXpath((objects) => {
                 this.setData(objects);
@@ -162,7 +157,6 @@ export class CarouselWrapper extends _WidgetBase {
         callback();
     }
     private fetchDataFromXpath(callback: (objects: mendix.lib.MxObject[]) => void): void {
-        logger.debug(this.id + ".getDataFromXpath");
         const isMissingContext = (this.requiresContext && !this.contextObject) ||
                                  (!this.requiresContext && this.entityConstraint.indexOf("[%CurrentObject%]") > -1 );
         if (!isMissingContext) {
@@ -175,15 +169,12 @@ export class CarouselWrapper extends _WidgetBase {
                 xpath : xpathString,
             });
         } else {
-            logger.debug(this.id + ".getDataFromXpath empty context");
             callback([]);
         }
     }
     private fetchDataFromMicroflow(callback: (objects: mendix.lib.MxObject[]) => void): void {
-        logger.debug(this.id + ".fetchDataFromMicroflow");
         if (this.requiresContext && !this.contextObject) {
             // case there is not context ID the xpath will fail, so it should always show no images.
-            logger.debug(this.id + ".fetchDataFromMicroflow, empty context");
             callback([]);
         } else {
             mx.data.action({
@@ -201,7 +192,6 @@ export class CarouselWrapper extends _WidgetBase {
      * Transforms mendix object into item properties and set new state
      */
     private setData(objects: mendix.lib.MxObject[]): void {
-        logger.debug(this.id + ".getCarouselItemsFromObject");
         this.data = objects.map((itemObj): Data => ({
             caption: this.captionAttr ? itemObj.get(this.captionAttr) as string : "",
             description: this.descriptionAttr ? itemObj.get(this.descriptionAttr) as string : "",
@@ -211,11 +201,9 @@ export class CarouselWrapper extends _WidgetBase {
     private resetSubscriptions(): void {
         // Only run when widget is using context.
         if (this.requiresContext && this.contextObject) {
-            logger.debug(this.id + "._resetSubscriptions");
             // When a mendix object exists create subscription
             this.subscribe({
                 callback: guid => {
-                    logger.debug(this.id + "._resetSubscriptions object subscription update MxId " + guid);
                     this.updateData(() => {
                         this.isLoading = false;
                         this.updateRendering();
@@ -236,7 +224,6 @@ const DojoCarousel = dojoDeclare(
     // dojo.declare.constructor is called to construct the widget instance.
     // Implement to initialize non-primitive properties.
     result.constructor = function() {
-        logger.debug( this.id + ".constructor dojo");
         // default, will be set by NoContext Version, if not set, it should be true
         if (typeof this.requiresContext === "undefined") {
             this.requiresContext = true;

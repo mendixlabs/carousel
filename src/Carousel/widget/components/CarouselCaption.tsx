@@ -23,10 +23,8 @@ class CarouselCaption extends React.Component<CaptionProps, {}> {
         bootstrapClass: "carousel-caption",
         componentClass: "div",
     };
-    private loggerNode: string = "CarouselCaption";
 
     public render() {
-        logger.debug(this.loggerNode + " .render");
         const { className, bootstrapClass, componentClass: Component } = this.props;
         const classes = prefix(bootstrapClass);
         const children = { children: this.props.children };

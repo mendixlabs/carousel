@@ -38,11 +38,8 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
         slide: true,
     };
     private isUnmounted: boolean;
-    private loggerNode: string;
     constructor(props: CarouselItemProps, context: CarouselItem) {
         super(props, context);
-        this.loggerNode = "CarouselItem";
-        logger.debug(this.loggerNode + " .constructor");
 
         this.handleAnimateOutEnd = this.handleAnimateOutEnd.bind(this);
 
@@ -54,14 +51,12 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
     }
 
     public componentWillReceiveProps(nextProps: CarouselItemProps) {
-        logger.debug(this.loggerNode + " .componentWillReceiveProps");
         if (this.props.active !== nextProps.active) {
             this.setState({ direction: null });
         }
     }
 
     public componentDidUpdate(prevProps: CarouselItemProps) {
-        logger.debug(this.loggerNode + " .componentDidUpdate");
         const { active } = this.props;
         const prevActive = prevProps.active;
         if (!active && prevActive) {
@@ -77,12 +72,10 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
     }
 
     public componentWillUnmount() {
-        logger.debug(this.loggerNode + " .componentWillUnmount");
         this.isUnmounted = true;
     }
 
     public render() {
-        logger.debug(this.loggerNode + " .render");
         const { direction, active, animateIn, animateOut, className } = this.props;
         const props = {
             children: this.props.children,
@@ -104,7 +97,6 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
         );
     }
     private handleAnimateOutEnd() {
-        logger.debug(this.loggerNode + " .handleAnimateOutEnd");
         if (this.isUnmounted) {
             return;
         }
@@ -114,7 +106,6 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
         }
     }
     private startAnimation() {
-        logger.debug(this.loggerNode + " .startAnimation");
         if (this.isUnmounted) {
             return;
         }

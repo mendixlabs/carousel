@@ -87,7 +87,6 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         };
     }
     public componentWillMount() {
-        logger.debug(this.props.widgetId + " .componentWillMount");
         this.checkConfig();
     }
     /**
@@ -121,7 +120,6 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      * React Component method that renders the interface once the component has mounted
      */
     public render() {
-        logger.debug(this.props.widgetId + ".render");
         const carouselProps: CarouselProps = {
             interval: this.props.interval,
         };
@@ -169,7 +167,6 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      * Creates a Carousel item based on the properties passed
      */
     private getCarouselItem(itemProps: ItemProps) {
-        logger.debug(this.props.widgetId + ".getCarouselItem");
         return (
             <CarouselItem onClick={itemProps.onClick} key={itemProps.key}>
                 <img style={this.carouselItemStyle} alt={itemProps.alt} src={itemProps.src} />
@@ -181,7 +178,6 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      * Handles the onclick for carousel items
      */
     private onItemClick(onClickProps: OnClickProps) {
-        logger.debug(this.props.widgetId + ".onItemClick");
         if (onClickProps.onClickEvent === OnClickEvent.callMicroflow && onClickProps.microflow) {
             this.executeMicroflow(onClickProps.microflow, onClickProps.guid);
         } else if (onClickProps.onClickEvent === OnClickEvent.openPage && onClickProps.page) {
@@ -190,13 +186,10 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
                 pageLocation: onClickProps.pageLocation,
                 pageName: onClickProps.page,
             });
-        } else {
-            logger.debug(this.props.widgetId + ".onItemClick ignored");
         }
     }
     private executeMicroflow(name: string, guid?: string) {
         mx.ui.action(name, {
-            callback: () => logger.debug(this.props.widgetId + ".clickMicroflow callback success"),
             error: error => {
                 logger.error(this.props.widgetId + ": An error occurred while executing microflow: ", error);
                 mx.ui.error("Error occurred during handling the microflow " + name);
@@ -223,7 +216,6 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      * Creates an array of properties that we be used to create the Carousel items
      */
     private getPropsFromData(): ItemProps[] {
-        logger.debug(this.props.widgetId + ".getCarouselItemsFromObject");
         return this.props.data.map((item, index) => {
             const clickObject: OnClickProps = {
                     guid: item.guid,
@@ -247,7 +239,6 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      * Returns a image url from the object Id.
      */
     private getFileUrl(objectId: string): string {
-        logger.debug(this.props.widgetId + ".getFileUrl");
         return "file?target=window&guid=" + objectId + "&csrfToken=" +
                     mx.session.getCSRFToken() + "&time=" + Date.now();
     }
@@ -255,7 +246,6 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      * Creates an array of properties that we be used to create the Carousel items
      */
     private getPropsFromStatic(): ItemProps[] {
-        logger.debug(this.props.widgetId + ".getCarouselItemsFromObject");
         return this.props.staticImageCollection.map((item, index) => {
             const clickObject: OnClickProps = {
                     guid: this.props.contextId,
