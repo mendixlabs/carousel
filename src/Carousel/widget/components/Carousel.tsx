@@ -128,13 +128,12 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
 
     private renderIndicators(children: React.ReactChildren, activeIndex: number, bootstrapClass: string) {
         let indicators: Array<JSX.Element> = [];
-        const style = { marginRight: "5px" };
+        const style = "indicator-spacing";
         ValidComponentChildren.forEach(children, (child: React.ReactChild, index: number) => {
             indicators.push(
                 <li
                     key={index}
-                    className={index === activeIndex ? "active" : null}
-                    style={style}
+                    className={index === activeIndex ? style + " active " : style}
                     onClick={(e: CarouselEvent<HTMLLIElement>) => this.slide(index, e)}
                 />
             );

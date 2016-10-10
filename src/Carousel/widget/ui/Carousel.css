@@ -22,3 +22,6 @@
         transform: rotate(359deg);
     }
 }
+.carousel-indicators .indicator-spacing {
+     margin-right: 5px;
+     }
