@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:m="http://www.mendix.com/widget/1.0/">
 <xsl:output method="text" indent="yes" />
 <xsl:strip-space elements="*"/>
-
+<!-- Properties -->
 <xsl:template name="properties">
     <xsl:value-of select="@key" />?: <xsl:choose>
     <xsl:when test="@type = 'entity' or @type = 'microflow' or @type = 'entityConstraint' or @type = 'attribute' or @type = 'form' or @type ='image' or @type = 'translatableString'">string</xsl:when>
@@ -19,6 +19,7 @@
   <xsl:param name = "name" />
         <xsl:value-of select="concat(translate(substring($name, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring($name, 2))" />
 </xsl:template>
+<!-- Main template -->
 <xsl:template match="/" name="widget">
 // WARNING do not make manual Changes to this file.
 // widget.d.ts files is auto generated from the params in the widget.xml
@@ -30,6 +31,7 @@ export interface ModelProps {
     <xsl:for-each select="m:widget/m:properties/m:property">
 <xsl:call-template name="properties" /></xsl:for-each>
 }
+<!-- Generate interface for object properties, only 1 level deep-->
 <xsl:for-each select="m:widget/m:properties/m:property[@type='object']">
 export interface <xsl:call-template name="CaptialFirst">
     <xsl:with-param name="name" select = "@key" />
@@ -38,7 +40,7 @@ export interface <xsl:call-template name="CaptialFirst">
 <xsl:call-template name="properties" /></xsl:for-each>
 }
 </xsl:for-each>
-
+<!-- Generate enums for attributes -->
 <xsl:for-each select="m:widget/m:properties/m:property[@type='enumeration']">
 export enum <xsl:call-template name="CaptialFirst">
     <xsl:with-param name="name" select = "@key" />
@@ -48,7 +50,7 @@ export enum <xsl:call-template name="CaptialFirst">
     </xsl:for-each>
 }
 </xsl:for-each>
-<!-- some comments -->
+<!-- Generate enums inside object attributes, only 1 level deep -->
 <xsl:for-each select="m:widget/m:properties/m:property[@type='object']/m:properties/m:property[@type='enumeration']">
 export enum <xsl:call-template name="CaptialFirst">
     <xsl:with-param name="name" select = "../../@key" />
@@ -60,7 +62,6 @@ export enum <xsl:call-template name="CaptialFirst">
     </xsl:for-each>
 }
 </xsl:for-each>
-
 
 </xsl:template>
 </xsl:stylesheet>
