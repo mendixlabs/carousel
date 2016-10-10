@@ -16,6 +16,7 @@ test/javasource/*/*
 
 .vscode/
 out/
+dist/
 nbproject/
 node_modules/
 .idea

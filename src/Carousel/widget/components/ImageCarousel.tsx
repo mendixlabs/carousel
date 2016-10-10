@@ -127,7 +127,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         };
         const itemProps = this.props.imageSourceEnum === ImageSource.static ?
             this.getPropsFromStatic() : this.getPropsFromData();
-        const classes = this.props.widgetId + " image-carousel-react";
+        const classes = this.props.widgetId + " mx-image-carousel";
         if (itemProps.length > 0) {
             // Has images
             return (

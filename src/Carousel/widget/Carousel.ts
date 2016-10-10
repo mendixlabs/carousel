@@ -8,16 +8,6 @@ import { HeightUnits, ImageSource, OnClickEvent,
     PageLocation, StaticImageCollection, WidthUnits } from "./../Carousel";
 import { ImageCarousel, ImageCarouselProps, StaticImageCollectionWithEnums } from "./components/ImageCarousel";
 
-interface OnClick {
-    clickMicroflow: string;
-    contextGuid?: string;
-    onClickEvent: string;
-    onClickEventEnum: OnClickEvent;
-    page?: string;
-    pageLocation?: string;
-    pageLocationEnum?: PageLocation;
-}
-
 export interface Data {
     caption?: string;
     description?: string;
