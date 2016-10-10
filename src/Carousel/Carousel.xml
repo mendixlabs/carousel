@@ -18,7 +18,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
 3Qd/BBgAioQXVN0jZskAAAAASUVORK5CYII=</icon>
 
      <properties>
-            <property key="imageEntity" type="entity">
+            <property key="imageEntity" type="entity" required="false">
                 <caption>Entity</caption>
                 <category>Data source</category>
                 <description>The entity which should be displayed in the carousel</description>
@@ -36,7 +36,7 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
             <property key="entityConstraint" type="entityConstraint" entityProperty="imageEntity" required="false">
 			    <caption>Constraint</caption>
 			    <category>Source - XPath</category>
-			    <description>Constraint on the carousel entity.</description>
+			    <description>Constraint on the carousel entity</description>
 	        </property>
             <property key="dataSourceMicroflow" type="microflow" required="false">
                 <caption>Data source microflow </caption>
@@ -49,18 +49,18 @@ rADlcYEr/Z5yjnz/s728XJNJXU45iLqzI5KLixXAcEKwTIT9bwKN7zFGjzrvpXO5
                 <category>Source - static</category>
                 <description>Images to display in the carousel</description> 
                 <properties>
-                    <property key="imgCaption" type="string" required="false">
-                        <caption>Image caption</caption>
+                    <property key="caption" type="string" required="false">
+                        <caption>Caption</caption>
                         <category>Data source</category>
                         <description>Caption to display on the image</description>
                     </property>
-                    <property key="imgDescription" type="string" required="false">
-                        <caption>Image description</caption>
+                    <property key="description" type="string" required="false">
+                        <caption>Description</caption>
                         <category>Data source</category>
                         <description>Description to display on the image</description>
                     </property>
                     <property key="pictureUrl" type="image" required="true">
-                        <caption>Image/picture</caption>
+                        <caption>Image</caption>
                         <category>Data source</category>
                         <description>Image to add to the carousel</description>
                     </property>

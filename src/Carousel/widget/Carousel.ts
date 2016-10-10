@@ -1,28 +1,17 @@
 import * as dojoDeclare from "dojo/_base/declare";
+import * as _WidgetBase from "mxui/widget/_WidgetBase";
 
-// tslint:disable-next-line : no-unused-variable
-import * as React from "Carousel/lib/react";
+import { createElement } from "Carousel/lib/react";
+import { render, unmountComponentAtNode } from "Carousel/lib/react-dom";
 
-import * as _WidgetBase from  "mxui/widget/_WidgetBase";
-import ReactDOM = require("Carousel/lib/react-dom");
-
-import { ImageCarousel, ImageCarouselProps } from "./components/ImageCarousel";
-/**
- * Implementation of Dojo wrapper for react components
- */
+import { HeightUnits, ImageSource, OnClickEvent,
+    PageLocation, StaticImageCollection, WidthUnits } from "./../Carousel";
+import { ImageCarousel, ImageCarouselProps, StaticImageCollectionWithEnums } from "./components/ImageCarousel";
 
 export interface Data {
     caption?: string;
     description?: string;
     guid?: string;
-    onClick?: {
-        clickMicroflow?: string,
-        contextGuid?: string,
-        onClickEvent: string,
-        page?: string,
-        pageLocation?: string,
-    };
-    url: string;
 }
 
 export class CarouselWrapper extends _WidgetBase {
@@ -31,29 +20,37 @@ export class CarouselWrapper extends _WidgetBase {
     // Parameters configured in the Modeler
     private imageEntity: string;
     private imageSource: "xpath" | "microflow" | "static";
+    private imageSourceEnum: ImageSource;
     private entityConstraint: string;
     private dataSourceMicroflow: string;
     private captionAttr: string;
     private descriptionAttr: string;
     private interval: number;
-    private staticImageCollection: any[];
+    private staticImageCollection: StaticImageCollection[];
+    private staticImageCollectionWithEnum: StaticImageCollectionWithEnums[];
     private onClickEvent: "none" | "openPage" | "callMicroflow";
+    private onClickEventEnum: OnClickEvent;
     private callMicroflow: string;
     private pageForm: string;
     private pageLocation: "content" | "popup" | "modal";
+    private pageLocationEnum: PageLocation;
     private width?: number;
     private widthUnits: "auto" | "pixels" | "percent";
+    private widthUnitsEnum: WidthUnits;
     private height?: number;
     private heightUnits: "auto" | "pixels" | "percent";
+    private heightUnitsEnum: HeightUnits;
     // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
     private contextObject: mendix.lib.MxObject;
     private data: Data[];
     private isLoading: boolean;
+
     constructor(args?: Object, elem?: HTMLElement) {
         // Do not add any default value here... it wil not run in dojo!     
         super() ;
         return new DojoCarousel(args, elem);
     }
+
     public createProps(): ImageCarouselProps {
         return {
             callMicroflow: this.callMicroflow,
@@ -65,21 +62,51 @@ export class CarouselWrapper extends _WidgetBase {
             entityConstraint: this.entityConstraint,
             height: this.height,
             heightUnits: this.heightUnits,
+            heightUnitsEnum: this.heightUnitsEnum,
             imageEntity: this.imageEntity,
             imageSource: this.imageSource,
+            imageSourceEnum: this.imageSourceEnum,
             interval: this.interval,
             isLoading: this.isLoading,
             onClickEvent: this.onClickEvent,
+            onClickEventEnum: this.onClickEventEnum,
             pageForm: this.pageForm,
             pageLocation: this.pageLocation,
+            pageLocationEnum: this.pageLocationEnum,
             staticImageCollection: this.staticImageCollection,
             width: this.width,
             widthUnits: this.widthUnits,
+            widthUnitsEnum: this.widthUnitsEnum,
         };
     }
     public postCreate() {
         logger.debug(this.id + ".postCreate");
+        this.convertStringPropsToEnum();
         this.updateRendering();
+    }
+    /**
+     * Convert modeler string enum properties to TypeScript enum values.
+     * Enum conversion for the items are done getDataFromObjects or fetchDataFromStatic
+     */
+    private convertStringPropsToEnum() {
+        // TSC Might show an incorrect error. 
+        // Both index and values are preserved in the enum object.
+        this.imageSourceEnum = ImageSource[this.imageSource];
+        this.onClickEventEnum = OnClickEvent[this.onClickEvent];
+        this.pageLocationEnum = PageLocation[this.pageLocation];
+        this.heightUnitsEnum = HeightUnits[this.widthUnits];
+        this.widthUnitsEnum = WidthUnits[this.widthUnits];
+        this.staticImageCollectionWithEnum = this.staticImageCollection.map((item, index) => ({
+            callMicroflow: item.callMicroflow,
+            caption: item.caption,
+            description: item.description,
+            onClickEvent: item.onClickEvent,
+            onClickEventEnum: OnClickEvent[item.onClickEvent],
+            pageForm: item.pageForm,
+            pageLocation: item.pageLocation,
+            pageLocationEnum: PageLocation[item.pageLocation],
+            pictureUrl: item.pictureUrl,
+        }));
     }
     /**
      * called when context is changed or initialized. 
@@ -100,7 +127,7 @@ export class CarouselWrapper extends _WidgetBase {
      */
     public uninitialize(): void {
         logger.debug(this.id + ".uninitialize");
-        ReactDOM.unmountComponentAtNode(this.domNode);
+        unmountComponentAtNode(this.domNode);
     }
     /**
      *  called to render the interface 
@@ -109,9 +136,8 @@ export class CarouselWrapper extends _WidgetBase {
         logger.debug(this.id + ".updateRendering");
         let props = this.createProps();
         props.widgetId = this.id;
-        ReactDOM.render(
-            React.createElement(ImageCarousel, props)
-            , this.domNode
+        render(
+            createElement(ImageCarousel, props), this.domNode
         );
         if (callback) {
             callback();
@@ -122,109 +148,73 @@ export class CarouselWrapper extends _WidgetBase {
      */
     private updateData(callback: Function): void {
         logger.debug(this.id + ".getCarouselData");
-        if (this.imageSource === "xpath" && this.imageEntity) {
-            this.fetchDataFromXpath(callback);
-        } else if (this.imageSource === "microflow" && this.dataSourceMicroflow) {
-            this.fetchDataFromMicroflow(callback);
-        } else if (this.imageSource === "static"  ) {
-            this.fetchDataFromStatic();
-            callback();
-        } else {
-            logger.error(this.id + ".getCarouselData unknown image source or error in widget configuration" +
-                         this.imageSource);
-            callback();
+        if (this.imageSourceEnum === ImageSource.xpath && this.imageEntity) {
+            this.fetchDataFromXpath((objects) => {
+                this.setData(objects);
+                callback();
+            });
+        } else if (this.imageSourceEnum === ImageSource.microflow && this.dataSourceMicroflow) {
+            this.fetchDataFromMicroflow((objects) => {
+                this.setData(objects);
+                callback();
+            });
         }
+        callback();
     }
-    private fetchDataFromXpath(callback: Function): void {
-        logger.debug(this.id  + ".getDataFromXpath");
+    private fetchDataFromXpath(callback: (objects: mendix.lib.MxObject[]) => void): void {
+        logger.debug(this.id + ".getDataFromXpath");
         const isMissingContext = (this.requiresContext && !this.contextObject) ||
                                  (!this.requiresContext && this.entityConstraint.indexOf("[%CurrentObject%]") > -1 );
         if (!isMissingContext) {
-            // case there is not context ID the xpath will fail, so it should always show no images.
-            // or in case no context is required, but the constraint contains CurrentObject. 
-            // That will also show an error in the config check.
             const guid = this.contextObject ? this.contextObject.getGuid() : "";
             const constraint = this.entityConstraint.replace("[%CurrentObject%]", guid);
             const xpathString = "//" + this.imageEntity + constraint;
             mx.data.get({
-                callback: this.setDataFromObjects.bind(this, callback), // is this callback right?
-                error: (error) => logger.error(this.id + ": An error occurred while retrieving items: " + error),
+                callback: callback.bind(this), // is this callback right?
+                error: error => logger.error(this.id + ": An error occurred while retrieving items: " + error),
                 xpath : xpathString,
             });
         } else {
-            logger.debug(this.id  + ".getDataFromXpath empty context");
-            this.setDataFromObjects(callback, []);
+            logger.debug(this.id + ".getDataFromXpath empty context");
+            callback([]);
         }
     }
-    private fetchDataFromMicroflow(callback: Function): void {
-        logger.debug(this.id  + ".fetchDataFromMicroflow");
+    private fetchDataFromMicroflow(callback: (objects: mendix.lib.MxObject[]) => void): void {
+        logger.debug(this.id + ".fetchDataFromMicroflow");
         if (this.requiresContext && !this.contextObject) {
             // case there is not context ID the xpath will fail, so it should always show no images.
-            logger.debug(this.id  + ".fetchDataFromMicroflow, empty context");
-            this.setDataFromObjects(callback, []);
+            logger.debug(this.id + ".fetchDataFromMicroflow, empty context");
+            callback([]);
         } else {
             mx.data.action({
-                callback: this.setDataFromObjects.bind(this, callback),
-                error: (error) => logger.error(this.id  + ": An error occurred while executing microflow: " + error),
-                params: {actionname: this.dataSourceMicroflow,
-                         applyto: this.requiresContext ? "selection" : "none",
-                         guids: this.requiresContext ? [this.contextObject.getGuid()] : [],
-                        },
+                callback: callback.bind(this),
+                error: error => logger.error(this.id + ": An error occurred while executing microflow: " + error),
+                params: {
+                    actionname: this.dataSourceMicroflow,
+                    applyto: this.requiresContext ? "selection" : "none",
+                    guids: this.requiresContext ? [ this.contextObject.getGuid() ] : [],
+                },
             });
         }
     }
     /**
-     * transforms mendix object into item properties and set new state
+     * Transforms mendix object into item properties and set new state
      */
-    private setDataFromObjects(callback: Function, objects: mendix.lib.MxObject[]): void {
+    private setData(objects: mendix.lib.MxObject[]): void {
         logger.debug(this.id + ".getCarouselItemsFromObject");
         this.data = objects.map((itemObj): Data => ({
-                caption: this.captionAttr ? itemObj.get(this.captionAttr) as string : "",
-                description: this.descriptionAttr ? itemObj.get(this.descriptionAttr) as string : "",
-                onClick: {
-                    clickMicroflow: this.callMicroflow,
-                    contextGuid: itemObj.getGuid(),
-                    onClickEvent: this.onClickEvent,
-                    page: this.pageForm,
-                    pageLocation: this.pageLocation,
-                },
-                url: this.getFileUrl(itemObj.getGuid()),
-        }));
-        callback();
-    }
-    /**
-     * Returns a image url from the object Id.
-     */
-    private getFileUrl(objectId: string): string {
-        logger.debug(this.id + ".getFileUrl");
-        return "file?target=window&guid=" + objectId + "&csrfToken=" +
-                    mx.session.getCSRFToken() + "&time=" + Date.now();
-    }
-    /**
-     * iterate over modeler setting of the static images for props and set state
-     */
-    private fetchDataFromStatic(): void {
-        logger.debug(this.id  + ".getPropsFromObjects");
-        this.data = this.staticImageCollection.map((itemObject, index): Data => ({
-                caption: itemObject.imgCaption,
-                description: itemObject.imgDescription,
-                onClick: {
-                    clickMicroflow: itemObject.callMicroflow,
-                    contextGuid: this.contextObject ? this.contextObject.getGuid() : "",
-                    onClickEvent: itemObject.onClickEvent,
-                    page: itemObject.pageForm,
-                    pageLocation: itemObject.pageLocation,
-                },
-                url: itemObject.pictureUrl,
+            caption: this.captionAttr ? itemObj.get(this.captionAttr) as string : "",
+            description: this.descriptionAttr ? itemObj.get(this.descriptionAttr) as string : "",
+            guid: itemObj.getGuid(),
         }));
     }
     private resetSubscriptions(): void {
-        // only run when widget is using context.
+        // Only run when widget is using context.
         if (this.requiresContext && this.contextObject) {
             logger.debug(this.id + "._resetSubscriptions");
             // When a mendix object exists create subscription
             this.subscribe({
-                callback: (guid: string) => {
+                callback: guid => {
                     logger.debug(this.id + "._resetSubscriptions object subscription update MxId " + guid);
                     this.updateData(() => {
                         this.isLoading = false;
@@ -248,7 +238,7 @@ const DojoCarousel = dojoDeclare(
     result.constructor = function() {
         logger.debug( this.id + ".constructor dojo");
         // default, will be set by NoContext Version, if not set, it should be true
-        if (typeof this.requiresContext  === "undefined") {
+        if (typeof this.requiresContext === "undefined") {
             this.requiresContext = true;
         }
         this.data = [];

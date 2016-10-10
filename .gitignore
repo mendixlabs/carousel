@@ -16,6 +16,7 @@ test/javasource/*/*
 
 .vscode/
 out/
+dist/
 nbproject/
 node_modules/
 .idea
@@ -23,7 +24,7 @@ node_modules/
 *.map
 *.tmp
 
-src/Carousel/Carousel.d.ts
+src/Carousel/Carousel.js
 src/Carousel/widget/Carousel.js
 src/Carousel/widget/components/ImageCarousel.js
 src/Carousel/widget/components/Carousel.js
@@ -33,4 +34,5 @@ src/Carousel/widget/components/Glyphicon.js
 src/Carousel/widget/components/SafeAnchor.js
 src/Carousel/widget/utils/bootstrapUtils.js
 src/Carousel/widget/utils/TransitionEvents.js
+src/Carousel/widget/utils/ValidComponentChildren.js
 src/Carousel/widget/utils/StyleConfig.js
