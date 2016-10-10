@@ -7,12 +7,35 @@ declare module mxui {
 		class _WidgetBase extends dijit._WidgetBase {
 			readOnly: boolean;
 			uninitialize(): void;
+			/**
+			 * Subscribe to all changes in an MxObject
+			 */
 			subscribe(args: {
 				guid: string,
-				entity?: string,
-				attr?: string,
-				val?: boolean,
-				callback: Function
+				callback(guid: string): void
+			}): number;
+			/**
+			 * Subscribe to changes in a specific attribute of an MxObject
+			 */
+			subscribe(args: {
+				guid: string,
+				attr: string,
+				callback(guid: string, attribute: string, value:any): void
+			}): number;
+			/**
+			 * Subscribe to validations of an MxObject
+			 */
+			subscribe(args: {
+				guid: string,
+				val: true,
+				callback(validations: mendix.lib.ObjectValidation[]): void
+			}): number;
+			/**
+			 * Subscribe to changes in a class
+			 */
+			subscribe(args: {
+				entity: string,
+				callback(entity: string): void
 			}): number;
 			// refresh(callback?: Function);
 			unsubscribeAll(): void;
