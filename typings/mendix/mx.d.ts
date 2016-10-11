@@ -185,7 +185,17 @@ declare module mx {
 		/**
 		 * Opens a form, either in content, in a DOM node or in a (modal) popup
 		 */
-		openForm(path:string, args?:{location?:string, domNode?:HTMLElement, title?:string, context?:mendix.lib.MxContext, callback?:Function, error?:Function}, scope?:any): void
+		openForm(path:string,
+			args?:{
+				location?:"content" | "popup" | "modal", 
+				domNode?:HTMLElement,
+				title?:string,
+				context?:mendix.lib.MxContext,
+				callback?(form: mxui.lib.form._FormBase):void,
+				error?(error: Error): void,
+			},
+			scope?:any
+		): void
 	}
 }
 
