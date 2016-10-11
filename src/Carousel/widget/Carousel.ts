@@ -63,6 +63,7 @@ export class CarouselWrapper extends _WidgetBase {
             onClickEvent: this.onClickEvent,
             pageForm: this.pageForm,
             pageLocation: this.pageLocation,
+            requiresContext: this.requiresContext,
             staticImageCollection: this.staticImageCollection,
             width: this.width,
             widthUnits: this.widthUnits,

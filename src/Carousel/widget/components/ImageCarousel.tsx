@@ -86,31 +86,29 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      */
     private checkConfig() {
         if (this.props.imageSource === "microflow" && !this.props.dataSourceMicroflow) {
-            mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
-                        " \n Image Source is set to MicroFlow and No Microflow specified in Tab 'Source - Microflow' ");
+            this.errorMessage += " \n Image Source is set to MicroFlow " +
+                                 " and No Microflow specified in Tab 'Source - Microflow' ";
         }
         if (this.props.imageSource === "static" && this.props.staticImageCollection.length < 1) {
-            mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
-                        " \n Image Source is set to Static and No Images specified in Tab 'Source - Static'");
+            this.errorMessage += " \n Image Source is set to Static and No Images specified in Tab 'Source - Static'";
         }
         if (this.props.imageSource === "xpath" && !this.props.imageEntity) {
-             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
-                        " \n Image 'Source' is set to XPath and there is no 'Entity' selected");
+            this.errorMessage += " \n Image 'Source' is set to XPath and there is no 'Entity' selected";
         }
         if (!this.props.requiresContext && this.props.entityConstraint.indexOf("[%CurrentObject%]") > -1) {
-            mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
-                        " \n Unexpected constraint to CurrentObject in Tab 'Source - XPath'");
+            this.errorMessage += " \n Unexpected constraint to CurrentObject in Tab 'Source - XPath'";
         }
         if (this.props.onClickEvent === "callMicroflow" && !this.props.callMicroflow) {
-            mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
-                        " \n 'On Click' call a microFlow is set and there is no 'Call Microflow' Selected");
+            this.errorMessage += " \n 'On Click' call a microFlow is set" +
+                                 " and there is no 'Call Microflow' Selected in Tab Events";
         }
         if (this.props.onClickEvent === "openPage" && !this.props.pageForm) {
-            mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
-                        " \n 'On Click' Show a page is set and there is no 'Page' Selected");
+            this.errorMessage += "\n 'On Click' Show a page is set and there is no 'Page' Selected in Tab 'Events'";
         }
         if (this.props.staticImageCollection.length > 1) {
             this.props.staticImageCollection.forEach(this.validate);
+        }
+        if (this.errorMessage) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId + this.errorMessage);
         }
     }
