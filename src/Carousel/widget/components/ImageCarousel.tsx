@@ -1,8 +1,8 @@
 
 import * as React from "Carousel/lib/react";
 
-import ImageCarouselModelProps, { HeightUnits, ImageSource, OnClickEvent, PageLocation,
-    StaticImageCollection, WidthUnits } from "./../../Carousel";
+import ImageCarouselModelProps, { HeightUnits, OnClickEvent,
+    PageLocation, WidthUnits } from "./../../Carousel.d";
 import { Data } from "./../Carousel";
 
 import Carousel, { CarouselProps } from "./Carousel";
@@ -38,22 +38,12 @@ interface ItemProps extends CarouselItemProps {
  * All properties of Image Carousel, 
  * Including all props from the modeler, and props from react.
  */
-export interface StaticImageCollectionWithEnums extends StaticImageCollection {
-        onClickEventEnum?: OnClickEvent;
-        pageLocationEnum?: PageLocation;
-}
 export interface ImageCarouselProps extends ImageCarouselModelProps {
     contextId?: string;
     data?: Data[];
     isLoading?: boolean;
     requiresContext?: boolean;
     widgetId?: string;
-    imageSourceEnum?: ImageSource;
-    onClickEventEnum?: OnClickEvent;
-    pageLocationEnum?: PageLocation;
-    widthUnitsEnum?: WidthUnits;
-    heightUnitsEnum?: HeightUnits;
-    staticImageCollection?: StaticImageCollectionWithEnums[];
 }
 
 export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
@@ -66,15 +56,15 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      * Height and width to be passed to the carousel Component/ the container for the items/images
      */
     private carouselStyle = {
-        height: this.getValueFromUnits(this.props.height, this.props.heightUnitsEnum),
-        width: this.getValueFromUnits(this.props.width, this.props.widthUnitsEnum),
+        height: this.getValueFromUnits(this.props.height, this.props.heightUnits),
+        width: this.getValueFromUnits(this.props.width, this.props.widthUnits),
     };
     /**
      * Height and width to be passed to the carousel items/images
      */
     private carouselItemStyle = {
-        height: this.getValueFromUnits(this.props.height, this.props.heightUnitsEnum, true),
-        width: this.getValueFromUnits(this.props.width, this.props.widthUnitsEnum, true),
+        height: this.getValueFromUnits(this.props.height, this.props.heightUnits, true),
+        width: this.getValueFromUnits(this.props.width, this.props.widthUnits, true),
     };
     private loaded: boolean;
     constructor(props: ImageCarouselProps) {
@@ -94,23 +84,23 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      * Validate the widget configurations from the modeler
      */
     private checkConfig() {
-        if (this.props.imageSourceEnum === ImageSource.microflow && !this.props.dataSourceMicroflow) {
+        if (this.props.imageSource === "microflow" && !this.props.dataSourceMicroflow) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " Image Source is set to MicroFlow and No Microflow specified in Tab 'Source - Microflow' ");
         }
-        if (this.props.imageSourceEnum === ImageSource.static && this.props.staticImageCollection.length < 1) {
+        if (this.props.imageSource === "static" && this.props.staticImageCollection.length < 1) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " Image Source is set to Static and No Images specified in Tab 'Source - Static'");
         }
-        if (this.props.imageSourceEnum === ImageSource.xpath && !this.props.imageEntity) {
+        if (this.props.imageSource === "xpath" && !this.props.imageEntity) {
              mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " Image 'Source' is set to XPath and there is no 'Entity' selected");
         }
-        if (this.props.onClickEventEnum === OnClickEvent.callMicroflow && !this.props.callMicroflow) {
+        if (this.props.onClickEvent === "callMicroflow" && !this.props.callMicroflow) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " 'On Click' call a microFlow is set and there is no 'Call Microflow' Selected");
         }
-        if (this.props.onClickEventEnum === OnClickEvent.openPage && !this.props.pageForm) {
+        if (this.props.onClickEvent === "openPage" && !this.props.pageForm) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId +
                         " 'On Click' Show a page is set and there is no 'Page' Selected");
         }
@@ -125,7 +115,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         const carouselProps: CarouselProps = {
             interval: this.props.interval,
         };
-        const itemProps = this.props.imageSourceEnum === ImageSource.static ?
+        const itemProps = this.props.imageSource === "static" ?
             this.getPropsFromStatic() : this.getPropsFromData();
         const classes = this.props.widgetId + " mx-image-carousel";
         if (itemProps.length > 0) {
@@ -154,13 +144,13 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      * TODO this will work but fail when the to types are not equal anymore.
      */
     private getValueFromUnits(value: number, type: WidthUnits | HeightUnits, isInner?: boolean): number|string {
-        if (type === WidthUnits.auto || type === HeightUnits.auto) {
+        if (type === "auto") {
             return "";
         }
-        if (isInner && (type === WidthUnits.percent || type === HeightUnits.percent)) {
+        if (isInner && type === "percent" ) {
             return "100%";
         }
-        if (type === WidthUnits.percent || type === HeightUnits.percent) {
+        if (type === "percent") {
             return value + "%";
         }
         return value;
@@ -182,9 +172,9 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      */
     private onItemClick(onClickProps: OnClickProps) {
         logger.debug(this.props.widgetId + ".onItemClick");
-        if (onClickProps.onClickEvent === OnClickEvent.callMicroflow && onClickProps.microflow) {
+        if (onClickProps.onClickEvent === "callMicroflow" && onClickProps.microflow) {
             this.executeMicroflow(onClickProps.microflow, onClickProps.guid);
-        } else if (onClickProps.onClickEvent === OnClickEvent.openPage && onClickProps.page) {
+        } else if (onClickProps.onClickEvent === "openPage" && onClickProps.page) {
             this.showPage({
                 guid: onClickProps.guid,
                 pageLocation: onClickProps.pageLocation,
@@ -216,7 +206,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         }
         mx.ui.openForm(showPageProps.pageName, {
             context,
-            location: PageLocation[showPageProps.pageLocation],
+            location: showPageProps.pageLocation,
         });
     }
     /**
@@ -228,9 +218,9 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
             const clickObject: OnClickProps = {
                     guid: item.guid,
                     microflow: this.props.callMicroflow,
-                    onClickEvent: this.props.onClickEventEnum,
+                    onClickEvent: this.props.onClickEvent,
                     page: this.props.pageForm,
-                    pageLocation: this.props.pageLocationEnum,
+                    pageLocation: this.props.pageLocation,
                 };
             return {
                 alt: item.caption,
@@ -238,7 +228,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
                 description: item.description,
                 imgStyle: this.carouselItemStyle,
                 key: item.guid,
-                onClick: this.onItemClick.bind(this, clickObject),
+                onClick: () => this.onItemClick(clickObject),
                 src: this.getFileUrl(item.guid),
             };
         });
@@ -260,9 +250,9 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
             const clickObject: OnClickProps = {
                     guid: this.props.contextId,
                     microflow: item.callMicroflow,
-                    onClickEvent: item.onClickEventEnum,
+                    onClickEvent: item.onClickEvent,
                     page: item.pageForm,
-                    pageLocation: item.pageLocationEnum,
+                    pageLocation: item.pageLocation,
                 };
             return {
                 alt: item.caption,
@@ -270,7 +260,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
                 description: item.description,
                 imgStyle: this.carouselItemStyle,
                 key: index,
-                onClick: this.onItemClick.bind(this, clickObject),
+                onClick: () => this.onItemClick(clickObject),
                 src: item.pictureUrl,
             };
         });
