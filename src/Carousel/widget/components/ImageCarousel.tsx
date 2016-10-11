@@ -105,9 +105,7 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         if (this.props.onClickEvent === "openPage" && !this.props.pageForm) {
             this.errorMessage += "\n 'On Click' Show a page is set and there is no 'Page' Selected in Tab 'Events'";
         }
-        if (this.props.staticImageCollection.length > 1) {
-            this.props.staticImageCollection.forEach(this.validate);
-        }
+        this.props.staticImageCollection.forEach(this.validate);
         if (this.errorMessage) {
             mx.ui.error("Error in Configuration of Widget " + this.props.widgetId + this.errorMessage);
         }
