@@ -1,4 +1,5 @@
 {
+    "rulesDirectory": ["node_modules/tslint-eslint-rules/dist/rules"],
     "extends": "tslint:latest", // Widget dev rules base
     "rules": {
         "class-name": true,
@@ -78,6 +79,29 @@
         "interface-name": [
             false,
             "always-prefix"
-        ]
+        ],
+        // https://www.npmjs.com/package/tslint-eslint-rules
+        "no-multi-spaces": [true],
+        "no-extra-semi": true,
+        "no-irregular-whitespace": true,
+        "no-duplicate-case": true,
+        "no-control-regex": true,
+        "no-empty-character-class": true,
+        "no-ex-assign": true,
+        "no-extra-boolean-cast": true,
+        "no-unexpected-multiline": true,
+        "no-sparse-arrays": true,
+        "no-regex-spaces": true,
+        "no-invalid-regexp": true,
+        "valid-typeof": true,
+        "array-bracket-spacing": [ true, "always" ],
+        "block-spacing": [ true, "always" ],
+        "brace-style": [
+            true,
+            "1tbs", {
+                "allowSingleLine": true
+            }
+        ],
+        "object-curly-spacing": [ true, "always" ]
     }
 }

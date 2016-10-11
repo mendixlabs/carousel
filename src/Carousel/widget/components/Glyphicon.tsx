@@ -18,7 +18,7 @@ export interface GlyphiconProps extends React.Props<Glyphicon> {
     className?: string;
     bootstrapClass?: string;
     elementProps?: {};
-};
+}
 
 class Glyphicon extends React.Component<GlyphiconProps, {}> {
     public static defaultProps: GlyphiconProps = {

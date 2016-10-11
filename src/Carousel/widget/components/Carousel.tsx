@@ -5,19 +5,16 @@
  * This code is under the MIT license found here:
  * https://github.com/react-bootstrap/react-bootstrap/blob/master/LICENSE
  */
+import * as React from "Carousel/lib/react";
+
 import { prefix } from "../utils/bootstrapUtils";
 import ValidComponentChildren from "../utils/ValidComponentChildren";
 import Glyphicon from "./Glyphicon";
-
 import classNames = require("Carousel/lib/classnames");
-import * as React from "Carousel/lib/react"; // Gets children that are React components
 
 export interface CarouselProps extends React.Props<Carousel> {
     slide?: boolean;
     showIndicators?: boolean;
-    /**
-     * In milliseconds
-     */
     interval?: number;
     showControls?: boolean;
     pauseOnHover?: boolean;
@@ -106,7 +103,7 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
     public render() {
         logger.debug(this.loggerNode + " .render");
         const props = this.props;
-        const { showIndicators, showControls, wrap, prevIcon} = props;
+        const { showIndicators, showControls, wrap, prevIcon } = props;
         const { nextIcon, className, children, bootstrapClass } = props;
         const activeIndex = this.getActiveIndex();
         let classes: any = {
@@ -139,7 +136,7 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
     private renderIndicators(children: React.ReactChildren, activeIndex: number, bootstrapClass: string) {
         logger.debug(this.loggerNode + " .renderIndicators");
         let indicators: Array<JSX.Element> = [];
-        const style = {marginRight: "5px"};
+        const style = { marginRight: "5px" };
         ValidComponentChildren.forEach(children, (child: React.ReactChild, index: number) => {
             indicators.push(
                 <li
