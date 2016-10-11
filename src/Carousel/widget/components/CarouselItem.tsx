@@ -22,6 +22,8 @@ export interface CarouselItemProps extends React.Props<CarouselItem> {
     className?: string;
     onClick?: React.EventHandler<React.MouseEvent<HTMLElement>>;
     slide?: boolean;
+    onSwipeLeft?: EventListener;
+    onSwipeRight?: EventListener;
 }
 
 interface CarouselItemState {
@@ -39,12 +41,14 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
     };
     private isUnmounted: boolean;
     private loggerNode: string;
+    private itemRef: Node;
     constructor(props: CarouselItemProps, context: CarouselItem) {
         super(props, context);
         this.loggerNode = "CarouselItem";
         logger.debug(this.loggerNode + " .constructor");
 
         this.handleAnimateOutEnd = this.handleAnimateOutEnd.bind(this);
+        this.registerSwipeEvents = this.registerSwipeEvents.bind(this);
 
         this.state = {
             direction: null,
@@ -52,7 +56,9 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
 
         this.isUnmounted = false;
     }
-
+    public componentDidMount() {
+        this.registerSwipeEvents();
+    }
     public componentWillReceiveProps(nextProps: CarouselItemProps) {
         logger.debug(this.loggerNode + " .componentWillReceiveProps");
         if (this.props.active !== nextProps.active) {
@@ -79,6 +85,9 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
     public componentWillUnmount() {
         logger.debug(this.loggerNode + " .componentWillUnmount");
         this.isUnmounted = true;
+        ReactDOM.findDOMNode(this).removeEventListener("transitionend", this.handleAnimateOutEnd, false);
+        this.itemRef.removeEventListener("swipeleftend", this.props.onSwipeLeft);
+        this.itemRef.removeEventListener("swiperightend", this.props.onSwipeRight);
     }
 
     public render() {
@@ -98,10 +107,19 @@ export class CarouselItem extends React.Component<CarouselItemProps, CarouselIte
 
         return (
             <div
+                ref={(ref) => this.itemRef = ref}
                 {...props}
                 className={classNames(className, classes)}
                 />
         );
+    }
+    private registerSwipeEvents() {
+        if (this.props.onSwipeLeft) {
+            this.itemRef.addEventListener("swipeleftend", this.props.onSwipeLeft);
+        }
+        if (this.props.onSwipeRight) {
+            this.itemRef.addEventListener("swiperightend", this.props.onSwipeRight);
+        }
     }
     private handleAnimateOutEnd() {
         logger.debug(this.loggerNode + " .handleAnimateOutEnd");

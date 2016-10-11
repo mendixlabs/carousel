@@ -89,9 +89,10 @@ export class CarouselWrapper extends _WidgetBase {
      * called when the widget is destroyed.
      * will need to unmount react components
      */
-    public uninitialize(): void {
+    public uninitialize(): boolean {
         logger.debug(this.id + ".uninitialize");
         unmountComponentAtNode(this.domNode);
+        return true;
     }
     /**
      *  called to render the interface 

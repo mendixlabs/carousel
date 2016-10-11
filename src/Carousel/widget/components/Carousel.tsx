@@ -66,6 +66,8 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
         this.handlePrev = this.handlePrev.bind(this);
         this.handleNext = this.handleNext.bind(this);
         this.handleItemAnimateOutEnd = this.handleItemAnimateOutEnd.bind(this);
+        this.onSwipeLeft = this.onSwipeLeft.bind(this);
+        this.onSwipeRight = this.onSwipeRight.bind(this);
 
         const { defaultActiveIndex } = props;
 
@@ -204,6 +206,8 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
                         onAnimateOutEnd: previousActive ?
                             this.handleItemAnimateOutEnd : null,
                         slide,
+                        onSwipeLeft: this.onSwipeLeft,
+                        onSwipeRight: this.onSwipeRight,
                     })
                 );
             }
@@ -301,6 +305,7 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
         const { interval, activeIndex: activeIndexProp } = this.props;
 
         if (!this.isPaused && interval && activeIndexProp == null) {
+            if (this.timeout) { clearTimeout(this.timeout); }
             this.timeout = setTimeout(this.handleNext, interval);
         }
     }
@@ -315,6 +320,16 @@ class Carousel extends React.Component<CarouselProps, CarouselState> {
         logger.debug(this.loggerNode + " .play");
         this.isPaused = false;
         this.waitForNext();
+    }
+    private onSwipeLeft(event: CarouselEvent<HTMLDivElement>) {
+        logger.debug(this.loggerNode + " .onSwipeLeft");
+        clearTimeout(this.timeout);
+        this.handleNext(event);
+    }
+    private onSwipeRight(event: CarouselEvent<HTMLDivElement>) {
+        logger.debug(this.loggerNode + " .onSwipeRight");
+        clearTimeout(this.timeout);
+        this.handlePrev(event);
     }
 }
 
