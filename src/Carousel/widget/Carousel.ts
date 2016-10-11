@@ -5,8 +5,8 @@ import { createElement } from "Carousel/lib/react";
 import { render, unmountComponentAtNode } from "Carousel/lib/react-dom";
 
 import { HeightUnits, ImageSource, OnClickEvent,
-    PageLocation, StaticImageCollection, WidthUnits } from "./../Carousel";
-import { ImageCarousel, ImageCarouselProps, StaticImageCollectionWithEnums } from "./components/ImageCarousel";
+    PageLocation, StaticImageCollection, WidthUnits } from "../Carousel.d";
+import { ImageCarousel, ImageCarouselProps } from "./components/ImageCarousel";
 
 export interface Data {
     caption?: string;
@@ -19,27 +19,21 @@ export class CarouselWrapper extends _WidgetBase {
     private requiresContext: boolean;
     // Parameters configured in the Modeler
     private imageEntity: string;
-    private imageSource: "xpath" | "microflow" | "static";
-    private imageSourceEnum: ImageSource;
+    private imageSource: ImageSource;
     private entityConstraint: string;
     private dataSourceMicroflow: string;
     private captionAttr: string;
     private descriptionAttr: string;
     private interval: number;
     private staticImageCollection: StaticImageCollection[];
-    private staticImageCollectionWithEnum: StaticImageCollectionWithEnums[];
-    private onClickEvent: "none" | "openPage" | "callMicroflow";
-    private onClickEventEnum: OnClickEvent;
+    private onClickEvent: OnClickEvent;
     private callMicroflow: string;
     private pageForm: string;
-    private pageLocation: "content" | "popup" | "modal";
-    private pageLocationEnum: PageLocation;
+    private pageLocation: PageLocation;
     private width?: number;
-    private widthUnits: "auto" | "pixels" | "percent";
-    private widthUnitsEnum: WidthUnits;
+    private widthUnits: WidthUnits;
     private height?: number;
-    private heightUnits: "auto" | "pixels" | "percent";
-    private heightUnitsEnum: HeightUnits;
+    private heightUnits: HeightUnits;
     // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
     private contextObject: mendix.lib.MxObject;
     private data: Data[];
@@ -62,50 +56,20 @@ export class CarouselWrapper extends _WidgetBase {
             entityConstraint: this.entityConstraint,
             height: this.height,
             heightUnits: this.heightUnits,
-            heightUnitsEnum: this.heightUnitsEnum,
             imageEntity: this.imageEntity,
             imageSource: this.imageSource,
-            imageSourceEnum: this.imageSourceEnum,
             interval: this.interval,
             isLoading: this.isLoading,
             onClickEvent: this.onClickEvent,
-            onClickEventEnum: this.onClickEventEnum,
             pageForm: this.pageForm,
             pageLocation: this.pageLocation,
-            pageLocationEnum: this.pageLocationEnum,
             staticImageCollection: this.staticImageCollection,
             width: this.width,
             widthUnits: this.widthUnits,
-            widthUnitsEnum: this.widthUnitsEnum,
         };
     }
     public postCreate() {
-        this.convertStringPropsToEnum();
         this.updateRendering();
-    }
-    /**
-     * Convert modeler string enum properties to TypeScript enum values.
-     * Enum conversion for the items are done getDataFromObjects or fetchDataFromStatic
-     */
-    private convertStringPropsToEnum() {
-        // TSC Might show an incorrect error. 
-        // Both index and values are preserved in the enum object.
-        this.imageSourceEnum = ImageSource[this.imageSource];
-        this.onClickEventEnum = OnClickEvent[this.onClickEvent];
-        this.pageLocationEnum = PageLocation[this.pageLocation];
-        this.heightUnitsEnum = HeightUnits[this.widthUnits];
-        this.widthUnitsEnum = WidthUnits[this.widthUnits];
-        this.staticImageCollectionWithEnum = this.staticImageCollection.map((item, index) => ({
-            callMicroflow: item.callMicroflow,
-            caption: item.caption,
-            description: item.description,
-            onClickEvent: item.onClickEvent,
-            onClickEventEnum: OnClickEvent[item.onClickEvent],
-            pageForm: item.pageForm,
-            pageLocation: item.pageLocation,
-            pageLocationEnum: PageLocation[item.pageLocation],
-            pictureUrl: item.pictureUrl,
-        }));
     }
     /**
      * called when context is changed or initialized. 
@@ -143,12 +107,12 @@ export class CarouselWrapper extends _WidgetBase {
      * Determines which data source was specific and calls the respective method to get the Data 
      */
     private updateData(callback: Function): void {
-        if (this.imageSourceEnum === ImageSource.xpath && this.imageEntity) {
+        if (this.imageSource === "xpath" && this.imageEntity) {
             this.fetchDataFromXpath((objects) => {
                 this.setData(objects);
                 callback();
             });
-        } else if (this.imageSourceEnum === ImageSource.microflow && this.dataSourceMicroflow) {
+        } else if (this.imageSource === "microflow" && this.dataSourceMicroflow) {
             this.fetchDataFromMicroflow((objects) => {
                 this.setData(objects);
                 callback();

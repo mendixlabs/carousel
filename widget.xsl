@@ -4,18 +4,24 @@
 <xsl:strip-space elements="*"/>
 <!-- Properties -->
 <xsl:template name="properties">
+  <xsl:param name = "parent" />
     <xsl:value-of select="@key" />?: <xsl:choose>
     <xsl:when test="@type = 'entity' or @type = 'microflow' or @type = 'entityConstraint' or @type = 'attribute' or @type = 'form' or @type ='image' or @type = 'translatableString'">string</xsl:when>
     <xsl:when test="@type = 'integer'">number</xsl:when>
-    <xsl:when test="@type = 'object'"><xsl:call-template name="CaptialFirst">
+    <xsl:when test="@type = 'object'"><xsl:call-template name="CapitalizeFirst">
     <xsl:with-param name="name" select = "@key" />
 </xsl:call-template>[]</xsl:when>
-    <xsl:when test="@type = 'enumeration'"><xsl:for-each select="m:enumerationValues/m:enumerationValue">"<xsl:value-of select="@key" />"<xsl:if test="position() != last()"> | </xsl:if> </xsl:for-each></xsl:when>
+    <xsl:when test="@type = 'enumeration'"><xsl:call-template name="CapitalizeFirst">
+    <xsl:with-param name="name" select = "$parent" />
+</xsl:call-template><xsl:call-template name="CapitalizeFirst">
+    <xsl:with-param name="name" select = "@key" />
+</xsl:call-template></xsl:when>
     <xsl:otherwise><xsl:value-of select="@type" /></xsl:otherwise>
     </xsl:choose><xsl:if test="position() != last()">;
     </xsl:if><xsl:if test="position() = last()">;</xsl:if>
 </xsl:template>
-<xsl:template name="CaptialFirst">
+<!-- Function template Capitalize first character-->
+<xsl:template name="CapitalizeFirst">
   <xsl:param name = "name" />
         <xsl:value-of select="concat(translate(substring($name, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring($name, 2))" />
 </xsl:template>
@@ -33,34 +39,26 @@ export interface ModelProps {
 }
 <!-- Generate interface for object properties, only 1 level deep-->
 <xsl:for-each select="m:widget/m:properties/m:property[@type='object']">
-export interface <xsl:call-template name="CaptialFirst">
+export interface <xsl:call-template name="CapitalizeFirst">
     <xsl:with-param name="name" select = "@key" />
 </xsl:call-template> {
     <xsl:for-each select="m:properties/m:property">
-<xsl:call-template name="properties" /></xsl:for-each>
+<xsl:call-template name="properties" ><xsl:with-param name="parent" select = "../../@key" /></xsl:call-template></xsl:for-each>
 }
 </xsl:for-each>
-<!-- Generate enums for attributes -->
+<!-- Generate string literal type for enum attributes -->
 <xsl:for-each select="m:widget/m:properties/m:property[@type='enumeration']">
-export enum <xsl:call-template name="CaptialFirst">
+export type <xsl:call-template name="CapitalizeFirst">
     <xsl:with-param name="name" select = "@key" />
-</xsl:call-template> {
-    <xsl:for-each select="m:enumerationValues/m:enumerationValue"><xsl:value-of select="@key" /><xsl:if test="position() != last()">,
-    </xsl:if>
-    </xsl:for-each>
-}
+</xsl:call-template> = <xsl:for-each select="m:enumerationValues/m:enumerationValue">"<xsl:value-of select="@key" />"<xsl:if test="position() != last()"> | </xsl:if></xsl:for-each>;
 </xsl:for-each>
-<!-- Generate enums inside object attributes, only 1 level deep -->
+<!-- Generate string literal type for enums inside object attributes, only 1 level deep -->
 <xsl:for-each select="m:widget/m:properties/m:property[@type='object']/m:properties/m:property[@type='enumeration']">
-export enum <xsl:call-template name="CaptialFirst">
+export type <xsl:call-template name="CapitalizeFirst">
     <xsl:with-param name="name" select = "../../@key" />
-</xsl:call-template><xsl:call-template name="CaptialFirst">
+</xsl:call-template><xsl:call-template name="CapitalizeFirst">
     <xsl:with-param name="name" select = "@key" />
-</xsl:call-template> {
-    <xsl:for-each select="m:enumerationValues/m:enumerationValue"><xsl:value-of select="@key" /><xsl:if test="position() != last()">,
-    </xsl:if>
-    </xsl:for-each>
-}
+</xsl:call-template> = <xsl:for-each select="m:enumerationValues/m:enumerationValue">"<xsl:value-of select="@key" />"<xsl:if test="position() != last()"> | </xsl:if></xsl:for-each>;
 </xsl:for-each>
 
 </xsl:template>

@@ -124,7 +124,7 @@ module.exports = function (grunt) {
             },
             compile: {
                 files: {
-                    "src/Carousel/Carousel.ts" : ["src/Carousel/Carousel.xml"]
+                    "src/Carousel/Carousel.d.ts" : ["src/Carousel/Carousel.xml"]
                 }
             }
         }        
