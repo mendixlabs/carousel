@@ -24,10 +24,8 @@ class Glyphicon extends React.Component<GlyphiconProps, {}> {
     public static defaultProps: GlyphiconProps = {
         bootstrapClass: "glyphicon",
     };
-    private loggerNode: string = "Glyphicon";
 
     public render() {
-        logger.debug(this.loggerNode + " .render");
         const { glyph } = this.props;
         const props = this.props;
         let classes = {
