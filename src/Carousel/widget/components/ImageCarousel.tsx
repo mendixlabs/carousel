@@ -2,7 +2,7 @@
 import * as React from "Carousel/lib/react";
 
 import ImageCarouselModelProps, { HeightUnits, OnClickEvent,
-    PageLocation, StaticImageCollection, WidthUnits } from "./../../Carousel.d";
+    PageLocation, WidthUnits } from "./../../Carousel.d";
 import { Data } from "./../Carousel";
 
 import Carousel, { CarouselProps } from "./Carousel";
@@ -67,11 +67,10 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
         width: this.getValueFromUnits(this.props.width, this.props.widthUnits, true),
     };
     private loaded: boolean;
-    private errorMessage: string = "";
+    // private errorMessage: string = "";
     constructor(props: ImageCarouselProps) {
         super(props);
         this.onItemClick = this.onItemClick.bind(this);
-        this.validate = this.validate.bind(this);
         this.loaded = false;
         this.state = {
             hasData: false,
@@ -85,40 +84,41 @@ export class ImageCarousel extends React.Component<ImageCarouselProps, {}> {
      * Validate the widget configurations from the modeler
      */
     private checkConfig() {
+        let errorMessage: string[] = [];
         if (this.props.imageSource === "microflow" && !this.props.dataSourceMicroflow) {
-            this.errorMessage += " \n Image Source is set to MicroFlow " +
-                                 " and No Microflow specified in Tab 'Source - Microflow' ";
+            errorMessage.push("Image Source is set to MicroFlow " +
+                              "and No Microflow specified in Tab 'Source - Microflow'");
         }
         if (this.props.imageSource === "static" && this.props.staticImageCollection.length < 1) {
-            this.errorMessage += " \n Image Source is set to Static and No Images specified in Tab 'Source - Static'";
+            errorMessage.push("Image Source is set to Static and No Images specified in Tab 'Source - Static'");
         }
         if (this.props.imageSource === "xpath" && !this.props.imageEntity) {
-            this.errorMessage += " \n Image 'Source' is set to XPath and there is no 'Entity' selected";
+            errorMessage.push("Image 'Source' is set to XPath and there is no 'Entity' selected");
         }
         if (!this.props.requiresContext && this.props.entityConstraint.indexOf("[%CurrentObject%]") > -1) {
-            this.errorMessage += " \n Unexpected constraint to CurrentObject in Tab 'Source - XPath'";
+            errorMessage.push("Unexpected constraint to CurrentObject in Tab 'Source - XPath'");
         }
         if (this.props.onClickEvent === "callMicroflow" && !this.props.callMicroflow) {
-            this.errorMessage += " \n 'On Click' call a microFlow is set" +
-                                 " and there is no 'Call Microflow' Selected in Tab Events";
+            errorMessage.push("'On Click' call a microFlow is set " +
+                              "and there is no 'Call Microflow' Selected in Tab Events");
         }
         if (this.props.onClickEvent === "openPage" && !this.props.pageForm) {
-            this.errorMessage += "\n 'On Click' Show a page is set and there is no 'Page' Selected in Tab 'Events'";
+            errorMessage.push("'On Click' Show a page is set and there is no 'Page' Selected in Tab 'Events'");
         }
-        this.props.staticImageCollection.forEach(this.validate);
-        if (this.errorMessage) {
-            mx.ui.error("Error in Configuration of Widget " + this.props.widgetId + this.errorMessage);
-        }
-    }
-    public validate(element: StaticImageCollection, index: number) {
+        this.props.staticImageCollection.forEach((element, index) => {
             if (element.onClickEvent === "callMicroflow" && !element.callMicroflow) {
-                    this.errorMessage += " \n Item " + (index + 1) + " 'On Click' call a microFlow is set " +
-                                        "and there is no 'Call Microflow' Selected";
+                errorMessage.push("Item " + (index + 1) + " 'On Click' call a microFlow is set " +
+                                  "and there is no 'Call Microflow' Selected");
             }
             if (element.onClickEvent === "openPage" && !element.pageForm) {
-                   this.errorMessage += " \n Item " + (index + 1) + " 'On Click' Show a page is set " +
-                                        "and there is no 'Page' Selected";
-           }
+                errorMessage.push("Item " + (index + 1) + " 'On Click' Show a page is set " +
+                                  "and there is no 'Page' Selected");
+            }
+        });
+        if (errorMessage.length > 0) {
+            errorMessage.unshift("Error in Configuration of Widget " + this.props.widgetId);
+            mx.ui.error(errorMessage.join("\n"));
+        }
     }
     /**
      * React Component method that renders the interface once the component has mounted
