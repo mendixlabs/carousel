@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget id="com.mendix.widget.carousel.Carousel" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../../../xsd/widget.xsd">
+    <name>Carousel</name>
+    <description>Carousel images set from the modeler</description>  
+    <icon></icon>
+    <properties>
+
+        <property key="message" type="string">
+            <caption>Message</caption>
+            <category>Data</category>
+            <description/>
+        </property>
+
+    </properties>
+</widget>

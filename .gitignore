@@ -1,7 +1,6 @@
 .vscode/
 nbproject/
-MxProject/
-test/
+MxTestProject/
 node_modules/
 dist/
 .idea
