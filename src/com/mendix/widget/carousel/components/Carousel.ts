@@ -1,9 +1,27 @@
-import { DOM } from "react";
+import { DOM, createElement } from "react";
 
-export interface CarouselProps {
-    message: string;
+import { CarouselItem } from "./CarouselItem";
+
+interface Image {
+    imageUrl?: string;
 }
 
-export const Carousel = (props: CarouselProps) => (
-    DOM.span({ className: "carousel"}, props.message)
-);
+export interface CarouselProps {
+    images?: Image[];
+}
+
+const carouselItems = (images: Image[]) => {
+    return images.map((image, index) => createElement(CarouselItem, {
+        active: index === 0 ? true : false,
+        imageUrl: image.imageUrl,
+        key: index
+    }));
+};
+
+export const Carousel = (props: CarouselProps) => {
+    return (DOM.div({ className: "carousel" },
+        DOM.div({  className: "carousel-inner" },
+            carouselItems(props.images)
+        )
+    ));
+};

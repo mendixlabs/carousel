@@ -5,10 +5,19 @@
     <icon></icon>
     <properties>
 
-        <property key="message" type="string">
-            <caption>Message</caption>
-            <category>Data</category>
-            <description/>
+        <property key="staticImages" type="object" isList="true" required="false">
+            <caption>Images to display</caption>
+            <category>Data source</category>
+            <description></description> 
+            <properties>
+            
+                <property key="imageUrl" type="image" required="true">
+                    <caption>Image</caption>
+                    <category>Data source</category>
+                    <description>Image to add to the carousel</description>
+                </property>
+
+            </properties>
         </property>
 
     </properties>
