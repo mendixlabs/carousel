@@ -2,11 +2,13 @@ var webpack = require("webpack");
 var CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-    entry: "./src/com/mendix/widget/carousel/CarouselRenderer.ts",
+    entry: "./src/com/mendix/widget/carousel/Carousel.ts",
     output: {
         path: __dirname + "/dist/tmp",
-        filename: "src/com/mendix/widget/carousel/CarouselRenderer.js",
+        filename: "src/com/mendix/widget/carousel/Carousel.js",
         libraryTarget:  "umd",
+        umdNamedDefine: true,
+        library: "com.mendix.widget.carousel.Carousel"
     },
     resolve: {
         extensions: [ "", ".ts", ".tsx", ".js", ".json" ]
@@ -19,7 +21,7 @@ module.exports = {
         ]
     },
     devtool: "source-map",
-    externals: [],
+    externals: [ "mxui/widget/_WidgetBase", "dojo/_base/declare" ],
     plugins: [
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },

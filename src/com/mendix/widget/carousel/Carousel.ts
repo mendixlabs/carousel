@@ -1,31 +1,28 @@
 import * as dojoDeclare from "dojo/_base/declare";
+
+import { createElement } from "react";
+import { render, unmountComponentAtNode } from "react-dom";
+
 import * as WidgetBase from "mxui/widget/_WidgetBase";
 
-import { CarouselRenderer } from "./CarouselRenderer";
+import { Carousel } from "./components/Carousel";
 
 export interface StaticImage {
     imageUrl?: string;
 }
 
-export class Carousel extends WidgetBase {
+class CarouselDojo extends WidgetBase {
     // Properties from Mendix modeler
     staticImages?: StaticImage[];
 
-    // internal variables
-    private renderer: CarouselRenderer;
-
-    postCreate() {
-        this.renderer = new CarouselRenderer();
-    }
-
     update(object: mendix.lib.MxObject, callback: Function) {
-        this.renderer.render({ images: this.staticImages }, this.domNode);
+        render(createElement(Carousel, { images: this.staticImages }), this.domNode);
 
         callback();
     }
 
     uninitialize(): boolean {
-        this.renderer.unmount();
+        unmountComponentAtNode(this.domNode);
 
         return true;
     }
@@ -42,4 +39,4 @@ dojoDeclare("com.mendix.widget.carousel.Carousel", [ WidgetBase ], (function (So
         }
     }
     return result;
-} (Carousel)));
+} (CarouselDojo)));
