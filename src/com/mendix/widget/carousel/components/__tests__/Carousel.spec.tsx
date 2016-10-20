@@ -24,17 +24,17 @@ describe("Carousel component", () => {
         expect(wrapper.find(".carousel-inner").children().length).toEqual(staticImages.length);
     });
 
-    it("should render carousel with class carousel", () => {
+    it("should render carousel with the class 'carousel'", () => {
         const output = render({ images: staticImages });
         expect(output).toHaveClass("carousel");
     });
 
-    it("should render carousel child to have class carousel-inner", () => {
+    it("should render carousel child to have class 'carousel-inner'", () => {
         const output = render({ images: staticImages });
         expect(output.children()).toHaveClass("carousel-inner");
     });
 
-    it("first child active should be active", () => {
+    it("first child should be active", () => {
         const wrapper = render({ images: staticImages });
         const children = wrapper.find(".carousel-inner").children();
         expect(children.first().prop("active")).toBe(true);
