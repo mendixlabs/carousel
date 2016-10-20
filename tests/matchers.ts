@@ -1,3 +1,4 @@
+/* tslint:disable */
 import { ReactChild } from "react";
 import { ShallowWrapper } from "enzyme";
 import { findDifference, toElementStructure } from "./helpers/structureMatcher";
