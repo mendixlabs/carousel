@@ -34,8 +34,16 @@ describe("Carousel component", () => {
         expect(output.children()).toHaveClass("carousel-inner");
     });
 
-    xit("should render carousel with only first child active", () => {
+    it("first child active should be active", () => {
         const wrapper = render({ images: staticImages });
-        expect(wrapper.find(".active").length).toEqual(1);
+        const children = wrapper.find(".carousel-inner").children();
+        expect(children.first().prop("active")).toBe(true);
+    });
+
+    it("should have only one active child", () => {
+        const wrapper = render({ images: staticImages });
+        const children = wrapper.find(".carousel-inner").children();
+        const activeChildren = children.filterWhere(c => c.prop("active") === true);
+        expect(activeChildren.length).toBe(1);
     });
 });
