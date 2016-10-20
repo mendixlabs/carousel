@@ -9,15 +9,15 @@ module.exports = function (grunt) {
         watch: {
             updateWidgetFiles: {
                 "files": ["./dist/tmp/src/**/*"],
-                "tasks": ["compress:dist", "copy:distDeployment", "copy:mpk"],
+                "tasks": ["webpack", "compress:dist", "copy:distDeployment", "copy:mpk"],
                 options: {
                     debounceDelay: 250,
                     livereload: true
                 }
             },
             sourceFiles: {
-                "files": ["./src/**/*", "!./src/**/*.ts", "!./src/**/*.tsx"],
-                "tasks": ["copy:source"],             
+                "files": ["./src/**/*"],
+                "tasks": ["copy:source"]
             }
         },
         
