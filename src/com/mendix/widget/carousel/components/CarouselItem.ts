@@ -2,7 +2,7 @@ import { DOM } from "react";
 
 export interface CarouselItemProps {
     imageUrl: string;
-    active?: boolean;
+    active: boolean;
 }
 
 export const CarouselItem = (props: CarouselItemProps) => {

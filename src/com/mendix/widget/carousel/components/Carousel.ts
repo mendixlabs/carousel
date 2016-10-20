@@ -8,6 +8,7 @@ interface Image {
 
 export interface CarouselProps {
     images?: Image[];
+    interval?: number; // In milliseconds
 }
 
 const carouselItems = (images: Image[]) => {
@@ -19,6 +20,9 @@ const carouselItems = (images: Image[]) => {
 };
 
 export class Carousel extends Component<CarouselProps, {}> {
+    static defaultProps: CarouselProps = {
+        interval: 5000
+    };
     render() {
         return (DOM.div({ className: "carousel" },
             DOM.div({  className: "carousel-inner" },
