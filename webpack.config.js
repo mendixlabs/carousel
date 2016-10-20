@@ -31,5 +31,6 @@ module.exports = {
         ], {
             copyUnmodified: true
         })
-    ]
+    ],
+    watch: true
 };
