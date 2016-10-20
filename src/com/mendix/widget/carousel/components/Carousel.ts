@@ -3,12 +3,12 @@ import { Component, DOM, createElement } from "react";
 import { CarouselItem } from "./CarouselItem";
 
 interface Image {
-    imageUrl?: string;
+    imageUrl: string;
 }
 
 export interface CarouselProps {
-    images?: Image[];
-    interval?: number; // In milliseconds
+    images: Image[];
+    interval: number; // In milliseconds
 }
 
 interface CarouselState {
@@ -24,9 +24,6 @@ const carouselItems = (images: Image[], activeIndex: number) => {
 };
 
 export class Carousel extends Component<CarouselProps, CarouselState> {
-    static defaultProps: CarouselProps = {
-        interval: 5000
-    };
     private timeout: number;
 
     constructor(props: CarouselProps) {
@@ -37,7 +34,7 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
 
     render() {
         return (DOM.div({ className: "carousel" },
-            DOM.div({  className: "carousel-inner" },
+            DOM.div({ className: "carousel-inner" },
                 carouselItems(this.props.images, this.state.activeImageIndex)
             )
         ));
@@ -48,7 +45,9 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
     }
 
     componentDidUpdate() {
-        if (this.timeout) { clearTimeout(this.timeout); }
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
         this.timeout = setTimeout(this.moveToNextImage, this.props.interval);
     }
 

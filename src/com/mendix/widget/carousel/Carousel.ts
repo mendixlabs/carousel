@@ -6,16 +6,20 @@ import { render, unmountComponentAtNode } from "react-dom";
 
 import { Carousel } from "./components/Carousel";
 
-export interface StaticImage {
-    imageUrl?: string;
+export interface Image {
+    imageUrl: string;
 }
 
 class CarouselDojo extends WidgetBase {
     // Properties from Mendix modeler
-    staticImages?: StaticImage[];
+    staticImages?: Image[];
+    interval: number;
 
     update(object: mendix.lib.MxObject, callback: Function) {
-        render(createElement(Carousel, { images: this.staticImages }), this.domNode);
+        render(createElement(Carousel, {
+            images: this.staticImages,
+            interval: this.interval
+        }), this.domNode);
 
         callback();
     }
