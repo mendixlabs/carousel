@@ -1,4 +1,4 @@
-import { DOM, createElement } from "react";
+import { Component, DOM, createElement } from "react";
 
 import { CarouselItem } from "./CarouselItem";
 
@@ -18,10 +18,12 @@ const carouselItems = (images: Image[]) => {
     }));
 };
 
-export const Carousel = (props: CarouselProps) => {
-    return (DOM.div({ className: "carousel" },
-        DOM.div({  className: "carousel-inner" },
-            carouselItems(props.images)
-        )
-    ));
-};
+export class Carousel extends Component<CarouselProps, {}> {
+    render() {
+        return (DOM.div({ className: "carousel" },
+            DOM.div({  className: "carousel-inner" },
+                carouselItems(this.props.images)
+            )
+        ));
+    }
+}
