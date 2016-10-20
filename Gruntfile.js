@@ -8,16 +8,16 @@ module.exports = function (grunt) {
         name: pkg.name,
         watch: {
             updateWidgetFiles: {
-                "files": ["./dist/tmp/src/**/*"],
-                "tasks": ["webpack", "compress:dist", "copy:distDeployment", "copy:mpk"],
+                "files": [ "./dist/tmp/src/**/*" ],
+                "tasks": [ "compress:dist", "copy:distDeployment", "copy:mpk" ],
                 options: {
                     debounceDelay: 250,
                     livereload: true
                 }
             },
             sourceFiles: {
-                "files": ["./src/**/*"],
-                "tasks": ["copy:source"]
+                "files": [ "./src/**/*" ],
+                "tasks": [ "copy:source" ]
             }
         },
         
@@ -28,29 +28,29 @@ module.exports = function (grunt) {
                     mode: "zip"
                 },
                 files: [{
-                        expand: true,
-                        date: new Date(),
-                        store: false,
-                        cwd: "./dist/tmp/src",
-                        src: ["**/*"]
-                    }]
+                    expand: true,
+                    date: new Date(),
+                    store: false,
+                    cwd: "./dist/tmp/src",
+                    src: [ "**/*" ]
+                }]
             }
         },
         
         copy: {
             distDeployment: {
                 files: [
-                    {dest: "./MxTestProject/deployment/web/widgets", cwd: "./dist/tmp/src/", src: ["**/*"], expand: true}
+                    { dest: "./MxTestProject/deployment/web/widgets", cwd: "./dist/tmp/src/", src: ["**/*"], expand: true }
                 ]
             },
             mpk: {
                 files: [
-                    {dest: "./MxTestProject/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk"], expand: true}
+                    { dest: "./MxTestProject/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk"], expand: true }
                 ]
             },
             source: {
                 files: [
-                    {dest: "./dist/tmp/src", cwd: "./src/", src: ["**/*", "!**/*.ts", "!**/*.tsx"], expand: true}
+                    { dest: "./dist/tmp/src", cwd: "./src/", src: ["**/*", "!**/*.ts", "!**/*.tsx"], expand: true }
                 ]
             }         
         },
@@ -61,10 +61,10 @@ module.exports = function (grunt) {
 
         clean: {
             build: [
-                    "./dist/" + pkg.version + "/" + pkg.name + "/*",
-                    "./MxTestProject/deployment/web/widgets/" + pkg.name + "/*",
-                    "./MxTestProject/widgets/" + pkg.name + ".mpk"
-                ], 
+                "./dist/" + pkg.version + "/" + pkg.name + "/*",
+                "./MxTestProject/deployment/web/widgets/" + pkg.name + "/*",
+                "./MxTestProject/widgets/" + pkg.name + ".mpk"
+            ], 
             dist : "./dist/**/*"               
         }
     });
@@ -74,11 +74,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-webpack");
-    grunt.registerTask("default", ["clean build", "watch"]);
-    
+
+    grunt.registerTask("default", [ "clean build", "watch" ]);    
     grunt.registerTask(
-            "clean build",
-            "Compiles all the assets and copies the files to the build directory.", ["clean:build", "webpack" ,"compress:dist", "copy:mpk"]
-            );
-    grunt.registerTask("build", ["clean build"]);
+        "clean build",
+        "Compiles all the assets and copies the files to the build directory.", ["clean:build", "webpack" ,"compress:dist", "copy:mpk"]
+    );
+    grunt.registerTask("build", [ "clean build" ]);
 };
