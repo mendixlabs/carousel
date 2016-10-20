@@ -11,6 +11,10 @@ export interface CarouselProps {
     interval?: number; // In milliseconds
 }
 
+interface CarouselState {
+    activeImageIndex: number;
+}
+
 const carouselItems = (images: Image[]) => {
     return images.map((image, index) => createElement(CarouselItem, {
         active: index === 0 ? true : false,
@@ -19,10 +23,14 @@ const carouselItems = (images: Image[]) => {
     }));
 };
 
-export class Carousel extends Component<CarouselProps, {}> {
+export class Carousel extends Component<CarouselProps, CarouselState> {
     static defaultProps: CarouselProps = {
         interval: 5000
     };
+    constructor(props: CarouselProps) {
+        super(props);
+        this.state = { activeImageIndex: 0 };
+    }
     render() {
         return (DOM.div({ className: "carousel" },
             DOM.div({  className: "carousel-inner" },
