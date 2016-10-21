@@ -2,7 +2,7 @@ import { Component, DOM, createElement } from "react";
 
 import { CarouselItem } from "./CarouselItem";
 
-interface Image {
+export interface Image {
     imageUrl: string;
 }
 
@@ -11,17 +11,9 @@ export interface CarouselProps {
     interval: number; // In milliseconds
 }
 
-interface CarouselState {
+export interface CarouselState {
     activeImageIndex: number;
 }
-
-const carouselItems = (images: Image[], activeIndex: number) => {
-    return images.map((image, index) => createElement(CarouselItem, {
-        active: index === activeIndex ? true : false,
-        imageUrl: image.imageUrl,
-        key: index
-    }));
-};
 
 export class Carousel extends Component<CarouselProps, CarouselState> {
     private timeout: number;
@@ -35,7 +27,7 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
     render() {
         return (DOM.div({ className: "carousel" },
             DOM.div({ className: "carousel-inner" },
-                carouselItems(this.props.images, this.state.activeImageIndex)
+                this.carouselItems(this.props.images, this.state.activeImageIndex)
             )
         ));
     }
@@ -49,6 +41,14 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
             clearTimeout(this.timeout);
         }
         this.timeout = setTimeout(this.moveToNextImage, this.props.interval);
+    }
+
+    carouselItems(images: Image[], activeIndex: number) {
+        return images.map((image, index) => createElement(CarouselItem, {
+            active: index === activeIndex ? true : false,
+            imageUrl: image.imageUrl,
+            key: index
+        }));
     }
 
     moveToNextImage() {
