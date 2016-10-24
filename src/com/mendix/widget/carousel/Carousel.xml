@@ -4,21 +4,17 @@
     <description>Carousel displaying images</description>
     <icon/>
     <properties>
-
         <property key="staticImages" type="object" isList="true" required="false">
             <caption>Images</caption>
             <category>Images</category>
-            <description/> 
+            <description/>
             <properties>
-            
                 <property key="imageUrl" type="image" required="true">
                     <caption>Image</caption>
                     <category>Image</category>
                     <description>Image to add to the carousel</description>
                 </property>
-
             </properties>
         </property>
-
     </properties>
 </widget>
