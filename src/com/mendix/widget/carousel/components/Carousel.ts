@@ -12,7 +12,7 @@ export interface CarouselProps {
 
 const carouselItems = (images: Image[]) => {
     return images.map((image, index) => createElement(CarouselItem, {
-        active: index === 0 ? true : false,
+        active: index === 0,
         imageUrl: image.imageUrl,
         key: index
     }));
