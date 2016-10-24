@@ -1,6 +1,5 @@
-import { DOM, createElement } from "react";
-
 import { CarouselItem } from "./CarouselItem";
+import { DOM, createElement } from "react";
 
 interface Image {
     imageUrl?: string;
