@@ -21,12 +21,10 @@ module.exports = function(config) {
             "tests/test-index.js"
         ],
         exclude: [],
-        preprocessors: {
-            "tests/test-index.js": [ "webpack", "sourcemap" ]
-        },
+        preprocessors: { "tests/test-index.js": [ "webpack", "sourcemap" ] },
         webpack: webpackConfig,
-        webpackServer: { noInfo: true },
-        reporters: ["progress"],
+        webpackServer: {noInfo: true},
+        reporters: [ "progress" ],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
@@ -34,5 +32,5 @@ module.exports = function(config) {
         browsers: [ "Chrome" ],
         singleRun: false,
         concurrency: Infinity
-    })
+    });
 };
