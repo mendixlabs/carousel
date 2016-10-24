@@ -6,7 +6,7 @@ export interface CarouselItemProps {
 }
 
 export const CarouselItem = (props: CarouselItemProps) => (
-    DOM.div({ className: props.active ? "item active" : "item" },
+    DOM.div({ className: "item" + (props.active ? " active" : "") },
         DOM.img({ alt: "item", src: props.url })
     )
 );
