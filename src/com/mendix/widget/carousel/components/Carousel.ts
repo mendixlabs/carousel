@@ -2,7 +2,7 @@ import { CarouselItem } from "./CarouselItem";
 import { DOM, createElement } from "react";
 
 interface Image {
-    imageUrl?: string;
+    url?: string;
 }
 
 export interface CarouselProps {
@@ -12,8 +12,8 @@ export interface CarouselProps {
 const carouselItems = (images: Image[]) => {
     return images.map((image, index) => createElement(CarouselItem, {
         active: index === 0,
-        imageUrl: image.imageUrl,
-        key: index
+        key: index,
+        url: image.url
     }));
 };
 
