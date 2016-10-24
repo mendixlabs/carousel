@@ -1,10 +1,11 @@
-var webpack = require("webpack");
-var CopyWebpackPlugin = require("copy-webpack-plugin");
+const webpack = require("webpack");
+const path = require("path");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: "./src/com/mendix/widget/carousel/Carousel.ts",
     output: {
-        path: __dirname + "/dist/tmp",
+        path: path.resolve(__dirname, "dist/tmp"),
         filename: "src/com/mendix/widget/carousel/Carousel.js",
         libraryTarget:  "umd",
         umdNamedDefine: true,
@@ -26,8 +27,7 @@ module.exports = {
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },
             { from: "src/**/*.xml" },
-            { from: "src/**/*.css" },
-
+            { from: "src/**/*.css" }
         ], {
             copyUnmodified: true
         })
