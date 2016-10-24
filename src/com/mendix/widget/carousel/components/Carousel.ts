@@ -19,7 +19,7 @@ const carouselItems = (images: Image[]) => (
 
 export const Carousel = (props: CarouselProps) => (
     DOM.div({ className: "carousel" },
-        DOM.div({  className: "carousel-inner" },
+        DOM.div({ className: "carousel-inner" },
             carouselItems(props.images)
         )
     )
