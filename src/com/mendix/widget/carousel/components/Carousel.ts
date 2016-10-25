@@ -9,7 +9,7 @@ export interface CarouselProps {
     images?: Image[];
 }
 
-const carouselItems = (images: Image[]) => (
+const carouselItems = (images: Image[] = []) => (
     images.map((image, index) => createElement(CarouselItem, {
         active: index === 0,
         key: index,
