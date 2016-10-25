@@ -3,10 +3,10 @@ import * as React from "react";
 
 import { Carousel, CarouselProps } from "../Carousel";
 
-describe("Carousel component", () => {
+describe("Carousel", () => {
     const staticImages = [
         { imageUrl: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" },
-        { imageUrl: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" }
+        { imageUrl: "https://www.google.com/images/nav_logo242.png" }
     ];
     const render = (props: CarouselProps) => shallow(<Carousel {...props} />);
 
