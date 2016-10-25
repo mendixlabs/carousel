@@ -11,30 +11,23 @@ describe("Carousel", () => {
     let wrapper: ShallowWrapper<CarouselProps, any>;
     beforeEach(() => wrapper = shallow(createElement(Carousel, { images })));
 
-    it("should render carousel structure", () => {
-        expect(DOM.div({ className: "carousel" }, DOM.div({ className: "carousel-inner" })));
+    it("should be a 'div' of class carousel with a 'div' child of class carousel-inner", () => {
+        expect(wrapper).toMatchStructure(DOM.div({ className: "carousel" },
+            DOM.div({ className: "carousel-inner" }))
+        );
     });
 
-    it("should render carousel with 2 children", () => {
+    it("should have the number of children equal to the number of images", () => {
         expect(wrapper.find(".carousel-inner").children().length).toEqual(images.length);
     });
 
-    it("should render carousel with the class 'carousel'", () => {
-        expect(wrapper).toHaveClass("carousel");
+    it("should have the first image as active", () => {
+        expect(wrapper.find(".carousel-inner").children().first().prop("active")).toBe(true);
     });
 
-    it("should render carousel child to have class 'carousel-inner'", () => {
-        expect(wrapper.children()).toHaveClass("carousel-inner");
-    });
-
-    it("first child should be active", () => {
+    it("should have only one active image", () => {
         const children = wrapper.find(".carousel-inner").children();
-        expect(children.first().prop("active")).toBe(true);
-    });
 
-    it("should have only one active child", () => {
-        const children = wrapper.find(".carousel-inner").children();
-        const activeChildren = children.filterWhere(c => c.prop("active") === true);
-        expect(activeChildren.length).toBe(1);
+        expect(children.filterWhere(c => c.prop("active") === true).length).toBe(1);
     });
 });
