@@ -15,7 +15,8 @@ class CarouselDojo extends WidgetBase {
     staticImages?: StaticImage[];
 
     update(object: mendix.lib.MxObject, callback: Function) {
-        render(createElement(Carousel, { images: this.staticImages }), this.domNode);
+        const images = this.staticImages.map(image => ({ url : image.imageUrl }));
+        render(createElement(Carousel, { images }), this.domNode);
 
         callback();
     }

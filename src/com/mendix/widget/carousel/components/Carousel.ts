@@ -2,7 +2,7 @@ import { CarouselItem } from "./CarouselItem";
 import { DOM, createElement } from "react";
 
 export interface Image {
-    url?: string;
+    url: string;
 }
 
 export interface CarouselProps {
