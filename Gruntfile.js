@@ -40,12 +40,12 @@ module.exports = function (grunt) {
         copy: {
             distDeployment: {
                 files: [
-                    { dest: "./MxTestProject/deployment/web/widgets", cwd: "./dist/tmp/src/", src: ["**/*"], expand: true }
+                    { dest: "./dist/MxTestProject/deployment/web/widgets", cwd: "./dist/tmp/src/", src: ["**/*"], expand: true }
                 ]
             },
             mpk: {
                 files: [
-                    { dest: "./MxTestProject/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk"], expand: true }
+                    { dest: "./dist/MxTestProject/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk"], expand: true }
                 ]
             },
             source: {
@@ -62,8 +62,8 @@ module.exports = function (grunt) {
         clean: {
             build: [
                 "./dist/" + pkg.version + "/" + pkg.name + "/*",
-                "./MxTestProject/deployment/web/widgets/" + pkg.name + "/*",
-                "./MxTestProject/widgets/" + pkg.name + ".mpk"
+                "./dist/MxTestProject/deployment/web/widgets/" + pkg.name + "/*",
+                "./dist/MxTestProject/widgets/" + pkg.name + ".mpk"
             ], 
             dist : "./dist/**/*"               
         }
