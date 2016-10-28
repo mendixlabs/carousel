@@ -20,7 +20,7 @@ module.exports = function (grunt) {
                 "tasks": [ "copy:source" ]
             }
         },
-        
+
         compress: {
             dist: {
                 options: {
@@ -36,25 +36,25 @@ module.exports = function (grunt) {
                 }]
             }
         },
-        
+
         copy: {
             distDeployment: {
                 files: [
-                    { dest: "./dist/MxTestProject/deployment/web/widgets", cwd: "./dist/tmp/src/", src: ["**/*"], expand: true }
+                    { dest: "./dist/MxTestProject/deployment/web/widgets", cwd: "./dist/tmp/src/", src: [ "**/*" ], expand: true }
                 ]
             },
             mpk: {
                 files: [
-                    { dest: "./dist/MxTestProject/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk"], expand: true }
+                    { dest: "./dist/MxTestProject/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk" ], expand: true }
                 ]
             },
             source: {
                 files: [
-                    { dest: "./dist/tmp/src", cwd: "./src/", src: ["**/*", "!**/*.ts", "!**/*.tsx"], expand: true }
+                    { dest: "./dist/tmp/src", cwd: "./src/", src: [ "**/*", "!**/*.ts" ], expand: true }
                 ]
-            }         
+            }
         },
-        
+
         webpack: {
             renderer: webpackConfig
         },
@@ -62,10 +62,10 @@ module.exports = function (grunt) {
         clean: {
             build: [
                 "./dist/" + pkg.version + "/" + pkg.name + "/*",
+                "./dist/tmp/**/*",
                 "./dist/MxTestProject/deployment/web/widgets/" + pkg.name + "/*",
                 "./dist/MxTestProject/widgets/" + pkg.name + ".mpk"
-            ], 
-            dist : "./dist/**/*"               
+            ]
         }
     });
     
@@ -78,7 +78,7 @@ module.exports = function (grunt) {
     grunt.registerTask("default", [ "clean build", "watch" ]);    
     grunt.registerTask(
         "clean build",
-        "Compiles all the assets and copies the files to the build directory.", ["clean:build", "webpack" ,"compress:dist", "copy:mpk"]
+        "Compiles all the assets and copies the files to the build directory.", [ "clean:build", "webpack" ,"compress:dist", "copy:mpk" ]
     );
     grunt.registerTask("build", [ "clean build" ]);
 };

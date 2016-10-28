@@ -12,12 +12,12 @@ module.exports = {
         library: "com.mendix.widget.carousel.Carousel"
     },
     resolve: {
-        extensions: [ "", ".ts", ".tsx", ".js", ".json" ]
+        extensions: [ "", ".ts", ".js", ".json" ]
     },
     errorDetails: true,
     module: {
         loaders: [
-            { test: /\.tsx?$/, loaders: [ "ts-loader" ] },
+            { test: /\.ts?$/, loaders: [ "ts-loader" ] },
             { test: /\.json$/, loader: "json" }
         ]
     },
