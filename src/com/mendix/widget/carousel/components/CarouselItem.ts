@@ -1,4 +1,4 @@
-import * as classnames from "classnames";
+import * as classNames from "classnames";
 import { DOM } from "react";
 
 export interface CarouselItemProps {
@@ -7,7 +7,7 @@ export interface CarouselItemProps {
 }
 
 export const CarouselItem = (props: CarouselItemProps) => (
-    DOM.div({ className: classnames({ active: props.active, item: true }) },
+    DOM.div({ className: classNames({ active: props.active, item: true }) },
         DOM.img({ alt: "Carousel image", src: props.url })
     )
 );

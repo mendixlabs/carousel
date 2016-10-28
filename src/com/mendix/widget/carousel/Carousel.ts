@@ -4,19 +4,14 @@ import * as WidgetBase from "mxui/widget/_WidgetBase";
 import { createElement } from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
-import { Carousel } from "./components/Carousel";
-
-export interface StaticImage {
-    imageUrl?: string;
-}
+import { Carousel, Image } from "./components/Carousel";
 
 class CarouselDojo extends WidgetBase {
     // Properties from Mendix modeler
-    staticImages?: StaticImage[];
+    staticImages?: Image[];
 
     postCreate() {
-        const images = this.staticImages.map(image => ({ url : image.imageUrl }));
-        render(createElement(Carousel, { images }), this.domNode);
+        render(createElement(Carousel, { images: this.staticImages }), this.domNode);
     }
 
     uninitialize(): boolean {
@@ -29,12 +24,12 @@ class CarouselDojo extends WidgetBase {
 // Declare widget prototype the Dojo way
 // Thanks to https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/dojo/README.md
 // tslint:disable : only-arrow-functions
-dojoDeclare("com.mendix.widget.carousel.Carousel", [ WidgetBase ], (function (Source: any) {
+dojoDeclare("com.mendix.widget.carousel.Carousel", [ WidgetBase ], function (Source: any) {
     let result: any = {};
-    for (let i in Source.prototype) {
-        if (i !== "constructor" && Source.prototype.hasOwnProperty(i)) {
-            result[i] = Source.prototype[i];
+    for (let property in Source.prototype) {
+        if (property !== "constructor" && Source.prototype.hasOwnProperty(property)) {
+            result[property] = Source.prototype[property];
         }
     }
     return result;
-} (CarouselDojo)));
+} (CarouselDojo));
