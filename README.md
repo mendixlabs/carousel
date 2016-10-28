@@ -2,7 +2,7 @@
 Displays images in a carousel.
 
 ## Features
-* Set static images in the modeler
+* Set static images in the Modeler
 
 ## Dependencies
 Mendix 6.
