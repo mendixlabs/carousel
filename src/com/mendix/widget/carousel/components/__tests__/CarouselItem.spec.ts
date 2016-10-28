@@ -1,33 +1,47 @@
 import { ShallowWrapper, shallow } from "enzyme";
-import { createElement } from "react";
+import { DOM, createElement } from "react";
 
 import { CarouselItem, CarouselItemProps } from "../CarouselItem";
 
 describe("CarouselItem", () => {
     const url = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-    let output: ShallowWrapper<CarouselItemProps, any>;
+    let carouselItem: ShallowWrapper<CarouselItemProps, any>;
+    let carouselImage: ShallowWrapper<CarouselItemProps, any>;
 
-    beforeEach(() => output = shallow(createElement(CarouselItem, { url, active: true })));
-
-    it("should be a div with one img child", () => {
-        expect(output.type()).toBe("div");
-        expect(output.children().length).toBe(1);
-        expect(output.children().first().type()).toBe("img");
+    beforeEach(() => {
+        carouselItem = shallow(createElement(CarouselItem, { url, active: true }));
+        carouselImage = carouselItem.children().first();
     });
 
-    it("should be active as set in the props", () => {
-        expect(output.hasClass("active")).toBe(true);
+    it("renders the structure correctly", () => {
+        expect(carouselItem).toBeElement(
+            DOM.div({ className: "item active" },
+                DOM.img({ alt: "Carousel image", src: url })
+            ));
     });
 
-    it("should be inactive as set in the props", () => {
-        output = shallow(createElement(CarouselItem, { url, active: false }));
+    it("renders one image", () => {
+        expect(carouselItem.children().length).toBe(1);
+        expect(carouselImage.type()).toBe("img");
+        expect(carouselImage.prop("src")).toBe(url);
+    });
 
-        expect(output.hasClass("active")).toBe(false);
+    it("renders the item css class", () => {
+        expect(carouselItem.hasClass("item")).toBe(true);
+    });
+
+    it("should add the active css class when active", () => {
+        expect(carouselItem.instance().props.active).toBe(true);
+        expect(carouselItem.hasClass("active")).toBe(true);
     });
 
     it("should have an image with the specified url", () => {
-        let imageUrl = output.children().first().prop("src");
+        expect(carouselImage.prop("src")).toBe(url);
+    });
 
-        expect(imageUrl).toBe(url);
+    it("should not add the active css class when not active", () => {
+        carouselItem.setProps({ active: false, url });
+        expect(carouselItem.instance().props.active).toBe(false);
+        expect(carouselItem.hasClass("active")).toBe(false);
     });
 });
