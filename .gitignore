@@ -1,5 +1,5 @@
 .vscode/
-nbproject/
+.idea
+.history
 node_modules/
 dist/
-.idea

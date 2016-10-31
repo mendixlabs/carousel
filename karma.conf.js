@@ -23,14 +23,21 @@ module.exports = function(config) {
         exclude: [],
         preprocessors: { "tests/test-index.js": [ "webpack", "sourcemap" ] },
         webpack: webpackConfig,
-        webpackServer: {noInfo: true},
-        reporters: [ "progress" ],
+        webpackServer: { noInfo: true },
+        reporters: [ "progress", "kjhtml", "coverage" ],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: [ "Chrome" ],
-        singleRun: false,
-        concurrency: Infinity
+        singleRun: true,
+        concurrency: Infinity,
+        coverageReporter: {
+            dir: "./dist/testresults", 
+            reporters: [
+                { type: "json", subdir: ".", file: "coverage.json" },
+                { type: "text" }
+            ]
+        }
     });
 };
