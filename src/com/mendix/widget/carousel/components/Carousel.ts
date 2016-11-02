@@ -1,5 +1,5 @@
 import { CarouselItem } from "./CarouselItem";
-import { DOM, createElement } from "react";
+import { Component, DOM, createElement } from "react";
 
 import "../ui/Carousel.css";
 import { CarouselControl } from "./CarouselControl";
@@ -12,18 +12,24 @@ export interface CarouselProps {
     images?: Image[];
 }
 
-const carouselItems = (images: Image[] = []) =>
-    images.map((image, index) => createElement(CarouselItem, {
-        active: index === 0,
-        key: index,
-        url: image.url
-    }));
+export class Carousel extends Component<CarouselProps, any> {
+    render() {
+        return (
+            DOM.div({ className: "carousel" },
+                DOM.div({ className: "carousel-inner" },
+                    this.createCarouselItems(this.props.images)
+                ),
+                createElement(CarouselControl, { direction: "left" }),
+                createElement(CarouselControl, { direction: "right" })
+            )
+        );
+    }
 
-export const Carousel = (props: CarouselProps) =>
-    DOM.div({ className: "widget-carousel" },
-        DOM.div({ className: "widget-carousel-item-wrapper" },
-            carouselItems(props.images)
-        ),
-        createElement(CarouselControl, { direction: "left" }),
-        createElement(CarouselControl, { direction: "right" })
-    );
+    private createCarouselItems(images: Image[] = []) {
+        return images.map((image, index) => createElement(CarouselItem, {
+            active: index === 0,
+            key: index,
+            url: image.url
+        }));
+    }
+}
