@@ -1,6 +1,8 @@
 import { CarouselItem } from "./CarouselItem";
 import { DOM, createElement } from "react";
 
+import { CarouselControl } from "./CarouselControl";
+
 export interface Image {
     url: string;
 }
@@ -20,5 +22,7 @@ export const Carousel = (props: CarouselProps) =>
     DOM.div({ className: "carousel" },
         DOM.div({ className: "carousel-inner" },
             carouselItems(props.images)
-        )
+        ),
+        createElement(CarouselControl, { direction: "left" }),
+        createElement(CarouselControl, { direction: "right" })
     );
