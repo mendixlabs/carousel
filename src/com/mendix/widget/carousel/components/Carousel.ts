@@ -11,12 +11,24 @@ export interface CarouselProps {
     images?: Image[];
 }
 
-export class Carousel extends Component<CarouselProps, any> {
+interface CarouselState {
+    activeIndex: number;
+}
+
+export class Carousel extends Component<CarouselProps, CarouselState> {
+    constructor(props: CarouselProps) {
+        super(props);
+
+        this.state = {
+            activeIndex: 0
+        };
+    }
+
     render() {
         return (
             DOM.div({ className: "carousel" },
                 DOM.div({ className: "carousel-inner" },
-                    this.createCarouselItems(this.props.images)
+                    this.createCarouselItems(this.props.images, this.state.activeIndex)
                 ),
                 createElement(CarouselControl, { direction: "left" }),
                 createElement(CarouselControl, { direction: "right" })
@@ -24,9 +36,9 @@ export class Carousel extends Component<CarouselProps, any> {
         );
     }
 
-    private createCarouselItems(images: Image[] = []) {
+    private createCarouselItems(images: Image[] = [], activeIndex: number) {
         return images.map((image, index) => createElement(CarouselItem, {
-            active: index === 0,
+            active: index === activeIndex,
             key: index,
             url: image.url
         }));
