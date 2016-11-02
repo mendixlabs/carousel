@@ -2,6 +2,7 @@ import { ShallowWrapper, shallow } from "enzyme";
 import { DOM, createElement } from "react";
 
 import { Carousel, CarouselProps, Image } from "../Carousel";
+import { CarouselControl } from "../CarouselControl";
 import { CarouselItem } from "../CarouselItem";
 
 describe("Carousel", () => {
@@ -17,7 +18,10 @@ describe("Carousel", () => {
             DOM.div({ className: "carousel" },
                 DOM.div({ className: "carousel-inner" },
                     createElement(CarouselItem, { active: true, url: images[0].url })
-            )));
+                ),
+                createElement(CarouselControl, { direction: "left" }),
+                createElement(CarouselControl, { direction: "right" })
+            ));
     });
 
     describe("with no images", () => {
