@@ -19,50 +19,51 @@ interface CarouselState {
 type Direction = "right" | "left";
 
 export class Carousel extends Component<CarouselProps, CarouselState> {
+    static defaultProps: CarouselProps = { images: [] };
+
     constructor(props: CarouselProps) {
         super(props);
 
-        this.state = {
-            activeIndex: 0
-        };
+        this.state = { activeIndex: 0 };
     }
 
     render() {
-        return (
-            DOM.div({ className: "carousel" },
-                DOM.div({ className: "carousel-inner" },
-                    this.createCarouselItems(this.props.images, this.state.activeIndex)
-                ),
-                this.props.images.length > 0 ? this.getCarouselControls() : null
-            )
+        return DOM.div({ className: "carousel" },
+            DOM.div({ className: "carousel-inner" },
+                this.getCarouselItems(this.props.images, this.state.activeIndex)
+            ),
+            this.props.images.length > 0 ? this.getCarouselControls() : null
         );
     }
 
-    private createCarouselItems(images: Image[] = [], activeIndex: number) {
-        return images.map((image, index) => createElement(CarouselItem, {
-            active: index === activeIndex,
-            key: index,
-            url: image.url
-        }));
+    static createCarouselItem(url: string, active: boolean, key: number) {
+        return createElement(CarouselItem, { active, key, url });
     }
 
-    private createCarouselControl(direction: Direction, key: number, onClick: MouseEventHandler<HTMLDivElement>) {
+    static createCarouselControl(direction: Direction, key: number, onClick: MouseEventHandler<any>) {
         return createElement(CarouselControl, { direction, key, onClick });
+    }
+
+    private getCarouselItems(images: Image[], activeIndex: number) {
+        return images.map((image, index) =>
+            Carousel.createCarouselItem(image.url, index === activeIndex, index));
     }
 
     private getCarouselControls() {
         return [
-            this.createCarouselControl("left", 0, () => this.moveInDirection("left")),
-            this.createCarouselControl("right", 1, () => this.moveInDirection("right"))
+            Carousel.createCarouselControl("left", 0, () => this.moveInDirection("left")),
+            Carousel.createCarouselControl("right", 1, () => this.moveInDirection("right"))
         ];
     }
 
     private moveInDirection(direction: Direction) {
-        const { activeIndex } = this.state;
-        const imageCount = this.props.images.length;
-        direction === "right"
-            ? this.setActiveIndex(activeIndex < imageCount - 1 ? activeIndex + 1 : 0)
-            : this.setActiveIndex(activeIndex === 0 ? imageCount - 1 : activeIndex - 1);
+        let { activeIndex } = this.state;
+        let imageCount = this.props.images.length;
+        if (direction === "right") {
+            this.setActiveIndex(activeIndex < --imageCount ? ++activeIndex : 0);
+        } else {
+            this.setActiveIndex(activeIndex === 0 ? --imageCount : --activeIndex);
+        }
     }
 
     private setActiveIndex(activeIndex: number) {
