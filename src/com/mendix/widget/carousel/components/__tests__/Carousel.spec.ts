@@ -26,8 +26,7 @@ describe("Carousel", () => {
         expect(carouselWrapper.children().length).toBe(1);
         expect(carouselWrapper.children().first().type()).toBe(CarouselItem);
 
-        expect(carousel.childAt(1).type()).toBe(CarouselControl);
-        expect(carousel.childAt(2).type()).toBe(CarouselControl);
+        expect(carousel.find(CarouselControl).length).toBe(2);
     });
 
     describe("with no images", () => {
@@ -37,6 +36,10 @@ describe("Carousel", () => {
             const carouselItems = carousel.find(CarouselItem);
 
             expect(carouselItems.length).toBe(0);
+        });
+
+        it("renders no carousel controls", () => {
+            expect(carousel.find(CarouselControl).length).toBe(0);
         });
     });
 
@@ -53,6 +56,20 @@ describe("Carousel", () => {
 
             expect(carouselItem.props().active).toBe(true);
             expect(carouselItem.props().url).toBe(images[0].url);
+        });
+
+        it("renders carousel controls", () => {
+            const carouselControls = carousel.find(CarouselControl);
+
+            expect(carouselControls.length).toBe(2);
+
+            carouselControls.forEach((carouselControl: any, index: number) => {
+                if (index === 0) {
+                    expect(carouselControl.props().direction).toBe("left");
+                } else {
+                    expect(carouselControl.props().direction).toBe("right");
+                }
+            });
         });
     });
 
@@ -88,6 +105,56 @@ describe("Carousel", () => {
             const activeItems = carouselWrapper.find(CarouselItem).filterWhere(c => c.prop("active"));
 
             expect(activeItems.length).toBe(1);
+        });
+
+        it("renders carousel controls", () => {
+            const carouselControls = carousel.find(CarouselControl);
+
+            expect(carouselControls.length).toBe(2);
+
+            carouselControls.forEach((carouselControl: any, index: number) => {
+                if (index === 0) {
+                    expect(carouselControl.props().direction).toBe("left");
+                } else {
+                    expect(carouselControl.props().direction).toBe("right");
+                }
+            });
+        });
+
+        it("switches to the next image when the right control is clicked", () => {
+            const carouselControls = carousel.find(CarouselControl);
+
+            const rightControl = carouselControls.at(1);
+
+            expect(rightControl.props().direction).toBe("right");
+            expect(carousel.state().activeIndex).toBe(0);
+
+            rightControl.simulate("click");
+
+            expect(carousel.state().activeIndex).toBe(1);
+
+            rightControl.simulate("click");
+
+            expect(carousel.state().activeIndex).toBe(0);
+            // TODO: Test incomplete - not checking if carousel items are updated. Failed to successfully test
+        });
+
+        it("switches to the previous image when the left control is clicked", () => {
+            const carouselControls = carousel.find(CarouselControl);
+
+            const leftControl = carouselControls.at(0);
+
+            expect(leftControl.props().direction).toBe("left");
+            expect(carousel.state().activeIndex).toBe(0);
+
+            leftControl.simulate("click");
+
+            expect(carousel.state().activeIndex).toBe(1);
+
+            leftControl.simulate("click");
+
+            expect(carousel.state().activeIndex).toBe(0);
+            // TODO: Test incomplete - not checking if carousel items are updated. Failed to successfully test
         });
     });
 });
