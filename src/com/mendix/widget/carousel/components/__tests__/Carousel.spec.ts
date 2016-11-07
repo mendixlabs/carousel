@@ -25,7 +25,7 @@ describe("Carousel", () => {
         beforeEach(() => carousel = shallow(createElement(Carousel)) );
 
         it("renders no carousel items", () => {
-            const carouselItems = carousel.find(".carousel-inner").children();
+            const carouselItems = carousel.find(CarouselItem);
 
             expect(carouselItems.length).toBe(0);
         });
@@ -39,7 +39,7 @@ describe("Carousel", () => {
         });
 
         it("renders one carousel item", () => {
-            const carouselItems = carousel.find(".carousel-inner").children();
+            const carouselItems = carousel.find(CarouselItem);
 
             expect(carouselItems.length).toBe(1);
 
