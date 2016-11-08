@@ -7,6 +7,6 @@ export interface CarouselControlProps {
 }
 
 export const CarouselControl = (props: CarouselControlProps) =>
-    DOM.div({ className: classNames("carousel-control", props.direction), onClick: props.onClick },
+    DOM.div({ className: classNames("mx-carousel-control", props.direction), onClick: props.onClick },
         DOM.span({ className: classNames("glyphicon", "glyphicon-chevron-" + props.direction) })
     );
