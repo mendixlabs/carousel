@@ -14,19 +14,11 @@ describe("Carousel", () => {
         images = [ { url: "https://www.google.com/images/nav_logo242.png" } ];
         carousel = shallow(createElement(Carousel, { images }));
 
-        expect(carousel.hasClass("carousel")).toBe(true);
-
-        const carouselChildren = carousel.children();
-
-        expect(carouselChildren.length).toBe(3);
-        expect(carouselChildren.first().hasClass("carousel-inner")).toBe(true);
-
-        carouselWrapper = carouselChildren.first();
-
-        expect(carouselWrapper.children().length).toBe(1);
-        expect(carouselWrapper.children().first().type()).toBe(CarouselItem);
-
-        expect(carousel.find(CarouselControl).length).toBe(2);
+        expect(carousel).toBeElement(
+            DOM.div({ className: "widget-carousel" },
+                DOM.div({ className: "widget-carousel-item-wrapper" },
+                    createElement(CarouselItem, { active: true, url: images[0].url })
+            )));
     });
 
     describe("with no images", () => {
