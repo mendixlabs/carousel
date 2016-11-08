@@ -1,4 +1,26 @@
-.carousel .item img {
+.mx-carousel {
+    position: relative
+}
+
+.mx-carousel-item-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden
+}
+
+.mx-carousel-item-wrapper .mx-carousel-item {
+    position: relative;
+    display: none;
+}
+
+.mx-carousel-item-wrapper .mx-carousel-item img {
+    line-height: 1;
     min-width: 100%;
-    min-height: 100%;
+    max-width: 100%;
+    height: auto
+}
+
+.mx-carousel-item-wrapper .active {
+    display: block;
+    left: 0
 }

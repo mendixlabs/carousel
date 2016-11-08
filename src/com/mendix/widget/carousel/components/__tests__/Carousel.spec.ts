@@ -14,12 +14,12 @@ describe("Carousel", () => {
         images = [ { url: "https://www.google.com/images/nav_logo242.png" } ];
         carousel = shallow(createElement(Carousel, { images }));
 
-        expect(carousel.hasClass("carousel")).toBe(true);
+        expect(carousel.hasClass("mx-carousel")).toBe(true);
 
         const carouselChildren = carousel.children();
 
         expect(carouselChildren.length).toBe(3);
-        expect(carouselChildren.first().hasClass("carousel-inner")).toBe(true);
+        expect(carouselChildren.first().hasClass("mx-carousel-item-wrapper")).toBe(true);
 
         carouselWrapper = carouselChildren.first();
 
@@ -34,7 +34,7 @@ describe("Carousel", () => {
         beforeEach(() => carousel = shallow(createElement(Carousel)) );
 
         it("renders no carousel items", () => {
-            const carouselItems = carousel.find(".carousel-inner").children();
+            const carouselItems = carousel.find(CarouselItem);
 
             expect(carouselItems.length).toBe(0);
         });
@@ -85,7 +85,7 @@ describe("Carousel", () => {
                 { url: "https://www.google.com/images/nav_logo242.png" }
             ];
             carousel = shallow(createElement(Carousel, { images }));
-            carouselWrapper = carousel.find(".carousel-inner");
+            carouselWrapper = carousel.find(".mx-carousel-item-wrapper");
         });
 
         it("renders all carousel items", () => {
