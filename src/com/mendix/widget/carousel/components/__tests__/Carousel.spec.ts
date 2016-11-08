@@ -14,8 +14,8 @@ describe("Carousel", () => {
         carousel = shallow(createElement(Carousel, { images }));
 
         expect(carousel).toBeElement(
-            DOM.div({ className: "carousel" },
-                DOM.div({ className: "carousel-inner" },
+            DOM.div({ className: "mx-carousel" },
+                DOM.div({ className: "mx-carousel-item-wrapper" },
                     createElement(CarouselItem, { active: true, url: images[0].url })
             )));
     });
@@ -59,7 +59,7 @@ describe("Carousel", () => {
                 { url: "https://www.google.com/images/nav_logo242.png" }
             ];
             carousel = shallow(createElement(Carousel, { images }));
-            carouselWrapper = carousel.find(".carousel-inner");
+            carouselWrapper = carousel.find(".mx-carousel-item-wrapper");
         });
 
         it("renders all carousel items", () => {
