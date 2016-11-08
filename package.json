@@ -25,6 +25,7 @@
     "@types/react": "^0.14.37",
     "@types/react-dom": "^0.14.17",
     "copy-webpack-plugin": "^3.0.1",
+    "css-loader": "^0.25.0",
     "enzyme": "^2.5.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "grunt": "1.0.1",
