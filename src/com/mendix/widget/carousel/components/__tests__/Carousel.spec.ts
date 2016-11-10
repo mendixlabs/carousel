@@ -115,7 +115,6 @@ describe("Carousel", () => {
 
         it("switches to the next image when the right control is clicked", () => {
             const carouselControls = carousel.find(CarouselControl);
-
             const rightControl = carouselControls.at(1);
 
             expect(rightControl.props().direction).toBe("right");
@@ -133,7 +132,6 @@ describe("Carousel", () => {
 
         it("switches to the previous image when the left control is clicked", () => {
             const carouselControls = carousel.find(CarouselControl);
-
             const leftControl = carouselControls.at(0);
 
             expect(leftControl.props().direction).toBe("left");
