@@ -18,7 +18,8 @@ describe("Carousel", () => {
             DOM.div({ className: "widget-carousel" },
                 DOM.div({ className: "widget-carousel-item-wrapper" },
                     createElement(CarouselItem, { active: true, url: images[0].url })
-            )));
+                )
+            ));
     });
 
     describe("with no images", () => {
@@ -79,12 +80,6 @@ describe("Carousel", () => {
             const carouselItems = carouselWrapper.find(CarouselItem);
 
             expect(carouselItems.length).toBe(2);
-
-            expect(carouselItems.at(0).props().active).toBe(true);
-            expect(carouselItems.at(0).props().url).toBe(images[0].url);
-
-            expect(carouselItems.at(1).props().active).toBe(false);
-            expect(carouselItems.at(1).props().url).toBe(images[1].url);
         });
 
         it("renders the first carousel item active", () => {
