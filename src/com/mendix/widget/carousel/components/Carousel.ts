@@ -1,6 +1,7 @@
-import "../ui/Carousel.css";
 import { CarouselItem } from "./CarouselItem";
 import { DOM, createElement } from "react";
+
+import "../ui/Carousel.css";
 
 export interface Image {
     url: string;
@@ -18,8 +19,8 @@ const carouselItems = (images: Image[] = []) =>
     }));
 
 export const Carousel = (props: CarouselProps) =>
-    DOM.div({ className: "mx-carousel" },
-        DOM.div({ className: "mx-carousel-item-wrapper" },
+    DOM.div({ className: "widget-carousel" },
+        DOM.div({ className: "widget-carousel-item-wrapper" },
             carouselItems(props.images)
         )
     );

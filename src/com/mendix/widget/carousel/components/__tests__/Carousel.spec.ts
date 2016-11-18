@@ -14,14 +14,14 @@ describe("Carousel", () => {
         carousel = shallow(createElement(Carousel, { images }));
 
         expect(carousel).toBeElement(
-            DOM.div({ className: "mx-carousel" },
-                DOM.div({ className: "mx-carousel-item-wrapper" },
+            DOM.div({ className: "widget-carousel" },
+                DOM.div({ className: "widget-carousel-item-wrapper" },
                     createElement(CarouselItem, { active: true, url: images[0].url })
-            )));
+                )
+            ));
     });
 
     describe("with no images", () => {
-
         beforeEach(() => carousel = shallow(createElement(Carousel)) );
 
         it("renders no carousel items", () => {
@@ -32,65 +32,52 @@ describe("Carousel", () => {
     });
 
     describe("with one image", () => {
-
         beforeEach(() => {
             images = [ { url: "https://www.google.com/images/nav_logo242.png" } ];
             carousel = shallow(createElement(Carousel, { images }));
         });
 
         it("renders one carousel item", () => {
-            const carouselItems = carousel.find(CarouselItem);
+            const carouselItem = carousel.find(CarouselItem);
 
-            expect(carouselItems.length).toBe(1);
+            expect(carouselItem.length).toBe(1);
 
-            const carouselItem = carouselItems.first();
-
-            expect(carouselItem.type()).toEqual(CarouselItem);
             expect(carouselItem.props().active).toBe(true);
             expect(carouselItem.props().url).toBe(images[0].url);
         });
     });
 
     describe("with multiple images", () => {
-
         beforeEach(() => {
             images = [
                 { url: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" },
                 { url: "https://www.google.com/images/nav_logo242.png" }
             ];
             carousel = shallow(createElement(Carousel, { images }));
-            carouselWrapper = carousel.find(".mx-carousel-item-wrapper");
+            carouselWrapper = carousel.find(".widget-carousel-item-wrapper");
         });
 
         it("renders all carousel items", () => {
-            const carouselItems = carouselWrapper.children();
+            const carouselItems = carouselWrapper.find(CarouselItem);
 
             expect(carouselItems.length).toBe(2);
 
-            carouselItems.forEach((carouselItem: any, index: number) => {
-                expect(carouselItem.type()).toEqual(CarouselItem);
+            expect(carouselItems.at(0).props().active).toBe(true);
+            expect(carouselItems.at(0).props().url).toBe(images[0].url);
 
-                if (index === 0) {
-                    expect(carouselItem.props().active).toBe(true);
-                } else {
-                    expect(carouselItem.props().active).toBe(false);
-                }
-
-                expect(carouselItem.props().url).toBe(images[index].url);
-            });
+            expect(carouselItems.at(1).props().active).toBe(false);
+            expect(carouselItems.at(1).props().url).toBe(images[1].url);
         });
 
         it("renders the first carousel item active", () => {
-            const firstCarouselItem = carouselWrapper.children().first();
+            const firstCarouselItem = carouselWrapper.find(CarouselItem).first();
 
-            expect(firstCarouselItem.type()).toEqual(CarouselItem);
             expect(firstCarouselItem.prop("active")).toBe(true);
         });
 
         it("renders only one active carousel item", () => {
-            const activeItems = carouselWrapper.children().filterWhere(c => c.prop("active"));
+            const activeItems = carouselWrapper.find(CarouselItem).filterWhere(c => c.prop("active"));
 
-            expect(activeItems.type()).toEqual(CarouselItem);
             expect(activeItems.length).toBe(1);
         });
     });
