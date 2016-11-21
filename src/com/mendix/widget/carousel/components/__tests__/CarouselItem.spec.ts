@@ -15,7 +15,7 @@ describe("CarouselItem", () => {
 
     it("renders the structure correctly", () => {
         expect(carouselItem).toBeElement(
-            DOM.div({ className: "mx-carousel-item active" },
+            DOM.div({ className: "widget-carousel-item active" },
                 DOM.img({ alt: "Carousel image", src: url })
             ));
     });
@@ -27,7 +27,7 @@ describe("CarouselItem", () => {
     });
 
     it("renders the item css class", () => {
-        expect(carouselItem.hasClass("mx-carousel-item")).toBe(true);
+        expect(carouselItem.hasClass("widget-carousel-item")).toBe(true);
     });
 
     it("should add the active css class when active", () => {
@@ -41,6 +41,7 @@ describe("CarouselItem", () => {
 
     it("should not add the active css class when not active", () => {
         carouselItem.setProps({ active: false, url });
+
         expect(carouselItem.instance().props.active).toBe(false);
         expect(carouselItem.hasClass("active")).toBe(false);
     });

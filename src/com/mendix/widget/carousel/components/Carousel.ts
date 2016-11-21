@@ -1,8 +1,8 @@
-import "../ui/Carousel.css";
+import { CarouselControl } from "./CarouselControl";
 import { CarouselItem } from "./CarouselItem";
 import { Component, DOM, MouseEventHandler, createElement } from "react";
 
-import { CarouselControl } from "./CarouselControl";
+import "../ui/Carousel.css";
 
 export interface Image {
     url: string;
@@ -28,8 +28,8 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
     }
 
     render() {
-        return DOM.div({ className: "mx-carousel" },
-            DOM.div({ className: "mx-carousel-item-wrapper" },
+        return DOM.div({ className: "widget-carousel" },
+            DOM.div({ className: "widget-carousel-item-wrapper" },
                 this.getCarouselItems(this.props.images, this.state.activeIndex)
             ),
             this.props.images.length > 0 ? this.getCarouselControls() : null

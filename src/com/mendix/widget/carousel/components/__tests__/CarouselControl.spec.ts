@@ -15,13 +15,13 @@ describe("CarouselControl", () => {
 
     it("renders the structure correctly", () => {
         expect(carouselControl).toBeElement(
-            DOM.div({ className: "mx-carousel-control right", onClick },
+            DOM.div({ className: "widget-carousel-control right", onClick },
                 DOM.span({ className: "glyphicon glyphicon-chevron-right" })
             ));
     });
 
     it("renders with the carousel-control css class", () => {
-        expect(carouselControl.hasClass("mx-carousel-control")).toBe(true);
+        expect(carouselControl.hasClass("widget-carousel-control")).toBe(true);
     });
 
     describe("with the direction right", () => {
