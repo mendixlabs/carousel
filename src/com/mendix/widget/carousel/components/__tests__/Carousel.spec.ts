@@ -16,10 +16,9 @@ describe("Carousel", () => {
 
         expect(carousel).toBeElement(
             DOM.div({ className: "widget-carousel" },
-                DOM.div({ className: "widget-carousel-item-wrapper" },
-                    createElement(CarouselItem, { active: true, url: images[0].url })
-                )
-            ));
+                DOM.div({ className: "widget-carousel-item-wrapper" })
+            )
+        );
     });
 
     describe("with no images", () => {
