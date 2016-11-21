@@ -1,6 +1,6 @@
 import { CarouselControl } from "./CarouselControl";
 import { CarouselItem } from "./CarouselItem";
-import { Component, DOM, MouseEventHandler, createElement } from "react";
+import { Component, DOM, createElement } from "react";
 
 import "../ui/Carousel.css";
 
@@ -36,37 +36,38 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
         );
     }
 
-    static createCarouselItem(url: string, active: boolean, key: number) {
-        return createElement(CarouselItem, { active, key, url });
-    }
-
-    static createCarouselControl(direction: Direction, key: number, onClick: MouseEventHandler<any>) {
-        return createElement(CarouselControl, { direction, key, onClick });
-    }
-
     private getCarouselItems(images: Image[], activeIndex: number) {
         return images.map((image, index) =>
-            Carousel.createCarouselItem(image.url, index === activeIndex, index));
+            createElement(CarouselItem, {
+                active: index === activeIndex,
+                key: index,
+                url: image.url
+            }));
     }
 
     private getCarouselControls() {
         return [
-            Carousel.createCarouselControl("left", 0, () => this.moveInDirection("left")),
-            Carousel.createCarouselControl("right", 1, () => this.moveInDirection("right"))
+            createElement(CarouselControl, {
+                direction: "left",
+                key: 0,
+                onClick: () => this.moveInDirection("left")
+            }),
+            createElement(CarouselControl, {
+                direction: "right",
+                key: 1,
+                onClick: () => this.moveInDirection("right")
+            })
         ];
     }
 
     private moveInDirection(direction: Direction) {
         let { activeIndex } = this.state;
         let imageCount = this.props.images.length;
+        const firstIndex = 0;
         if (direction === "right") {
-            this.setActiveIndex(activeIndex < --imageCount ? ++activeIndex : 0);
+            this.setState({ activeIndex : activeIndex < --imageCount ? ++activeIndex : firstIndex });
         } else {
-            this.setActiveIndex(activeIndex === 0 ? --imageCount : --activeIndex);
+            this.setState({ activeIndex: activeIndex === firstIndex ? --imageCount : --activeIndex });
         }
-    }
-
-    private setActiveIndex(activeIndex: number) {
-        this.setState({ activeIndex });
     }
 }
