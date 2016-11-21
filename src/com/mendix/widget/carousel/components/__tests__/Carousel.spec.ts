@@ -1,5 +1,5 @@
 import { ShallowWrapper, shallow } from "enzyme";
-import { DOM, createElement } from "react";
+import { createElement } from "react";
 
 import { Carousel, CarouselProps, Image } from "../Carousel";
 import { CarouselControl } from "../CarouselControl";
@@ -27,7 +27,7 @@ describe("Carousel", () => {
         expect(carouselWrapper.children().first().type()).toBe(CarouselItem);
 
         expect(carousel.find(CarouselControl).length).toBe(2);
-        // Conclusion: toBeElement & toMatchStructure only work with stateless components
+        // Conclusion: toBeElement & toMatchStructure only work with stateless function components
         // expect(carousel).toBeElement(
         //     DOM.div({ className: "widget-carousel" },
         //         DOM.div({ className: "widget-carousel-item-wrapper" },
@@ -59,6 +59,7 @@ describe("Carousel", () => {
         it("renders one carousel item", () => {
             const carouselItem = carousel.find(CarouselItem);
 
+            expect(carouselItem.length).toBe(1);
             expect(carouselItem.props().active).toBe(true);
             expect(carouselItem.props().url).toBe(images[0].url);
         });
@@ -92,6 +93,12 @@ describe("Carousel", () => {
             const carouselItems = carouselWrapper.find(CarouselItem);
 
             expect(carouselItems.length).toBe(2);
+
+            expect(carouselItems.at(0).props().active).toBe(true);
+            expect(carouselItems.at(0).props().url).toBe(images[0].url);
+
+            expect(carouselItems.at(1).props().active).toBe(false);
+            expect(carouselItems.at(1).props().url).toBe(images[1].url);
         });
 
         it("renders the first carousel item active", () => {
