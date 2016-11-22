@@ -1,5 +1,5 @@
 import { ShallowWrapper, shallow } from "enzyme";
-import { createElement } from "react";
+import { DOM, createElement } from "react";
 
 import { Carousel, CarouselProps, Image } from "../Carousel";
 import { CarouselControl } from "../CarouselControl";
@@ -11,8 +11,7 @@ describe("Carousel", () => {
     let carouselWrapper: ShallowWrapper<CarouselProps, any>;
 
     it("renders the structure correctly", () => {
-        images = [ { url: "https://www.google.com/images/nav_logo242.png" } ];
-        carousel = shallow(createElement(Carousel, { images }));
+        carousel = shallow(createElement(Carousel));
 
         expect(carousel).toBeElement(
             DOM.div({ className: "widget-carousel" },
@@ -54,14 +53,8 @@ describe("Carousel", () => {
             const carouselControls = carousel.find(CarouselControl);
 
             expect(carouselControls.length).toBe(2);
-
-            carouselControls.forEach((carouselControl: any, index: number) => {
-                if (index === 0) {
-                    expect(carouselControl.props().direction).toBe("left");
-                } else {
-                    expect(carouselControl.props().direction).toBe("right");
-                }
-            });
+            expect(carouselControls.at(0).props().direction).toBe("left");
+            expect(carouselControls.at(1).props().direction).toBe("right");
         });
     });
 
@@ -79,6 +72,12 @@ describe("Carousel", () => {
             const carouselItems = carouselWrapper.find(CarouselItem);
 
             expect(carouselItems.length).toBe(2);
+
+            expect(carouselItems.at(0).props().active).toBe(true);
+            expect(carouselItems.at(0).props().url).toBe(images[0].url);
+
+            expect(carouselItems.at(1).props().active).toBe(false);
+            expect(carouselItems.at(1).props().url).toBe(images[1].url);
         });
 
         it("renders the first carousel item active", () => {
@@ -97,21 +96,14 @@ describe("Carousel", () => {
             const carouselControls = carousel.find(CarouselControl);
 
             expect(carouselControls.length).toBe(2);
-
-            carouselControls.forEach((carouselControl: any, index: number) => {
-                if (index === 0) {
-                    expect(carouselControl.props().direction).toBe("left");
-                } else {
-                    expect(carouselControl.props().direction).toBe("right");
-                }
-            });
+            expect(carouselControls.at(0).props().direction).toBe("left");
+            expect(carouselControls.at(1).props().direction).toBe("right");
         });
 
         it("switches to the next image when the right control is clicked", () => {
             const carouselControls = carousel.find(CarouselControl);
             const rightControl = carouselControls.at(1);
 
-            expect(rightControl.props().direction).toBe("right");
             expect(carousel.state().activeIndex).toBe(0);
 
             rightControl.simulate("click");
@@ -121,14 +113,13 @@ describe("Carousel", () => {
             rightControl.simulate("click");
 
             expect(carousel.state().activeIndex).toBe(0);
-            // TODO: Test incomplete - not checking if carousel items are updated. Failed to successfully test
+            // Test incomplete: not checking if carousel items are updated. Failed to successfully test
         });
 
         it("switches to the previous image when the left control is clicked", () => {
             const carouselControls = carousel.find(CarouselControl);
             const leftControl = carouselControls.at(0);
 
-            expect(leftControl.props().direction).toBe("left");
             expect(carousel.state().activeIndex).toBe(0);
 
             leftControl.simulate("click");
@@ -138,7 +129,7 @@ describe("Carousel", () => {
             leftControl.simulate("click");
 
             expect(carousel.state().activeIndex).toBe(0);
-            // TODO: Test incomplete - not checking if carousel items are updated. Failed to successfully test
+            // Test incomplete: not checking if carousel items are updated. Failed to successfully test
         });
     });
 });
