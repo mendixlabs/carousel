@@ -61,13 +61,16 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
     }
 
     private moveInDirection(direction: Direction) {
-        let { activeIndex } = this.state;
-        let imageCount = this.props.images.length;
+        const { activeIndex } = this.state;
+        const imageCount = this.props.images.length;
         const firstIndex = 0;
+        let newActiveIndex: number;
+
         if (direction === "right") {
-            this.setState({ activeIndex : activeIndex < --imageCount ? ++activeIndex : firstIndex });
+            newActiveIndex = activeIndex < imageCount - 1 ? activeIndex + 1 : firstIndex;
         } else {
-            this.setState({ activeIndex: activeIndex === firstIndex ? --imageCount : --activeIndex });
+            newActiveIndex = activeIndex === firstIndex ? imageCount - 1 : activeIndex - 1;
         }
+        this.setState({ activeIndex: newActiveIndex });
     }
 }
