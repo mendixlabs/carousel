@@ -20,23 +20,21 @@ module.exports = function (grunt) {
                 "tasks": [ "copy:source" ]
             }
         },
-
         compress: {
             dist: {
                 options: {
                     archive: "./dist/" + pkg.version + "/" + pkg.name + ".mpk",
                     mode: "zip"
                 },
-                files: [{
+                files: [ {
                     expand: true,
                     date: new Date(),
                     store: false,
                     cwd: "./dist/tmp/src",
                     src: [ "**/*" ]
-                }]
+                } ]
             }
         },
-
         copy: {
             distDeployment: {
                 files: [
@@ -54,11 +52,9 @@ module.exports = function (grunt) {
                 ]
             }
         },
-
         webpack: {
             renderer: webpackConfig
         },
-
         clean: {
             build: [
                 "./dist/" + pkg.version + "/" + pkg.name + "/*",
