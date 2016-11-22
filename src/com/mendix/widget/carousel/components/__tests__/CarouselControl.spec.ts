@@ -24,8 +24,7 @@ describe("CarouselControl", () => {
         expect(carouselControl.hasClass("widget-carousel-control")).toBe(true);
     });
 
-    describe("with the direction right", () => {
-
+    describe("that navigates to the", () => {
         beforeEach(() => {
             carouselControl = shallow(createElement(CarouselControl, { direction: "right", onClick }));
         });
@@ -39,9 +38,9 @@ describe("CarouselControl", () => {
         });
     });
 
-    describe("with the direction left", () => {
-
+    describe("that navigates to the left", () => {
         beforeEach(() => {
+            clickCount = 0;
             carouselControl = shallow(createElement(CarouselControl, { direction: "left", onClick }));
         });
 

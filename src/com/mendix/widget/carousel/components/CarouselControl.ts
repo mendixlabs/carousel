@@ -1,9 +1,9 @@
 import * as classNames from "classnames";
-import { DOM, MouseEventHandler } from "react";
+import { DOM } from "react";
 
 export interface CarouselControlProps {
     direction: "right" | "left";
-    onClick?: MouseEventHandler<HTMLDivElement>;
+    onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 export const CarouselControl = (props: CarouselControlProps) =>
