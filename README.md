@@ -2,13 +2,13 @@
 Displays images in a carousel.
 
 ## Features
-* Set static images in the modeller
+* Set static images in the Modeler
 
 ## Dependencies
-Mendix 6: Tested on 6.8.0.
+Mendix 6.
 
 ## Demo project
-http://imagecarouselreact.mxapps.io
+http://carouselwidget.mxapps.io
 
 ## Issues
 Please report issues at https://github.com/mendixlabs/carousel/issues.

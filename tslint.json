@@ -1,5 +1,5 @@
 {
-    "rulesDirectory": ["node_modules/tslint-eslint-rules/dist/rules"],
+    "rulesDirectory": [ "node_modules/tslint-eslint-rules/dist/rules" ],
     "extends": "tslint:latest",
     "rules": {
         "class-name": true,
@@ -53,9 +53,7 @@
             "check-separator",
             "check-type"
         ],
-        // Rules for Widget development
-        "interface-name": [ false, "always-prefix" ],
-        // https://www.npmjs.com/package/tslint-eslint-rules
+        "interface-name": [ false, "always-prefix" ],        
         "no-multi-spaces": [true],
         "no-extra-semi": true,
         "no-irregular-whitespace": true,
@@ -78,7 +76,7 @@
             }
         ],
         "object-curly-spacing": [ true, "always" ],
-        "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
+        "trailing-comma": [ true, { "multiline": "never", "singleline": "never" } ],
         "member-access": false
     }
 }
