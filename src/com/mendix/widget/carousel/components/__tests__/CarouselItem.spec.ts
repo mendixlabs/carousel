@@ -41,6 +41,7 @@ describe("CarouselItem", () => {
 
     it("should not add the active css class when not active", () => {
         carouselItem.setProps({ active: false, url });
+
         expect(carouselItem.instance().props.active).toBe(false);
         expect(carouselItem.hasClass("active")).toBe(false);
     });

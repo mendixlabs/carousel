@@ -13,11 +13,9 @@ module.exports = function(config) {
     config.set({
         basePath: "",
         frameworks: [ "jasmine" ],
-
         files: [
             { pattern: "src/**/*.ts", watched: true, included: false, served: false },
             { pattern: "tests/**/*.ts", watched: true, included: false, served: false },
-
             "tests/test-index.js"
         ],
         exclude: [],
@@ -28,7 +26,7 @@ module.exports = function(config) {
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
-        autoWatch: true,
+        autoWatch: false,
         browsers: [ "Chrome" ],
         singleRun: false,
         concurrency: Infinity,

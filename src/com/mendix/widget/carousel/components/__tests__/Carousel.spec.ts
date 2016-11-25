@@ -2,6 +2,7 @@ import { ShallowWrapper, shallow } from "enzyme";
 import { DOM, createElement } from "react";
 
 import { Carousel, CarouselProps, Image } from "../Carousel";
+import { CarouselControl } from "../CarouselControl";
 import { CarouselItem } from "../CarouselItem";
 
 describe("Carousel", () => {
@@ -10,14 +11,11 @@ describe("Carousel", () => {
     let carouselWrapper: ShallowWrapper<CarouselProps, any>;
 
     it("renders the structure correctly", () => {
-        images = [ { url: "https://www.google.com/images/nav_logo242.png" } ];
-        carousel = shallow(createElement(Carousel, { images }));
+        carousel = shallow(createElement(Carousel));
 
         expect(carousel).toBeElement(
             DOM.div({ className: "widget-carousel" },
-                DOM.div({ className: "widget-carousel-item-wrapper" },
-                    createElement(CarouselItem, { active: true, url: images[0].url })
-                )
+                DOM.div({ className: "widget-carousel-item-wrapper" })
             ));
     });
 
@@ -28,6 +26,10 @@ describe("Carousel", () => {
             const carouselItems = carousel.find(CarouselItem);
 
             expect(carouselItems.length).toBe(0);
+        });
+
+        it("renders no carousel controls", () => {
+            expect(carousel.find(CarouselControl).length).toBe(0);
         });
     });
 
@@ -41,9 +43,16 @@ describe("Carousel", () => {
             const carouselItem = carousel.find(CarouselItem);
 
             expect(carouselItem.length).toBe(1);
-
             expect(carouselItem.props().active).toBe(true);
             expect(carouselItem.props().url).toBe(images[0].url);
+        });
+
+        it("renders carousel controls", () => {
+            const carouselControls = carousel.find(CarouselControl);
+
+            expect(carouselControls.length).toBe(2);
+            expect(carouselControls.at(0).props().direction).toBe("left");
+            expect(carouselControls.at(1).props().direction).toBe("right");
         });
     });
 
@@ -79,6 +88,46 @@ describe("Carousel", () => {
             const activeItems = carouselWrapper.find(CarouselItem).filterWhere(c => c.prop("active"));
 
             expect(activeItems.length).toBe(1);
+        });
+
+        it("renders carousel controls", () => {
+            const carouselControls = carousel.find(CarouselControl);
+
+            expect(carouselControls.length).toBe(2);
+            expect(carouselControls.at(0).props().direction).toBe("left");
+            expect(carouselControls.at(1).props().direction).toBe("right");
+        });
+
+        it("switches to the next image when the right control is clicked", () => {
+            const carouselControls = carousel.find(CarouselControl);
+            const rightControl = carouselControls.at(1);
+
+            expect(carousel.state().activeIndex).toBe(0);
+
+            rightControl.simulate("click");
+
+            expect(carousel.state().activeIndex).toBe(1);
+
+            rightControl.simulate("click");
+
+            expect(carousel.state().activeIndex).toBe(0);
+            // Test incomplete: not checking if carousel items are updated. Failed to successfully test
+        });
+
+        it("switches to the previous image when the left control is clicked", () => {
+            const carouselControls = carousel.find(CarouselControl);
+            const leftControl = carouselControls.at(0);
+
+            expect(carousel.state().activeIndex).toBe(0);
+
+            leftControl.simulate("click");
+
+            expect(carousel.state().activeIndex).toBe(1);
+
+            leftControl.simulate("click");
+
+            expect(carousel.state().activeIndex).toBe(0);
+            // Test incomplete: not checking if carousel items are updated. Failed to successfully test
         });
     });
 });
