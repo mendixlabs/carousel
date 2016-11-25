@@ -1,4 +1,4 @@
-import { Component, DOM, createElement } from "react";
+import { Component, createElement, DOM } from "react";
 
 import { CarouselControl } from "./CarouselControl";
 import { CarouselItem } from "./CarouselItem";

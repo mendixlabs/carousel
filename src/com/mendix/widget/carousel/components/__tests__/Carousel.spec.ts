@@ -1,5 +1,5 @@
-import { ShallowWrapper, shallow } from "enzyme";
-import { DOM, createElement } from "react";
+import { shallow, ShallowWrapper } from "enzyme";
+import { createElement, DOM } from "react";
 
 import { Carousel, CarouselProps, Image } from "../Carousel";
 import { CarouselControl } from "../CarouselControl";
@@ -87,7 +87,7 @@ describe("Carousel", () => {
         });
 
         it("renders only one active carousel item", () => {
-            const activeItems = carouselWrapper.find(CarouselItem).filterWhere(c => c.prop("active"));
+            const activeItems = carouselWrapper.find(CarouselItem).filterWhere((c) => c.prop("active"));
 
             expect(activeItems.length).toBe(1);
         });
