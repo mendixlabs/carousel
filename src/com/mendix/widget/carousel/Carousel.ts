@@ -17,7 +17,7 @@ class CarouselDojo extends WidgetBase {
 
         render(createElement(Carousel, {
             contextForm: this.mxform,
-            contextObject,
+            contextGuid: contextObject ? contextObject.getGuid() : null,
             images: this.staticImages
         }), this.domNode);
 

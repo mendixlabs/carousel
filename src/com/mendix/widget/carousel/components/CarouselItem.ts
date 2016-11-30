@@ -4,10 +4,10 @@ import * as classNames from "classnames";
 export interface CarouselItemProps {
     url: string;
     active: boolean;
-    onClick?(event: React.MouseEvent<HTMLImageElement>): void;
+    onClick?(event: React.MouseEvent<HTMLDivElement>): void;
 }
 
 export const CarouselItem = (props: CarouselItemProps) =>
-    DOM.div({ className: classNames("widget-carousel-item", { active: props.active }) },
-        DOM.img({ alt: "Carousel image", onClick: props.onClick, src: props.url })
+    DOM.div({ className: classNames("widget-carousel-item", { active: props.active }), onClick: props.onClick },
+        DOM.img({ alt: "Carousel image", src: props.url })
     );

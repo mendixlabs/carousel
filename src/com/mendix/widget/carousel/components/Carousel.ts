@@ -8,15 +8,14 @@ import "../ui/Carousel.css";
 export interface Image {
     url: string;
     onClickMicroflow?: string;
+    onClickForm?: string;
 }
 
 export interface CarouselProps {
     images?: Image[];
-    contextObject?: mendix.lib.MxObject;
+    contextGuid?: string;
     contextForm?: mxui.lib.form._FormBase;
 }
-
-type ActionCallback = (result: mendix.lib.MxObject | mendix.lib.MxObject[] | boolean | number | string) => void;
 
 export class Carousel extends Component<CarouselProps, { activeIndex: number }> {
     static defaultProps: CarouselProps = { images: [] };
@@ -47,7 +46,20 @@ export class Carousel extends Component<CarouselProps, { activeIndex: number }> 
                 key: index,
                 onClick: () => {
                     if (image.onClickMicroflow) {
-                        this.executeAction(image.onClickMicroflow, [ this.props.contextObject.getGuid() ]);
+                        window.mx.data.action({
+                            error: (error: Error) =>
+                                window.mx.ui.error(`An error occurred while executing action: ${error.message}`, true),
+                            origin: this.props.contextForm,
+                            params: {
+                                actionname: image.onClickMicroflow,
+                                guids: [ this.props.contextGuid ]
+                            }
+                        });
+                    } else if (image.onClickForm) {
+                        window.mx.ui.openForm(image.onClickForm, {
+                            error: (error: Error) =>
+                                window.mx.ui.error(`An error occurred while opening form: ${error.message}`, true)
+                        });
                     }
                 },
                 url: image.url
@@ -77,17 +89,5 @@ export class Carousel extends Component<CarouselProps, { activeIndex: number }> 
             : activeIndex === firstIndex ? this.props.images.length - 1 : activeIndex - 1;
 
         this.setState({ activeIndex: newActiveIndex });
-    }
-
-    private executeAction(actionname: string, guids: string [], callback?: ActionCallback) {
-        window.mx.data.action({
-            callback,
-            error: (error: Error) => null,
-            origin: this.props.contextForm,
-            params: {
-                actionname,
-                guids
-            }
-        });
     }
 }
