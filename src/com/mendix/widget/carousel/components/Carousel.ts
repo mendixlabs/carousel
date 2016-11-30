@@ -7,11 +7,16 @@ import "../ui/Carousel.css";
 
 export interface Image {
     url: string;
+    onClickMicroflow?: string;
 }
 
 export interface CarouselProps {
     images?: Image[];
+    contextObject?: mendix.lib.MxObject;
+    contextForm?: mxui.lib.form._FormBase;
 }
+
+type ActionCallback = (result: mendix.lib.MxObject | mendix.lib.MxObject[] | boolean | number | string) => void;
 
 export class Carousel extends Component<CarouselProps, { activeIndex: number }> {
     static defaultProps: CarouselProps = { images: [] };
@@ -40,6 +45,11 @@ export class Carousel extends Component<CarouselProps, { activeIndex: number }> 
             createElement(CarouselItem, {
                 active: index === activeIndex,
                 key: index,
+                onClick: () => {
+                    if (image.onClickMicroflow) {
+                        this.executeAction(image.onClickMicroflow, [ this.props.contextObject.getGuid() ]);
+                    }
+                },
                 url: image.url
             }));
     }
@@ -67,5 +77,17 @@ export class Carousel extends Component<CarouselProps, { activeIndex: number }> 
             : activeIndex === firstIndex ? this.props.images.length - 1 : activeIndex - 1;
 
         this.setState({ activeIndex: newActiveIndex });
+    }
+
+    private executeAction(actionname: string, guids: string [], callback?: ActionCallback) {
+        window.mx.data.action({
+            callback,
+            error: (error: Error) => null,
+            origin: this.props.contextForm,
+            params: {
+                actionname,
+                guids
+            }
+        });
     }
 }
