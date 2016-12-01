@@ -44,4 +44,20 @@ describe("CarouselItem", () => {
         expect(carouselItem.instance().props.active).toBe(false);
         expect(carouselItem.hasClass("active")).toBe(false);
     });
+
+    describe("image", () => {
+        let clickCount = 0;
+
+        it("should respond to a single click", () => {
+            carouselItem = shallow(createElement(CarouselItem, {
+                url,
+                active: true,
+                onClick: () => clickCount++
+            }));
+
+            carouselItem.simulate("click");
+
+            expect(clickCount).toBe(1);
+        });
+    });
 });
