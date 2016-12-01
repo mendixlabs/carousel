@@ -46,12 +46,10 @@ export class Carousel extends Component<CarouselProps, { activeIndex: number }> 
                 key: index,
                 onClick: () => {
                     if (image.onClickMicroflow) {
-                        window.mx.data.action({
+                        window.mx.ui.action(image.onClickMicroflow, {
                             error: (error: Error) =>
                                 window.mx.ui.error(`An error occurred while executing action: ${error.message}`, true),
-                            origin: this.props.contextForm,
                             params: {
-                                actionname: image.onClickMicroflow,
                                 guids: [ this.props.contextGuid ]
                             }
                         });
