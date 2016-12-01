@@ -27,14 +27,14 @@ class MxUiMock implements mx.ui {
                 xpath?: string,
                 constraints?: string,
                 sort?: any,
-                gridid?: string,
+                gridid?: string
             },
             context?: any,
             store?: any,
             async?: boolean,
             callback?: (result: mendix.lib.MxObject | mendix.lib.MxObject[] | boolean | number | string) => void,
             error?: (e: Error) => void,
-            onValidation?: Function,
+            onValidation?: Function
         },
         scope?: any
     ): void { /* */ }
@@ -62,7 +62,7 @@ class MxUiMock implements mx.ui {
             title?: string,
             context?: mendix.lib.MxContext,
             callback?(form: mxui.lib.form._FormBase): void,
-            error?(error: Error): void,
+            error?(error: Error): void
         },
         scope?: any
     ): void { /* */ }
