@@ -14,7 +14,6 @@ export interface Image {
 export interface CarouselProps {
     images?: Image[];
     contextGuid?: string;
-    contextForm?: mxui.lib.form._FormBase;
 }
 
 export class Carousel extends Component<CarouselProps, { activeIndex: number }> {
@@ -44,22 +43,7 @@ export class Carousel extends Component<CarouselProps, { activeIndex: number }> 
             createElement(CarouselItem, {
                 active: index === activeIndex,
                 key: index,
-                onClick: () => {
-                    if (image.onClickMicroflow) {
-                        window.mx.ui.action(image.onClickMicroflow, {
-                            error: (error: Error) =>
-                                window.mx.ui.error(`An error occurred while executing action: ${error.message}`, true),
-                            params: {
-                                guids: [ this.props.contextGuid ]
-                            }
-                        });
-                    } else if (image.onClickForm) {
-                        window.mx.ui.openForm(image.onClickForm, {
-                            error: (error: Error) =>
-                                window.mx.ui.error(`An error occurred while opening form: ${error.message}`, true)
-                        });
-                    }
-                },
+                onClick: () => this.executeAction(image.onClickMicroflow, image.onClickForm),
                 url: image.url
             }));
     }
@@ -87,5 +71,22 @@ export class Carousel extends Component<CarouselProps, { activeIndex: number }> 
             : activeIndex === firstIndex ? this.props.images.length - 1 : activeIndex - 1;
 
         this.setState({ activeIndex: newActiveIndex });
+    }
+
+    private executeAction(microflow?: string, form?: string) {
+        if (microflow) {
+            window.mx.ui.action(microflow, {
+                error: (error: Error) =>
+                    window.mx.ui.error(`An error occurred while executing action: ${error.message}`, true),
+                params: {
+                    guids: [ this.props.contextGuid ]
+                }
+            });
+        } else if (form) {
+            window.mx.ui.openForm(form, {
+                error: (error: Error) =>
+                    window.mx.ui.error(`An error occurred while opening form: ${error.message}`, true)
+            });
+        }
     }
 }

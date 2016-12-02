@@ -10,13 +10,8 @@ class CarouselDojo extends WidgetBase {
     // Properties from Mendix modeler
     staticImages?: Image[];
 
-    private contextObject: mendix.lib.MxObject;
-
     update(contextObject: mendix.lib.MxObject, callback: Function) {
-        this.contextObject = contextObject;
-
         render(createElement(Carousel, {
-            contextForm: this.mxform,
             contextGuid: contextObject ? contextObject.getGuid() : null,
             images: this.staticImages
         }), this.domNode);
