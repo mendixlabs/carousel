@@ -1,13 +1,12 @@
 import { ShallowWrapper, shallow } from "enzyme";
 import { DOM, createElement } from "react";
 
-import { image, lorem, random } from "faker";
-
 import { Alert } from "../Alert";
 import { Carousel, CarouselProps, Image } from "../Carousel";
 import { CarouselControl } from "../CarouselControl";
 import { CarouselItem } from "../CarouselItem";
 
+import { image, lorem, random } from "faker";
 import { mockMendix } from "tests/mocks/Mendix";
 
 describe("Carousel", () => {
