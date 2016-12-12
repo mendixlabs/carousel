@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget id="com.mendix.widget.carousel.Carousel" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../../../../xsd/widget.xsd">
+<widget id="com.mendix.widget.carousel.Carousel" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../../../../xsd/widget.xsd">
     <name>Carousel</name>
     <description>Carousel displaying images</description>
     <icon/>

@@ -1,5 +1,5 @@
-import { shallow, ShallowWrapper } from "enzyme";
-import { createElement, DOM } from "react";
+import { ShallowWrapper, shallow } from "enzyme";
+import { DOM, createElement } from "react";
 
 import { CarouselItem, CarouselItemProps } from "../CarouselItem";
 

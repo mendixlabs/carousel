@@ -1,36 +1,33 @@
-import { shallow, ShallowWrapper } from "enzyme";
-import { createElement, DOM } from "react";
+import { ShallowWrapper, shallow } from "enzyme";
+import { DOM, createElement } from "react";
 
 import { CarouselControl, CarouselControlProps } from "../CarouselControl";
 
 describe("CarouselControl", () => {
 
     let carouselControl: ShallowWrapper<CarouselControlProps, any>;
-    let clickCount = 0;
-    let onClick = () => clickCount++;
+    let onClickSpy: jasmine.Spy;
 
     beforeEach(() => {
-        carouselControl = shallow(createElement(CarouselControl, { direction: "right", onClick }));
+        onClickSpy = jasmine.createSpy("onClick");
+        carouselControl = shallow(createElement(CarouselControl, { direction: "right", onClick: onClickSpy }));
     });
 
     it("renders the structure correctly", () => {
         expect(carouselControl).toBeElement(
-            DOM.div({ className: "widget-carousel-control right", onClick },
+            DOM.div({ className: "widget-carousel-control right", onClick: onClickSpy },
                 DOM.span({ className: "glyphicon glyphicon-chevron-right" })
-            ));
+            )
+        );
     });
 
-    it("renders with the carousel-control css class", () => {
-        expect(carouselControl.hasClass("widget-carousel-control")).toBe(true);
-    });
-
-    describe("that navigates to the", () => {
+    describe("that navigates to the right", () => {
         beforeEach(() => {
-            carouselControl = shallow(createElement(CarouselControl, { direction: "right", onClick }));
+            carouselControl = shallow(createElement(CarouselControl, { direction: "right" }));
         });
 
         it("renders the right css class", () => {
-            expect(carouselControl.hasClass("right")).toBe(true);
+            expect(carouselControl).toHaveClass("right");
         });
 
         it("renders the correct glyphicon", () => {
@@ -40,12 +37,11 @@ describe("CarouselControl", () => {
 
     describe("that navigates to the left", () => {
         beforeEach(() => {
-            clickCount = 0;
-            carouselControl = shallow(createElement(CarouselControl, { direction: "left", onClick }));
+            carouselControl = shallow(createElement(CarouselControl, { direction: "left", onClick: onClickSpy }));
         });
 
         it("renders the left css class", () => {
-            expect(carouselControl.hasClass("left")).toBe(true);
+            expect(carouselControl).toHaveClass("left");
         });
 
         it("renders the correct glyphicon", () => {
@@ -54,10 +50,8 @@ describe("CarouselControl", () => {
     });
 
     it("responds to a single click", () => {
-        expect(clickCount).toBe(0);
-
         carouselControl.simulate("click");
 
-        expect(clickCount).toBe(1);
+        expect(onClickSpy).toHaveBeenCalled();
     });
 });
