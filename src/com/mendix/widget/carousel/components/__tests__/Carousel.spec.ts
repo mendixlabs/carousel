@@ -7,7 +7,7 @@ import { Carousel, CarouselProps, Image } from "../Carousel";
 import { CarouselControl } from "../CarouselControl";
 import { CarouselItem } from "../CarouselItem";
 
-import { MxMock, MxUiMock } from "../../../../../../../tests/mocks/Mendix";
+import { mockMendix } from "tests/mocks/Mendix";
 
 describe("Carousel", () => {
     let images: Image[];
@@ -17,8 +17,7 @@ describe("Carousel", () => {
     const contextGuid = random.uuid();
 
     beforeAll(() => {
-        window.mx = MxMock.prototype;
-        window.mx.ui = MxUiMock.prototype;
+        window.mx = mockMendix;
     });
 
     it("renders the structure correctly", () => {
@@ -194,8 +193,15 @@ describe("Carousel", () => {
 
     describe("with an invalid onClick microflow", () => {
         it("shows an error when a carousel item is clicked", () => {
-            images = [ { onClickMicroflow: "error_action", url: image.imageUrl() } ];
+            const invalidAction = "invalid_action";
+            images = [ { onClickMicroflow: invalidAction, url: image.imageUrl() } ];
             const actionErrorMessage = "An error occurred while executing action: mx.ui.action error mock";
+
+            spyOn(window.mx.ui, "action").and.callFake((actionname: string, action: { error: (e: Error) => void}) => {
+                if (actionname === invalidAction) {
+                    action.error(new Error("mx.ui.action error mock"));
+                }
+            });
             spyOn(window.mx.ui, "error").and.callThrough();
             carousel = shallow(createElement(Carousel, { images, contextGuid }));
 
@@ -232,8 +238,15 @@ describe("Carousel", () => {
 
     describe("with an invalid onClick form", () => {
         it("shows an error when a carousel item is clicked", () => {
-            images = [ { onClickForm: "error_form", url: image.imageUrl() } ];
+            const invalidForm = "invalid_form";
+            images = [ { onClickForm: invalidForm, url: image.imageUrl() } ];
             const openFormErrorMessage = "An error occurred while opening form: mx.ui.openForm error mock";
+
+            spyOn(window.mx.ui, "openForm").and.callFake((path: string, args: { error: (e: Error) => void}) => {
+                if (path === invalidForm) {
+                    args.error(new Error("mx.ui.openForm error mock"));
+                }
+            });
             spyOn(window.mx.ui, "error").and.callThrough();
             carousel = shallow(createElement(Carousel, { images, contextGuid: random.uuid() }));
 

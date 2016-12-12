@@ -1,10 +1,10 @@
-import { DOM } from "react";
+import { DOM, MouseEvent } from "react";
 import * as classNames from "classnames";
 
 export interface CarouselItemProps {
     url: string;
     active: boolean;
-    onClick?(event: React.MouseEvent<HTMLDivElement>): void;
+    onClick?: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
 export const CarouselItem = (props: CarouselItemProps) =>
