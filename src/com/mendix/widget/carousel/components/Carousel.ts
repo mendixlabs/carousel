@@ -20,6 +20,18 @@ export interface CarouselProps {
 interface CarouselState {
     activeIndex?: number;
     alertMessage?: string;
+    showControls?: boolean;
+}
+
+interface CustomEvent extends Event {
+    type: string;
+    detail: {
+        originPageX: number;
+        originPageY: number;
+        pageX: number;
+        pageY: number;
+    };
+    target: HTMLElement;
 }
 
 export class Carousel extends Component<CarouselProps, CarouselState> {
@@ -30,15 +42,22 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
     private moveToTheRight: MouseEventHandler<HTMLDivElement>;
     private carouselWidth: number;
     private items: HTMLElement[];
+    private swipeEvents: string[];
+    private itemsAdded: boolean;
 
     constructor(props: CarouselProps) {
         super(props);
 
         this.items = [];
+        this.itemsAdded = false;
         this.carouselWidth = 0;
+        this.swipeEvents = [ "touchstart", "swiperight", "swipeleft", "swiperightend", "swipeleftend" ];
         this.moveToTheLeft = () => this.moveInDirection("left");
         this.moveToTheRight = () => this.moveInDirection("right");
-        this.state = { activeIndex: 0 };
+        this.state = {
+            activeIndex: 0,
+            showControls: this.props.images.length > 0
+        };
     }
 
     render() {
@@ -58,27 +77,15 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
     }
 
     componentDidMount() {
-        this.items.map((carouselItem: HTMLElement) => {
-            if (carouselItem) {
-                if (!this.carouselWidth) {
-                    this.carouselWidth = carouselItem.parentElement ? carouselItem.parentElement.offsetWidth : 0;
-                    carouselItem.style.width = this.carouselWidth + "px";
-                } else {
-                    carouselItem.style.width = this.carouselWidth + "px";
-                }
-            }
-        });
-        this.carouselItemsNode.style.width = (this.items.length * this.carouselWidth) + "px";
-        setTimeout(() => {
-            this.carouselNode.style.height = this.items[0].offsetHeight + "px";
-        }, 100);
+        this.itemsAdded = true;
+        this.registerSwipeEvents();
     }
 
     private createCarouselItems(images: Image[], activeIndex: number) {
         return images.map((image, index) =>
             createElement(CarouselItem, {
                 active: index === activeIndex,
-                getRef: (ref: HTMLElement) => this.setCarouselItemPosition(ref),
+                getRef: (ref: HTMLElement) => this.addCarouselItem(ref),
                 key: index,
                 onClick: () => this.executeAction(image.onClickMicroflow, image.onClickForm),
                 url: image.url
@@ -86,7 +93,7 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
     }
 
     private createCarouselControls() {
-        if (!this.props.images.length) return null;
+        if (!this.state.showControls) return null;
 
         return [
             createElement(CarouselControl, {
@@ -102,8 +109,10 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
         ];
     }
 
-    private setCarouselItemPosition(carouselItem: HTMLElement) {
-        this.items.push(carouselItem);
+    private addCarouselItem(carouselItem: HTMLElement) {
+        if (!this.itemsAdded) {
+            this.items.push(carouselItem);
+        }
     }
 
     private moveInDirection(direction: "right" | "left") {
@@ -118,6 +127,81 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
         this.carouselNode.style.height = carouselItem.offsetHeight + "px";
 
         this.setState({ activeIndex: newActiveIndex, alertMessage: "" });
+    }
+
+    private registerSwipeEvents() {
+        if (this.items.length > 0) {
+            this.items.forEach((carouselItem: HTMLElement) => {
+                this.swipeEvents.forEach((eventName: string) => {
+                    carouselItem.addEventListener(eventName, (event: MouseEvent | CustomEvent) => {
+                        if (eventName === "swipeleft") {
+                            this.handleSwipeLeft(event as CustomEvent);
+                        }
+
+                        if (eventName === "swipeleftend") {
+                            this.handleSwipeLeftEnd(event as CustomEvent);
+                        }
+                    });
+                });
+            });
+        }
+    }
+
+    private handleSwipeLeft(event: CustomEvent) {
+        if (this.state.showControls) {
+            this.setState({ activeIndex: this.state.activeIndex, showControls: false });
+        }
+        const currentItem = this.items[this.state.activeIndex || 0];
+        let nextItem: HTMLElement;
+        if (this.state.activeIndex + 1 === this.items.length) {
+            nextItem = this.items[0];
+        } else {
+            nextItem = this.items[this.state.activeIndex + 1];
+        }
+
+        if (!this.carouselWidth) {
+            this.carouselWidth = currentItem.parentElement ? currentItem.parentElement.offsetWidth : 0;
+        }
+
+        if (nextItem.className.indexOf("next") === -1) {
+            nextItem.className = nextItem.className + " next";
+        }
+
+        const eventDetails = (event as CustomEvent).detail;
+        const swipeOffset = eventDetails.pageX - eventDetails.originPageX;
+        const currentPercentage = Math.floor((100 / this.carouselWidth) * swipeOffset);
+        currentItem.style.transform = `translate3d(${currentPercentage}%, 0px, 0px)`;
+        nextItem.style.transform = `translate3d(${100 + currentPercentage}%, 0px, 0px)`;
+    }
+
+    private handleSwipeLeftEnd(event: CustomEvent) {
+        const eventDetails = (event as CustomEvent).detail;
+        const swipeOffset = eventDetails.pageX - eventDetails.originPageX;
+        const currentPercentage = (100 / this.carouselWidth) * swipeOffset;
+        if (Math.abs(currentPercentage) > 20) {
+            this.moveInDirection("right");
+            let prevIndex = this.state.activeIndex === 0
+                ? this.items.length - 1
+                : this.state.activeIndex - 1;
+            this.resetSwipeStyles([ this.state.activeIndex || 0, prevIndex ]);
+        }
+
+        const nextIndex = this.state.activeIndex + 1 === this.items.length
+                ? 0
+                : this.state.activeIndex + 1;
+        this.resetSwipeStyles([ this.state.activeIndex || 0, nextIndex ]);
+
+        if (!this.state.showControls) {
+            this.setState({ activeIndex: this.state.activeIndex, showControls: true });
+        }
+        this.carouselWidth = 0;
+    }
+
+    private resetSwipeStyles(indexes: number[]) {
+        indexes.forEach((index) => {
+            this.items[index].removeAttribute("style");
+        });
+        this.carouselItemsNode.removeAttribute("style");
     }
 
     private executeAction(microflow?: string, form?: string) {
