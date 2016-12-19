@@ -137,9 +137,14 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
                         if (eventName === "swipeleft") {
                             this.handleSwipeLeft(event as CustomEvent);
                         }
-
                         if (eventName === "swipeleftend") {
                             this.handleSwipeLeftEnd(event as CustomEvent);
+                        }
+                        if (eventName === "swiperight") {
+                            this.handleSwipeRight(event as CustomEvent);
+                        }
+                        if (eventName === "swiperightend") {
+                            this.handleSwipeRightEnd(event as CustomEvent);
                         }
                     });
                 });
@@ -193,6 +198,56 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
 
         if (!this.state.showControls) {
             this.setState({ activeIndex: this.state.activeIndex, showControls: true });
+        }
+        this.carouselWidth = 0;
+    }
+
+    private handleSwipeRight(event: CustomEvent) {
+        if (this.state.showControls) {
+            this.setState({ showControls: false });
+        }
+        const currentItem = this.items[this.state.activeIndex];
+        let previousItem: HTMLElement;
+        if (this.state.activeIndex === 0) {
+            previousItem = this.items[this.items.length - 1];
+        } else {
+            previousItem = this.items[this.state.activeIndex - 1];
+        }
+
+        if (!this.carouselWidth) {
+            this.carouselWidth = currentItem.parentElement.offsetWidth;
+        }
+
+        if (previousItem.className.indexOf("prev") === -1) {
+            previousItem.className = previousItem.className + " prev";
+        }
+
+        const eventDetails = (event as CustomEvent).detail;
+        const swipeOffset = eventDetails.pageX - eventDetails.originPageX;
+        const currentPercentage = Math.floor((100 / this.carouselWidth) * swipeOffset);
+        currentItem.style.transform = `translate3d(${currentPercentage}%, 0px, 0px)`;
+        previousItem.style.transform = `translate3d(-${100 - currentPercentage}%, 0px, 0px)`;
+    }
+
+    private handleSwipeRightEnd(event: CustomEvent) {
+        const eventDetails = (event as CustomEvent).detail;
+        const swipeOffset = eventDetails.pageX - eventDetails.originPageX;
+        const currentPercentage = (100 / this.carouselWidth) * swipeOffset;
+        if (Math.abs(currentPercentage) > 20) {
+            this.moveInDirection("left");
+            const nextIndex = this.state.activeIndex + 1 === this.items.length
+                ? 0
+                : this.state.activeIndex + 1;
+            this.resetSwipeStyles([ this.state.activeIndex, nextIndex ]);
+        }
+
+        let prevIndex = this.state.activeIndex === 0
+            ? this.items.length - 1
+            : this.state.activeIndex - 1;
+        this.resetSwipeStyles([ this.state.activeIndex, prevIndex ]);
+
+        if (!this.state.showControls) {
+            this.setState({ showControls: true });
         }
         this.carouselWidth = 0;
     }
