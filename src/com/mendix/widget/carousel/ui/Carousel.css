@@ -7,7 +7,6 @@
 .widget-carousel-item-wrapper {
     position: relative;
     width: 100%;
-    overflow: hidden
 }
 
 .widget-carousel-item-wrapper .widget-carousel-item {
