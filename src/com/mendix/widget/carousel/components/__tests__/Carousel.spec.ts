@@ -34,7 +34,7 @@ describe("Carousel", () => {
         expect(carousel).toBeElement(
             DOM.div({ className: "widget-carousel-wrapper" },
                 createElement(Alert),
-                DOM.div({ className: "widget-carousel" },
+                DOM.div({ className: "widget-carousel", style: { transform: jasmine.any("String") } },
                     DOM.div({ className: "widget-carousel-item-wrapper" })
                 )
             )
@@ -65,7 +65,7 @@ describe("Carousel", () => {
             const carouselItem = carousel.find(CarouselItem);
 
             expect(carouselItem.length).toBe(1);
-            expect(carouselItem.props().active).toBe(true);
+            expect(carouselItem.props().status).toContain("active");
             expect(carouselItem.props().url).toBe(images[0].url);
         });
 
@@ -93,21 +93,23 @@ describe("Carousel", () => {
 
             expect(carouselItems.length).toBe(2);
 
-            expect(carouselItems.at(0).props().active).toBe(true);
+            expect(carouselItems.at(0).props().status).toContain("active");
             expect(carouselItems.at(0).props().url).toBe(images[0].url);
 
-            expect(carouselItems.at(1).props().active).toBe(false);
+            expect(carouselItems.at(1).props().status).not.toContain("active");
             expect(carouselItems.at(1).props().url).toBe(images[1].url);
         });
 
         it("renders the first carousel item active", () => {
             const firstCarouselItem = carouselWrapper.find(CarouselItem).first();
 
-            expect(firstCarouselItem.prop("active")).toBe(true);
+            expect(firstCarouselItem.prop("status")).toContain("active");
         });
 
         it("renders only one active carousel item", () => {
-            const activeItems = carouselWrapper.find(CarouselItem).filterWhere((c) => c.prop("active"));
+            const activeItems = carouselWrapper.find(CarouselItem).filterWhere((c) => {
+                return c.props().status.indexOf("active") !== -1;
+            });
 
             expect(activeItems.length).toBe(1);
         });
@@ -130,8 +132,8 @@ describe("Carousel", () => {
 
             const carouselItems = carousel.find(CarouselItem);
             expect(carousel.state().activeIndex).toBe(1);
-            expect(carouselItems.at(0).props().active).toBe(false);
-            expect(carouselItems.at(1).props().active).toBe(true);
+            expect(carouselItems.at(0).props().status).not.toBe("active");
+            expect(carouselItems.at(1).props().status).toBe("active");
         });
 
         it("moves to the first image when the right control of last image is clicked", () => {
@@ -143,8 +145,8 @@ describe("Carousel", () => {
 
             const carouselItems = carousel.find(CarouselItem);
             expect(carousel.state().activeIndex).toBe(0);
-            expect(carouselItems.at(0).props().active).toBe(true);
-            expect(carouselItems.at(1).props().active).toBe(false);
+            expect(carouselItems.at(0).props().status).toBe("active");
+            expect(carouselItems.at(1).props().status).not.toBe("active");
         });
 
         it("moves to the previous image when the left control is clicked", () => {
@@ -156,8 +158,8 @@ describe("Carousel", () => {
 
             const carouselItems = carousel.find(CarouselItem);
             expect(carousel.state().activeIndex).toBe(0);
-            expect(carouselItems.at(0).props().active).toBe(true);
-            expect(carouselItems.at(1).props().active).toBe(false);
+            expect(carouselItems.at(0).props().status).toBe("active");
+            expect(carouselItems.at(1).props().status).not.toBe("active");
         });
 
         it("moves to the last image when the left control on first image is clicked", () => {
@@ -168,8 +170,47 @@ describe("Carousel", () => {
 
             const carouselItems = carousel.find(CarouselItem);
             expect(carousel.state().activeIndex).toBe(1);
-            expect(carouselItems.at(0).props().active).toBe(false);
-            expect(carouselItems.at(1).props().active).toBe(true);
+            expect(carouselItems.at(0).props().status).not.toBe("active");
+            expect(carouselItems.at(1).props().status).toBe("active");
+        });
+
+        describe("on a mobile device", () => {
+            const swipeEventMock = (direction: "right" | "left") => new CustomEvent("swipeleft", {
+                detail: {
+                    originPageX: direction === "right" ? 12 : 23,
+                    originPageY: direction === "right" ? 23 : 12,
+                    pageX: 10,
+                    pageY: 12
+                }
+            });
+
+            const carouselItemWrapper = document.createElement("div");
+            const carouselItem1Mock = document.createElement("div"); // a mock of the carouselItem node returned by ref
+            const carouselItem2Mock = document.createElement("div");
+            carouselItemWrapper.appendChild(carouselItem1Mock);
+            carouselItemWrapper.appendChild(carouselItem2Mock);
+
+            it("registers swipe events on carousel items", () => {
+                const carouselInstance = carousel.instance() as any;
+                carouselInstance.carouselItems = [ carouselItem1Mock ];
+                spyOn(carouselItem1Mock, "addEventListener").and.callThrough();
+                spyOn(carouselInstance, "registerSwipeEvents").and.callThrough();
+
+                carouselInstance.componentDidMount();
+
+                expect(carouselInstance.registerSwipeEvents).toHaveBeenCalled();
+                expect(carouselItem1Mock.addEventListener).toHaveBeenCalled();
+            });
+
+            xit("moves to the next carousel item when swiped to the left", () => {
+                const carouselInstance = carousel.instance() as any;
+                carouselInstance.carouselItems = [ carouselItem1Mock, carouselItem2Mock ];
+
+                carouselInstance.componentDidMount();
+                carouselItem1Mock.dispatchEvent(swipeEventMock("left"));
+                expect(carouselInstance.swipingLeft).toBe(true);
+                expect(carouselInstance.swipingRight).toBe(false);
+            });
         });
     });
 
