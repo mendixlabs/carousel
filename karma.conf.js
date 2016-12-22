@@ -46,7 +46,7 @@ module.exports = function(config) {
         singleRun: false,
         concurrency: Infinity,
         coverageReporter: {
-            dir: "./dist/testresults", 
+            dir: "./dist/testresults",
             reporters: [
                 { type: "json", subdir: ".", file: "coverage.json" },
                 { type: "text" }
