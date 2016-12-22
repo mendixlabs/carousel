@@ -7,18 +7,20 @@
 .widget-carousel-item-wrapper {
     position: relative;
     width: 100%;
+    will-change: transform;
 }
 
-.widget-carousel-item-wrapper .widget-carousel-item {
+.widget-carousel-item {
     position: relative;
     display: none;
+    will-change: transform;
 }
 
-.widget-carousel-item-wrapper .widget-carousel-item.widget-carousel-item-swiping {
+.widget-carousel-item-swiping {
     float: left;
 }
 
-.widget-carousel-item-wrapper .widget-carousel-item img {
+.widget-carousel-item img {
     line-height: 1;
     min-width: 100%;
     max-width: 100%;
@@ -37,7 +39,7 @@
 }
 
 @media all and (transform-3d), (-webkit-transform-3d) {
-    .widget-carousel-item-wrapper > .widget-carousel-item.animate {
+    .widget-carousel-item-wrapper.animate > .widget-carousel-item{
         -webkit-transition: -webkit-transform 0.6s ease-in-out;
         -moz-transition: -moz-transform 0.6s ease-in-out;
         -o-transition: -o-transform 0.6s ease-in-out;
@@ -49,21 +51,21 @@
         -moz-perspective: 1000px;
         perspective: 1000px;
     }
-    .widget-carousel-item-wrapper > .widget-carousel-item.next,
-    .widget-carousel-item-wrapper > .widget-carousel-item.active.right {
+    .widget-carousel-item.next,
+    .widget-carousel-item.active.right {
         -webkit-transform: translate3d(100%, 0, 0);
         transform: translate3d(100%, 0, 0);
         left: 0;
     }
-    .widget-carousel-item-wrapper > .widget-carousel-item.prev,
-    .widget-carousel-item-wrapper > .widget-carousel-item.active.left {
+    .widget-carousel-item.prev,
+    .widget-carousel-item.active.left {
         -webkit-transform: translate3d(-100%, 0, 0);
         transform: translate3d(-100%, 0, 0);
         left: 0;
     }
-    .widget-carousel-item-wrapper > .widget-carousel-item.next.left,
-    .widget-carousel-item-wrapper > .widget-carousel-item.prev.right,
-    .widget-carousel-item-wrapper > .widget-carousel-item.active {
+    .widget-carousel-item.next.left,
+    .widget-carousel-item.prev.right,
+    .widget-carousel-item.active {
         -webkit-transform: translate3d(0, 0, 0);
         transform: translate3d(0, 0, 0);
         left: 0;
@@ -85,14 +87,14 @@
 
 .widget-carousel-item-wrapper > .next,
 .widget-carousel-item-wrapper > .prev {
-  position: absolute;
-  top: 0;
-  width: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
 }
 
 .widget-carousel-item-wrapper > .next.left,
 .widget-carousel-item-wrapper > .prev.right {
-  left: 0;
+    left: 0;
 }
 
 .widget-carousel-control.left {
