@@ -1,4 +1,5 @@
 import { Component, DOM, MouseEventHandler, createElement } from "react";
+import * as classNames from "classnames";
 
 import { Alert } from "./Alert";
 import { CarouselControl } from "./CarouselControl";
@@ -22,10 +23,10 @@ interface CarouselState {
     alertMessage?: string;
     showControls?: boolean;
     position?: number;
+    animate?: boolean;
 }
 
 interface CustomEvent extends Event {
-    type: string;
     detail: {
         originPageX: number;
         originPageY: number;
@@ -35,26 +36,29 @@ interface CustomEvent extends Event {
     target: HTMLElement;
 }
 
+type Direction = "right" | "left";
+
 export class Carousel extends Component<CarouselProps, CarouselState> {
     static defaultProps: CarouselProps = { images: [] };
     private moveToTheLeft: MouseEventHandler<HTMLDivElement>;
     private moveToTheRight: MouseEventHandler<HTMLDivElement>;
     private carouselWidth: number;
     private carouselItems: HTMLElement[];
-    private itemsAdded: boolean;
+    private allItemsAdded: boolean;
 
     constructor(props: CarouselProps) {
         super(props);
 
         this.carouselWidth = 0;
-        this.itemsAdded = false;
         this.carouselItems = [];
+        this.allItemsAdded = false;
         this.moveToTheLeft = () => this.moveInDirection("left");
         this.moveToTheRight = () => this.moveInDirection("right");
         this.state = {
             activeIndex: 0,
+            animate: false,
             position: 0,
-            showControls: this.props.images.length > 0
+            showControls: this.props.images.length > 1
         };
     }
 
@@ -64,7 +68,7 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
             DOM.div({ className: "widget-carousel" },
                 DOM.div(
                     {
-                        className: "widget-carousel-item-wrapper",
+                        className: classNames("widget-carousel-item-wrapper", { animate: this.state.animate }),
                         style: { transform: `translate3d(${this.state.position}%, 0px, 0px)` }
                     },
                     this.createCarouselItems(this.props.images, this.state.activeIndex || 0)
@@ -75,7 +79,7 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
     }
 
     componentDidMount() {
-        this.itemsAdded = true;
+        this.allItemsAdded = true;
         this.registerSwipeEvents();
     }
 
@@ -83,7 +87,7 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
         return images.map((image, index) => {
             const { position, status } = this.getItemStatus(index, activeIndex);
             return createElement(CarouselItem, {
-                getRef: (ref: HTMLElement) => this.addCarouselItem(ref),
+                getItemNode: (node: HTMLElement) => this.addCarouselItem(node),
                 key: index,
                 onClick: () => this.executeAction(image.onClickMicroflow, image.onClickForm),
                 position,
@@ -93,103 +97,102 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
         });
     }
 
-    private getItemStatus(index: number, activeIndex: number): { position?: number, status: ItemStatus } {
-        const nextPosition = 100;
-        const prevPosition = -100;
-        if (index === activeIndex) {
-            return { status: "active" };
-        }
-        if (index === this.props.images.length - 1 && activeIndex === 0) {
-            return { status: "prev", position: prevPosition };
-        }
-        if (activeIndex === this.props.images.length - 1 && index === 0) {
-            return { status: "next", position: nextPosition };
-        }
-        if (activeIndex < index) {
-            return { status: "next" };
-        } else {
-            return { status: "prev" };
-        }
+    private getItemStatus(index: number, activeIndex: number): { position: number, status: ItemStatus } {
+        const maxPercentage = 100;
+        return {
+            position: (index - activeIndex) * maxPercentage,
+            status: classNames({
+                active: index === activeIndex,
+                next: activeIndex < index,
+                prev: activeIndex > index
+            }) as ItemStatus
+        };
     }
 
     private createCarouselControls() {
         if (!this.state.showControls) return null;
 
-        return [
+        const directions: Direction[] = this.state.activeIndex === this.props.images.length - 1
+            ? [ "left" ]
+            : this.state.activeIndex === 0 ? [ "right" ] : [ "right", "left" ];
+
+        return directions.map((direction, index) =>
             createElement(CarouselControl, {
-                direction: "left",
-                key: 0,
-                onClick: this.moveToTheLeft
-            }),
-            createElement(CarouselControl, {
-                direction: "right",
-                key: 1,
-                onClick: this.moveToTheRight
+                direction,
+                key: index,
+                onClick: direction === "right" ? this.moveToTheRight : this.moveToTheLeft
             })
-        ];
+        );
     }
 
     private addCarouselItem(carouselItem: HTMLElement) {
-        if (!this.itemsAdded) {
+        if (!this.allItemsAdded) {
             this.carouselItems.push(carouselItem);
         }
     }
 
-    private moveInDirection(direction: "right" | "left") {
+    private moveInDirection(direction: Direction, swiping = false) {
         const { activeIndex } = this.state;
-        const firstIndex = 0;
-        const newActiveIndex = direction === "right"
-            ? activeIndex < this.props.images.length - 1 ? activeIndex + 1 : firstIndex
-            : activeIndex === firstIndex ? this.props.images.length - 1 : activeIndex - 1;
+        const newActiveIndex = direction === "right" ? activeIndex + 1 : activeIndex - 1;
 
-        this.setState({ activeIndex: newActiveIndex, alertMessage: "", position: 0 });
+        this.setState({
+            activeIndex: newActiveIndex,
+            alertMessage: "",
+            animate: true,
+            position: swiping ? this.state.position : 0
+        });
     }
 
     private registerSwipeEvents() {
         this.carouselItems.forEach((carouselItem: HTMLElement) => {
-            carouselItem.addEventListener("swipeleft", (event: CustomEvent) => {
-                    this.handleSwipe(event);
-            });
-            carouselItem.addEventListener("swipeleftend", (event: CustomEvent) => {
-                this.handleSwipeEnd(event, "left");
-            });
-            carouselItem.addEventListener("swiperight", (event: CustomEvent) => {
-                this.handleSwipe(event);
-            });
-            carouselItem.addEventListener("swiperightend", (event: CustomEvent) => {
-                this.handleSwipeEnd(event, "right");
-            });
+            carouselItem.addEventListener("swipeleft", (event: CustomEvent) => this.handleSwipe(event));
+            carouselItem.addEventListener("swipeleftend", (event: CustomEvent) => this.handleSwipeEnd(event, "left"));
+            carouselItem.addEventListener("swiperight", (event: CustomEvent) => this.handleSwipe(event));
+            carouselItem.addEventListener("swiperightend", (event: CustomEvent) => this.handleSwipeEnd(event, "right"));
         });
     }
 
     private handleSwipe(event: CustomEvent) {
-        const maxPercentage = 100;
-        if (this.state.showControls) {
-            this.setState({ activeIndex: this.state.activeIndex, showControls: false });
-        }
         const { parentElement } = event.target;
         this.carouselWidth = this.carouselWidth || (parentElement ? parentElement.offsetWidth : 0);
-
-        const swipeOffset = event.detail.pageX - event.detail.originPageX;
-        const currentPercentage = Math.floor((maxPercentage / this.carouselWidth) * swipeOffset);
-        this.setState({ activeIndex: this.state.activeIndex, position: currentPercentage });
+        const currentPercentage = this.calculateSwipePercentage(event, this.carouselWidth);
+        if (!this.shouldSwipe(currentPercentage)) { return; }
+        this.setState({
+            activeIndex: this.state.activeIndex,
+            animate: false,
+            position: currentPercentage,
+            showControls: false
+        });
     }
 
-     private handleSwipeEnd(event: CustomEvent, direction: "right" | "left") {
-         const maxPercentage = 100;
+     private handleSwipeEnd(event: CustomEvent, direction: Direction) {
          const swipeOutThreshold = 20;
-         const swipeOffset = event.detail.pageX - event.detail.originPageX;
-         const currentPercentage = (maxPercentage / this.carouselWidth) * swipeOffset;
+         const currentPercentage = this.calculateSwipePercentage(event, this.carouselWidth);
+         if (!this.shouldSwipe(currentPercentage)) { return; }
          this.carouselWidth = 0;
-         if (Math.abs(currentPercentage) > swipeOutThreshold) {
-             this.moveInDirection(direction === "right" ? "left" : "right");
+         const swipingOut = Math.abs(currentPercentage) > swipeOutThreshold;
+         if (swipingOut) {
+             this.moveInDirection(direction === "right" ? "left" : "right", true);
          }
 
          this.setState({
              activeIndex: this.state.activeIndex,
+             animate: true,
              position: 0,
              showControls: !this.state.showControls && !!this.carouselItems.length
          });
+    }
+
+    private calculateSwipePercentage(event: CustomEvent, width: number): number {
+        const maxPercentage = 100;
+        const swipeOffset = event.detail.pageX - event.detail.originPageX;
+        return Math.floor(maxPercentage / width * swipeOffset);
+    }
+
+    private shouldSwipe(percentage: number) {
+        return percentage > 0
+            ? this.state.activeIndex > 0
+            : this.state.activeIndex < this.carouselItems.length - 1;
     }
 
     private executeAction(microflow?: string, form?: string) {

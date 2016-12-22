@@ -7,6 +7,10 @@ export interface CarouselControlProps {
 }
 
 export const CarouselControl: StatelessComponent<CarouselControlProps> = (props) =>
-    DOM.div({ className: classNames("widget-carousel-control", props.direction), onClick: props.onClick },
+    DOM.div(
+        {
+            className: classNames("widget-carousel-control", props.direction),
+            onClick: props.onClick
+        },
         DOM.span({ className: classNames("glyphicon", "glyphicon-chevron-" + props.direction) })
     );

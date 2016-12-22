@@ -12,7 +12,7 @@ describe("CarouselItem", () => {
     beforeEach(() => {
         carouselItem = shallow(createElement(CarouselItem, {
             url,
-            getRef: jasmine.createSpy("ref"),
+            getItemNode: jasmine.createSpy("ref"),
             position: 100,
             status: "active"
         }));
@@ -21,7 +21,7 @@ describe("CarouselItem", () => {
 
     it("renders the structure correctly", () => {
         expect(carouselItem).toBeElement(
-            DOM.div({ className: "widget-carousel-item active", style: { transform: jasmine.any("String") } },
+            DOM.div({ className: "widget-carousel-item active", style: { transform: "translate3d(100%, 0px, 0px)" } },
                 DOM.img({ alt: "Carousel image", src: url })
             ));
     });
@@ -46,7 +46,7 @@ describe("CarouselItem", () => {
     });
 
     it("should not add the active css class when not active", () => {
-        carouselItem.setProps({ status: "prev", url });
+        carouselItem.setProps({ position: 100, status: "prev", url });
         expect(carouselItem.instance().props.status).not.toBe("active");
         expect(carouselItem.hasClass("active")).toBe(false);
     });

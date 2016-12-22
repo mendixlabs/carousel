@@ -34,8 +34,11 @@ describe("Carousel", () => {
         expect(carousel).toBeElement(
             DOM.div({ className: "widget-carousel-wrapper" },
                 createElement(Alert),
-                DOM.div({ className: "widget-carousel", style: { transform: jasmine.any("String") } },
-                    DOM.div({ className: "widget-carousel-item-wrapper" })
+                DOM.div({ className: "widget-carousel" },
+                    DOM.div({
+                        className: "widget-carousel-item-wrapper",
+                        style: { transform: "translate3d(0%, 0px, 0px)" }
+                    })
                 )
             )
         );
@@ -175,7 +178,7 @@ describe("Carousel", () => {
         });
 
         describe("on a mobile device", () => {
-            const swipeEventMock = (direction: "right" | "left") => new CustomEvent("swipeleft", {
+            const swipeEventMock = (direction: "right" | "left") => new CustomEvent(`swipe${direction}`, {
                 detail: {
                     originPageX: direction === "right" ? 12 : 23,
                     originPageY: direction === "right" ? 23 : 12,
@@ -199,17 +202,17 @@ describe("Carousel", () => {
                 carouselInstance.componentDidMount();
 
                 expect(carouselInstance.registerSwipeEvents).toHaveBeenCalled();
-                expect(carouselItem1Mock.addEventListener).toHaveBeenCalled();
+                expect(carouselItem1Mock.addEventListener).toHaveBeenCalledTimes(4);
             });
 
-            xit("moves to the next carousel item when swiped to the left", () => {
+            it("moves to the next carousel item when swiped to the left", () => {
                 const carouselInstance = carousel.instance() as any;
                 carouselInstance.carouselItems = [ carouselItem1Mock, carouselItem2Mock ];
 
                 carouselInstance.componentDidMount();
                 carouselItem1Mock.dispatchEvent(swipeEventMock("left"));
-                expect(carouselInstance.swipingLeft).toBe(true);
-                expect(carouselInstance.swipingRight).toBe(false);
+                expect(carousel.state("position")).not.toBe(0);
+                // expect(carouselInstance.swipingRight).toBe(false);
             });
         });
     });

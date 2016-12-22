@@ -5,6 +5,7 @@ Displays images in a carousel.
 * Set static images in the Modeler
 * Navigate to the next or the previous image
 * Execute a microflow or open a page when an image is clicked
+* Swipe through the images on mobile devices
 
 ## Dependencies
 Mendix 6.
