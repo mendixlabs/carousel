@@ -21,7 +21,11 @@ describe("CarouselItem", () => {
 
     it("renders the structure correctly", () => {
         expect(carouselItem).toBeElement(
-            DOM.div({ className: "widget-carousel-item active", style: { transform: "translate3d(100%, 0px, 0px)" } },
+            DOM.div(
+                {
+                    className: "widget-carousel-item active",
+                    style: { transform: "translate3d(100%, 0px, 0px)" }
+                },
                 DOM.img({ alt: "Carousel image", src: url })
             ));
     });
@@ -32,7 +36,7 @@ describe("CarouselItem", () => {
         expect(carouselImage.prop("src")).toBe(url);
     });
 
-    it("renders the item css class", () => {
+    it("renders the widget-carousel-item css class", () => {
         expect(carouselItem.hasClass("widget-carousel-item")).toBe(true);
     });
 

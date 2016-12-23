@@ -75,9 +75,7 @@ describe("Carousel", () => {
         it("renders navigation controls", () => {
             const carouselControls = carousel.find(CarouselControl);
 
-            expect(carouselControls.length).toBe(2);
-            expect(carouselControls.at(0).props().direction).toBe("left");
-            expect(carouselControls.at(1).props().direction).toBe("right");
+            expect(carouselControls.length).toBe(0);
         });
     });
 
@@ -85,7 +83,8 @@ describe("Carousel", () => {
         beforeEach(() => {
             images = [
                 { url: image.imageUrl() },
-                { url: image.imageUrl(800, 600) }
+                { url: image.imageUrl(800, 600) },
+                { url: image.imageUrl(600, 600) }
             ];
             carousel = shallow(createElement(Carousel, { images }));
             carouselWrapper = carousel.find(".widget-carousel-item-wrapper") as ShallowWrapper<CarouselProps, any>;
@@ -94,13 +93,16 @@ describe("Carousel", () => {
         it("renders all carousel items", () => {
             const carouselItems = carouselWrapper.find(CarouselItem);
 
-            expect(carouselItems.length).toBe(2);
+            expect(carouselItems.length).toBe(3);
 
             expect(carouselItems.at(0).props().status).toContain("active");
             expect(carouselItems.at(0).props().url).toBe(images[0].url);
 
-            expect(carouselItems.at(1).props().status).not.toContain("active");
+            expect(carouselItems.at(1).props().status).toContain("next");
             expect(carouselItems.at(1).props().url).toBe(images[1].url);
+
+            expect(carouselItems.at(2).props().status).toContain("next");
+            expect(carouselItems.at(2).props().url).toBe(images[2].url);
         });
 
         it("renders the first carousel item active", () => {
@@ -117,102 +119,76 @@ describe("Carousel", () => {
             expect(activeItems.length).toBe(1);
         });
 
-        it("renders navigation controls", () => {
-            const carouselControls = carousel.find(CarouselControl);
+        describe("and an image to the right", () => {
+            it("moves to the next image when the right control is clicked", () => {
+                const carouselControls = carousel.find(CarouselControl);
+                const rightControl = carouselControls.at(0);
 
-            expect(carouselControls.length).toBe(2);
-            expect(carouselControls.at(0).props().direction).toBe("left");
-            expect(carouselControls.at(1).props().direction).toBe("right");
-        });
-    });
+                rightControl.simulate("click");
 
-    describe("with navigation controls", () => {
-        it("moves to the next image when the right control is clicked", () => {
-            const carouselControls = carousel.find(CarouselControl);
-            const rightControl = carouselControls.at(1);
-
-            rightControl.simulate("click");
-
-            const carouselItems = carousel.find(CarouselItem);
-            expect(carousel.state().activeIndex).toBe(1);
-            expect(carouselItems.at(0).props().status).not.toBe("active");
-            expect(carouselItems.at(1).props().status).toBe("active");
+                const carouselItems = carousel.find(CarouselItem);
+                expect(carousel.state().activeIndex).toBe(1);
+                expect(carouselItems.at(0).props().status).toBe("prev");
+                expect(carouselItems.at(1).props().status).toBe("active");
+            });
         });
 
-        it("moves to the first image when the right control of last image is clicked", () => {
-            carousel.setState({ activeIndex: 1 });
-            const carouselControls = carousel.find(CarouselControl);
-            const rightControl = carouselControls.at(1);
+        describe("and no image to the right", () => {
+            it("renders only the left carousel control", () => {
+                carousel.setState({ activeIndex: 2 });
+                const carouselControls = carousel.find(CarouselControl);
 
-            rightControl.simulate("click");
-
-            const carouselItems = carousel.find(CarouselItem);
-            expect(carousel.state().activeIndex).toBe(0);
-            expect(carouselItems.at(0).props().status).toBe("active");
-            expect(carouselItems.at(1).props().status).not.toBe("active");
-        });
-
-        it("moves to the previous image when the left control is clicked", () => {
-            carousel.setState({ activeIndex: 1 });
-            const carouselControls = carousel.find(CarouselControl);
-            const leftControl = carouselControls.at(0);
-
-            leftControl.simulate("click");
-
-            const carouselItems = carousel.find(CarouselItem);
-            expect(carousel.state().activeIndex).toBe(0);
-            expect(carouselItems.at(0).props().status).toBe("active");
-            expect(carouselItems.at(1).props().status).not.toBe("active");
-        });
-
-        it("moves to the last image when the left control on first image is clicked", () => {
-            const carouselControls = carousel.find(CarouselControl);
-            const leftControl = carouselControls.at(0);
-
-            leftControl.simulate("click");
-
-            const carouselItems = carousel.find(CarouselItem);
-            expect(carousel.state().activeIndex).toBe(1);
-            expect(carouselItems.at(0).props().status).not.toBe("active");
-            expect(carouselItems.at(1).props().status).toBe("active");
-        });
-
-        describe("on a mobile device", () => {
-            const swipeEventMock = (direction: "right" | "left") => new CustomEvent(`swipe${direction}`, {
-                detail: {
-                    originPageX: direction === "right" ? 12 : 23,
-                    originPageY: direction === "right" ? 23 : 12,
-                    pageX: 10,
-                    pageY: 12
-                }
+                expect(carouselControls.length).toBe(1);
+                expect(carouselControls.at(0).props().direction).toBe("left");
             });
 
-            const carouselItemWrapper = document.createElement("div");
-            const carouselItem1Mock = document.createElement("div"); // a mock of the carouselItem node returned by ref
-            const carouselItem2Mock = document.createElement("div");
-            carouselItemWrapper.appendChild(carouselItem1Mock);
-            carouselItemWrapper.appendChild(carouselItem2Mock);
+            it("moves to the first image when the right control is clicked", () => {
+                carousel.setState({ activeIndex: 1 });
+                const carouselControls = carousel.find(CarouselControl);
+                const rightControl = carouselControls.at(1);
 
-            it("registers swipe events on carousel items", () => {
-                const carouselInstance = carousel.instance() as any;
-                carouselInstance.carouselItems = [ carouselItem1Mock ];
-                spyOn(carouselItem1Mock, "addEventListener").and.callThrough();
-                spyOn(carouselInstance, "registerSwipeEvents").and.callThrough();
+                rightControl.simulate("click");
 
-                carouselInstance.componentDidMount();
+                const carouselItems = carousel.find(CarouselItem);
+                expect(carousel.state().activeIndex).toBe(0);
+                expect(carouselItems.at(0).props().status).toBe("active");
+                expect(carouselItems.at(1).props().status).toBe("next");
+            });
+        });
 
-                expect(carouselInstance.registerSwipeEvents).toHaveBeenCalled();
-                expect(carouselItem1Mock.addEventListener).toHaveBeenCalledTimes(4);
+        describe("and an image to the left", () => {
+            it("moves to the previous image when the left control is clicked", () => {
+                carousel.setState({ activeIndex: 1 });
+                const carouselControls = carousel.find(CarouselControl);
+                const leftControl = carouselControls.at(1);
+
+                leftControl.simulate("click");
+
+                const carouselItems = carousel.find(CarouselItem);
+                expect(carousel.state().activeIndex).toBe(0);
+                expect(carouselItems.at(0).props().status).toBe("active");
+                expect(carouselItems.at(1).props().status).toBe("next");
+            });
+        });
+
+        describe("and no image to the left", () => {
+            it("renders only the right carousel control", () => {
+                const carouselControls = carousel.find(CarouselControl);
+
+                expect(carouselControls.length).toBe(1);
+                expect(carouselControls.at(0).props().direction).toBe("right");
             });
 
-            it("moves to the next carousel item when swiped to the left", () => {
-                const carouselInstance = carousel.instance() as any;
-                carouselInstance.carouselItems = [ carouselItem1Mock, carouselItem2Mock ];
+            it("moves to the last image when the left control is clicked", () => {
+                const carouselControls = carousel.find(CarouselControl);
+                const leftControl = carouselControls.at(0);
 
-                carouselInstance.componentDidMount();
-                carouselItem1Mock.dispatchEvent(swipeEventMock("left"));
-                expect(carousel.state("position")).not.toBe(0);
-                // expect(carouselInstance.swipingRight).toBe(false);
+                leftControl.simulate("click");
+
+                const carouselItems = carousel.find(CarouselItem);
+                expect(carousel.state().activeIndex).toBe(1);
+                expect(carouselItems.at(0).props().status).toBe("prev");
+                expect(carouselItems.at(1).props().status).toBe("active");
             });
         });
     });
@@ -283,23 +259,157 @@ describe("Carousel", () => {
         });
     });
 
-    describe("without click action", () => {
-        it("does not open a page when a carousel item is clicked", () => {
-            spyOn(window.mx.ui, "openForm").and.callThrough();
-            carousel = createCarousel();
+    describe("on a mobile device", () => {
+        const swipeEventMock = (swipeEvent: "right" | "left" | "rightend" | "leftend", pageX = 100) =>
+            new CustomEvent(`swipe${swipeEvent}`, {
+                    detail: {
+                        originPageX: swipeEvent.indexOf("right") > -1 ? 12 : 180,
+                        pageX
+                    }
+                }
+            );
 
-            carousel.find(CarouselItem).simulate("click");
+        const carouselItemWrapper = document.createElement("div");
+        const carouselItem1Mock = document.createElement("div");
+        const carouselItem2Mock = document.createElement("div");
+        carouselItemWrapper.appendChild(carouselItem1Mock);
+        carouselItemWrapper.appendChild(carouselItem2Mock);
 
-            expect(window.mx.ui.openForm).not.toHaveBeenCalled();
+        const addCarouselItems = (carouselInstance: any) => {
+            carouselInstance.addCarouselItem(carouselItem1Mock);
+            carouselInstance.addCarouselItem(carouselItem2Mock);
+            carouselInstance.carouselWidth = 500;
+        };
+
+        beforeEach(() => {
+            images = [
+                { url: image.imageUrl() },
+                { url: image.imageUrl(800, 600) },
+                { url: image.imageUrl(600, 600) }
+            ];
+            carousel = shallow(createElement(Carousel, { images }));
         });
 
-        it("does not respond when a carousel item is clicked", () => {
-            spyOn(window.mx.ui, "action").and.callThrough();
-            carousel = createCarousel();
+        it("registers swipe events on carousel items", () => {
+            const carouselInstance = carousel.instance() as any;
+            carouselInstance.addCarouselItem(carouselItem1Mock);
+            spyOn(carouselItem1Mock, "addEventListener").and.callThrough();
+            spyOn(carouselInstance, "registerSwipeEvents").and.callThrough();
 
-            carousel.find(CarouselItem).simulate("click");
+            carouselInstance.componentDidMount();
 
-            expect(window.mx.ui.action).not.toHaveBeenCalled();
+            expect(carouselInstance.registerSwipeEvents).toHaveBeenCalled();
+            expect(carouselItem1Mock.addEventListener).toHaveBeenCalledTimes(4);
+        });
+
+        it("does not show controls while swiping", () => {
+            const carouselInstance = carousel.instance() as any;
+            addCarouselItems(carouselInstance);
+
+            carouselInstance.componentDidMount();
+            carouselItem1Mock.dispatchEvent(swipeEventMock("left"));
+
+            expect(carousel.state("showControls")).toBe(false);
+        });
+
+        it("does not animate while swiping", () => {
+            const carouselInstance = carousel.instance() as any;
+            addCarouselItems(carouselInstance);
+
+            carouselInstance.componentDidMount();
+            carouselItem1Mock.dispatchEvent(swipeEventMock("left"));
+
+            expect(carousel.state("animate")).toBe(false);
+        });
+
+        it("does not swipe out until swipe threshold is passed", () => {
+            const carouselInstance = carousel.instance() as any;
+            addCarouselItems(carouselInstance);
+            const currentPosition = 100;
+
+            carouselInstance.componentDidMount();
+            carouselItem1Mock.dispatchEvent(swipeEventMock("left", currentPosition));
+
+            expect(carousel.state("position")).toBeLessThan(0);
+
+            carouselItem1Mock.dispatchEvent(swipeEventMock("leftend", currentPosition));
+
+            expect(carousel.state("activeIndex")).toBe(0);
+        });
+
+        it("moves to the next carousel item when swiped to the left", () => {
+            const carouselInstance = carousel.instance() as any;
+            addCarouselItems(carouselInstance);
+            const currentPosition = 70;
+
+            carouselInstance.componentDidMount();
+            carouselItem1Mock.dispatchEvent(swipeEventMock("left", currentPosition));
+            carouselItem1Mock.dispatchEvent(swipeEventMock("leftend", currentPosition));
+
+            expect(carousel.state("activeIndex")).toBe(1);
+        });
+
+        it("moves to the previous image when swiped to the right", () => {
+            carousel.setState({ activeIndex: 1 });
+            const carouselInstance = carousel.instance() as any;
+            addCarouselItems(carouselInstance);
+            const currentPosition = 120;
+
+            carouselInstance.componentDidMount();
+            carouselItem1Mock.dispatchEvent(swipeEventMock("right", currentPosition));
+            carouselItem1Mock.dispatchEvent(swipeEventMock("rightend", currentPosition));
+
+            expect(carousel.state("activeIndex")).toBe(0);
+        });
+
+        it("animates when swiping out", () => {
+            carousel.setState({ activeIndex: 1 });
+            const carouselInstance = carousel.instance() as any;
+            addCarouselItems(carouselInstance);
+            const currentPosition = 120;
+
+            carouselInstance.componentDidMount();
+            carouselItem1Mock.dispatchEvent(swipeEventMock("rightend", currentPosition));
+
+            expect(carousel.state("animate")).toBe(true);
+        });
+
+        it("shows carousel controls when swiping is done", () => {
+            carousel.setState({ activeIndex: 1 });
+            const carouselInstance = carousel.instance() as any;
+            addCarouselItems(carouselInstance);
+            const currentPosition = 120;
+
+            carouselInstance.componentDidMount();
+            carouselItem1Mock.dispatchEvent(swipeEventMock("right", currentPosition));
+            carouselItem1Mock.dispatchEvent(swipeEventMock("rightend", currentPosition));
+
+            expect(carousel.state("showControls")).toBe(true);
+        });
+
+        it("does not swipe to the right when on the first image", () => {
+            const carouselInstance = carousel.instance() as any;
+            addCarouselItems(carouselInstance);
+            const currentPosition = 120;
+
+            carouselInstance.componentDidMount();
+            carouselItem1Mock.dispatchEvent(swipeEventMock("right", currentPosition));
+            carouselItem1Mock.dispatchEvent(swipeEventMock("rightend", currentPosition));
+
+            expect(carousel.state("activeIndex")).toBe(0);
+        });
+
+        it("does not swipe to the left when on the last image", () => {
+            carousel.setState({ activeIndex: 2 });
+            const carouselInstance = carousel.instance() as any;
+            addCarouselItems(carouselInstance);
+            const currentPosition = 70;
+
+            carouselInstance.componentDidMount();
+            carouselItem1Mock.dispatchEvent(swipeEventMock("left", currentPosition));
+            carouselItem1Mock.dispatchEvent(swipeEventMock("leftend", currentPosition));
+
+            expect(carousel.state("activeIndex")).toBe(2);
         });
     });
 
