@@ -19,7 +19,7 @@ export interface CarouselProps {
 }
 
 interface CarouselState {
-    activeIndex?: number;
+    activeIndex: number;
     alertMessage?: string;
     showControls?: boolean;
     position?: number;
