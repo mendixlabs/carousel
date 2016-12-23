@@ -29,7 +29,7 @@ describe("Carousel", () => {
             expect(carouselItems.length).toBe(0);
         });
 
-        it("renders no carousel controls", () => {
+        it("renders no navigation controls", () => {
             expect(carousel.find(CarouselControl).length).toBe(0);
         });
     });
@@ -49,7 +49,7 @@ describe("Carousel", () => {
             expect(carouselItem.props().url).toBe(images[0].url);
         });
 
-        it("renders carousel controls", () => {
+        it("renders navigation controls", () => {
             const carouselControls = carousel.find(CarouselControl);
 
             expect(carouselControls.length).toBe(2);
@@ -92,70 +92,64 @@ describe("Carousel", () => {
             expect(activeItems.length).toBe(1);
         });
 
-        it("renders carousel controls", () => {
+        it("renders navigation controls", () => {
             const carouselControls = carousel.find(CarouselControl);
 
             expect(carouselControls.length).toBe(2);
             expect(carouselControls.at(0).props().direction).toBe("left");
             expect(carouselControls.at(1).props().direction).toBe("right");
         });
+    });
 
-        describe("and an image to the right", () => {
-            it("moves to the next image when the right control is clicked", () => {
-                const carouselControls = carousel.find(CarouselControl);
-                const rightControl = carouselControls.at(1);
+    describe("with navigation controls", () => {
+        it("moves to the next image when the right control is clicked", () => {
+            const carouselControls = carousel.find(CarouselControl);
+            const rightControl = carouselControls.at(1);
 
-                rightControl.simulate("click");
+            rightControl.simulate("click");
 
-                const carouselItems = carousel.find(CarouselItem);
-                expect(carousel.state().activeIndex).toBe(1);
-                expect(carouselItems.at(0).props().active).toBe(false);
-                expect(carouselItems.at(1).props().active).toBe(true);
-            });
+            const carouselItems = carousel.find(CarouselItem);
+            expect(carousel.state().activeIndex).toBe(1);
+            expect(carouselItems.at(0).props().active).toBe(false);
+            expect(carouselItems.at(1).props().active).toBe(true);
         });
 
-        describe("and no image to the right", () => {
-            it("moves to the first image when the right control is clicked", () => {
-                carousel.setState({ activeIndex: 1 });
-                const carouselControls = carousel.find(CarouselControl);
-                const rightControl = carouselControls.at(1);
+        it("moves to the first image when the right control of last image is clicked", () => {
+            carousel.setState({ activeIndex: 1 });
+            const carouselControls = carousel.find(CarouselControl);
+            const rightControl = carouselControls.at(1);
 
-                rightControl.simulate("click");
+            rightControl.simulate("click");
 
-                const carouselItems = carousel.find(CarouselItem);
-                expect(carousel.state().activeIndex).toBe(0);
-                expect(carouselItems.at(0).props().active).toBe(true);
-                expect(carouselItems.at(1).props().active).toBe(false);
-            });
+            const carouselItems = carousel.find(CarouselItem);
+            expect(carousel.state().activeIndex).toBe(0);
+            expect(carouselItems.at(0).props().active).toBe(true);
+            expect(carouselItems.at(1).props().active).toBe(false);
         });
 
-        describe("and an image to the left", () => {
-            it("moves to the previous image when the left control is clicked", () => {
-                carousel.setState({ activeIndex: 1 });
-                const carouselControls = carousel.find(CarouselControl);
-                const leftControl = carouselControls.at(0);
+        it("moves to the previous image when the left control is clicked", () => {
+            carousel.setState({ activeIndex: 1 });
+            const carouselControls = carousel.find(CarouselControl);
+            const leftControl = carouselControls.at(0);
 
-                leftControl.simulate("click");
+            leftControl.simulate("click");
 
-                const carouselItems = carousel.find(CarouselItem);
-                expect(carousel.state().activeIndex).toBe(0);
-                expect(carouselItems.at(0).props().active).toBe(true);
-                expect(carouselItems.at(1).props().active).toBe(false);
-            });
+            const carouselItems = carousel.find(CarouselItem);
+            expect(carousel.state().activeIndex).toBe(0);
+            expect(carouselItems.at(0).props().active).toBe(true);
+            expect(carouselItems.at(1).props().active).toBe(false);
         });
 
-        describe("and no image to the left", () => {
-            it("moves to the last image when the left control is clicked", () => {
-                const carouselControls = carousel.find(CarouselControl);
-                const leftControl = carouselControls.at(0);
+        it("moves to the last image when the left control on first image is clicked", () => {
+            const carouselControls = carousel.find(CarouselControl);
+            const leftControl = carouselControls.at(0);
 
-                leftControl.simulate("click");
+            leftControl.simulate("click");
 
-                const carouselItems = carousel.find(CarouselItem);
-                expect(carousel.state().activeIndex).toBe(1);
-                expect(carouselItems.at(0).props().active).toBe(false);
-                expect(carouselItems.at(1).props().active).toBe(true);
-            });
+            const carouselItems = carousel.find(CarouselItem);
+            expect(carousel.state().activeIndex).toBe(1);
+            expect(carouselItems.at(0).props().active).toBe(false);
+            expect(carouselItems.at(1).props().active).toBe(true);
         });
     });
 });
