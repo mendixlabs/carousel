@@ -22,13 +22,7 @@ module.exports = {
             { test: /\.ts$/, loader: "ts-loader" },
             { test: /\.json$/, loader: "json" },
             { test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader") }
-        ],
-        postLoaders: [ {
-            test: /\.ts$/,
-            loader: "istanbul-instrumenter",
-            include: path.resolve(__dirname, "src"),
-            exclude: /\.(spec)\.ts$/
-        } ]
+        ]
     },
     devtool: "source-map",
     externals: [ "mxui/widget/_WidgetBase", "dojo/_base/declare" ],
