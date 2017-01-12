@@ -8,9 +8,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist/tmp"),
         filename: "src/com/mendix/widget/carousel/Carousel.js",
-        libraryTarget:  "umd",
-        umdNamedDefine: true,
-        library: "com.mendix.widget.carousel.Carousel"
+        libraryTarget:  "umd"
     },
     resolve: {
         extensions: [ "", ".ts", ".js", ".json" ],
