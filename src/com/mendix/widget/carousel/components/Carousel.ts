@@ -12,7 +12,7 @@ export interface Image {
 }
 
 export interface CarouselProps {
-    images?: Image[];
+    images: Image[];
     contextGuid?: string;
 }
 
@@ -79,7 +79,7 @@ export class Carousel extends Component<CarouselProps, { activeIndex: number }> 
                 error: (error: Error) =>
                     window.mx.ui.error(`An error occurred while executing action: ${error.message}`, true),
                 params: {
-                    guids: [ this.props.contextGuid ]
+                    guids: this.props.contextGuid ? [ this.props.contextGuid ] : []
                 }
             });
         } else if (form) {

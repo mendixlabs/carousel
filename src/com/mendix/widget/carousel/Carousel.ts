@@ -8,11 +8,11 @@ import { Carousel, Image } from "./components/Carousel";
 
 class CarouselDojo extends WidgetBase {
     // Properties from Mendix modeler
-    staticImages?: Image[];
+    staticImages: Image[];
 
     update(contextObject: mendix.lib.MxObject, callback?: Function) {
         render(createElement(Carousel, {
-            contextGuid: contextObject ? contextObject.getGuid() : null,
+            contextGuid: contextObject ? contextObject.getGuid() : undefined,
             images: this.staticImages
         }), this.domNode);
 

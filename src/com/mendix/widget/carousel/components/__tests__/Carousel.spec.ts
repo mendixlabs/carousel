@@ -74,7 +74,7 @@ describe("Carousel", () => {
                 { url: image.imageUrl(800, 600) }
             ];
             carousel = shallow(createElement(Carousel, { images }));
-            carouselWrapper = carousel.find(".widget-carousel-item-wrapper");
+            carouselWrapper = carousel.find(".widget-carousel-item-wrapper") as ShallowWrapper<CarouselProps, any>;
         });
 
         it("renders all carousel items", () => {
