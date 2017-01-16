@@ -1,4 +1,4 @@
-import { DOM, MouseEvent } from "react";
+import { DOM, MouseEvent, StatelessComponent } from "react";
 import * as classNames from "classnames";
 
 export interface CarouselItemProps {
@@ -7,7 +7,7 @@ export interface CarouselItemProps {
     onClick?: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
-export const CarouselItem = (props: CarouselItemProps) =>
+export const CarouselItem: StatelessComponent<CarouselItemProps> = (props) =>
     DOM.div({ className: classNames("widget-carousel-item", { active: props.active }), onClick: props.onClick },
         DOM.img({ alt: "Carousel image", src: props.url })
     );
