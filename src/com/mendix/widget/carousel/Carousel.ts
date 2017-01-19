@@ -16,7 +16,7 @@ class CarouselDojo extends WidgetBase {
             images: this.staticImages
         }), this.domNode);
 
-        if (callback) { callback(); }
+        if (callback) callback();
     }
 
     uninitialize(): boolean {
