@@ -37,12 +37,12 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
 
     render() {
         return DOM.div({ className: "widget-carousel-wrapper" },
-            this.state.alertMessage ? createElement(Alert, { message: this.state.alertMessage }) : null,
+            createElement(Alert, { message: this.state.alertMessage }),
             DOM.div({ className: "widget-carousel" },
                 DOM.div({ className: "widget-carousel-item-wrapper" },
                     this.createCarouselItems(this.props.images, this.state.activeIndex || 0)
                 ),
-                this.props.images.length ? this.createCarouselControls() : null
+                this.createCarouselControls()
             )
         );
     }
@@ -58,6 +58,8 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
     }
 
     private createCarouselControls() {
+        if (!this.props.images.length) return null;
+
         return [
             createElement(CarouselControl, {
                 direction: "left",

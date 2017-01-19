@@ -46,18 +46,17 @@ describe("CarouselItem", () => {
     });
 
     describe("image", () => {
-        let clickCount = 0;
-
+        const onClickSpy = jasmine.createSpy("onClick");
         it("should respond to a single click", () => {
             carouselItem = shallow(createElement(CarouselItem, {
                 url,
                 active: true,
-                onClick: () => clickCount++
+                onClick: onClickSpy
             }));
 
             carouselItem.simulate("click");
 
-            expect(clickCount).toBe(1);
+            expect(onClickSpy).toHaveBeenCalled();
         });
     });
 });

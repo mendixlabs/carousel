@@ -30,8 +30,8 @@ class CarouselDojo extends WidgetBase {
 // Thanks to https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/dojo/README.md
 // tslint:disable : only-arrow-functions
 dojoDeclare("com.mendix.widget.carousel.Carousel", [ WidgetBase ], function(Source: any) {
-    let result: any = {};
-    for (let property in Source.prototype) {
+    const result: any = {};
+    for (const property in Source.prototype) {
         if (property !== "constructor" && Source.prototype.hasOwnProperty(property)) {
             result[property] = Source.prototype[property];
         }

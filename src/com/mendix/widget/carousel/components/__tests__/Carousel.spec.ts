@@ -3,6 +3,7 @@ import { DOM, createElement } from "react";
 
 import { image, lorem, random } from "faker";
 
+import { Alert } from "../Alert";
 import { Carousel, CarouselProps, Image } from "../Carousel";
 import { CarouselControl } from "../CarouselControl";
 import { CarouselItem } from "../CarouselItem";
@@ -15,6 +16,14 @@ describe("Carousel", () => {
     let carouselWrapper: ShallowWrapper<CarouselProps, any>;
     const defaultMx = window.mx;
     const contextGuid = random.uuid();
+    const createCarousel = (onClickMicroflow?: string, onClickForm?: string) => {
+        images = [ {
+            onClickForm,
+            onClickMicroflow,
+            url: image.imageUrl()
+        } ];
+        return shallow(createElement(Carousel, { images, contextGuid }));
+    };
 
     beforeAll(() => {
         window.mx = mockMendix;
@@ -24,8 +33,11 @@ describe("Carousel", () => {
         carousel = shallow(createElement(Carousel));
 
         expect(carousel).toBeElement(
-            DOM.div({ className: "widget-carousel" },
-                DOM.div({ className: "widget-carousel-item-wrapper" })
+            DOM.div({ className: "widget-carousel-wrapper" },
+                createElement(Alert),
+                DOM.div({ className: "widget-carousel" },
+                    DOM.div({ className: "widget-carousel-item-wrapper" })
+                )
             )
         );
     });
@@ -164,13 +176,12 @@ describe("Carousel", () => {
 
     describe("with click action", () => {
         it("executes the specified microflow when a carousel item is clicked", () => {
-            images = [ { onClickMicroflow: lorem.word(), url: image.imageUrl() } ];
             spyOn(window.mx.ui, "action").and.callThrough();
-            carousel = shallow(createElement(Carousel, { images, contextGuid }));
+            carousel = createCarousel(lorem.word());
 
             carousel.find(CarouselItem).simulate("click");
 
-            expect(window.mx.ui.action).toHaveBeenCalledWith( images[0].onClickMicroflow, {
+            expect(window.mx.ui.action).toHaveBeenCalledWith(images[0].onClickMicroflow, {
                 error: jasmine.any(Function),
                 params: {
                     guids: [ contextGuid ]
@@ -179,27 +190,22 @@ describe("Carousel", () => {
         });
 
         it("shows an error when a carousel item is clicked with an invalid microflow", () => {
-            const invalidAction = "invalid_action";
-            images = [ { onClickMicroflow: invalidAction, url: image.imageUrl() } ];
             const actionErrorMessage = "An error occurred while executing action: mx.ui.action error mock";
-
             spyOn(window.mx.ui, "action").and.callFake((actionname: string, action: { error: (e: Error) => void}) => {
-                if (actionname === invalidAction) {
-                    action.error(new Error("mx.ui.action error mock"));
-                }
+                action.error(new Error("mx.ui.action error mock"));
             });
-            spyOn(window.mx.ui, "error").and.callThrough();
-            carousel = shallow(createElement(Carousel, { images, contextGuid }));
+            carousel = createCarousel(lorem.word());
 
             carousel.find(CarouselItem).simulate("click");
 
-            expect(window.mx.ui.error).toHaveBeenCalledWith(actionErrorMessage, true);
+            expect(carousel.state().alertMessage).toBe(actionErrorMessage);
+            const alert = carousel.find(Alert);
+            expect(alert.props().message).toBe(carousel.state().alertMessage);
         });
 
         it("opens the specified page when a carousel item is clicked", () => {
-            images = [ { onClickForm: lorem.word(), url: image.imageUrl() } ];
             spyOn(window.mx.ui, "openForm").and.callThrough();
-            carousel = shallow(createElement(Carousel, { images, contextGuid: random.uuid() }));
+            carousel = createCarousel(undefined, lorem.word());
             const carouselItem = carousel.find(CarouselItem);
 
             carouselItem.simulate("click");
@@ -208,28 +214,24 @@ describe("Carousel", () => {
         });
 
         it("shows an error when a carousel item is clicked with an invalid form", () => {
-            const invalidForm = "invalid_form";
-            images = [ { onClickForm: invalidForm, url: image.imageUrl() } ];
             const openFormErrorMessage = "An error occurred while opening form: mx.ui.openForm error mock";
 
             spyOn(window.mx.ui, "openForm").and.callFake((path: string, args: { error: (e: Error) => void}) => {
-                if (path === invalidForm) {
-                    args.error(new Error("mx.ui.openForm error mock"));
-                }
+                args.error(new Error("mx.ui.openForm error mock"));
             });
-            spyOn(window.mx.ui, "error").and.callThrough();
-            carousel = shallow(createElement(Carousel, { images, contextGuid: random.uuid() }));
+            carousel = createCarousel(undefined, lorem.word());
 
             carousel.find(CarouselItem).simulate("click");
 
-            expect(window.mx.ui.error).toHaveBeenCalledWith(openFormErrorMessage, true);
+            expect(carousel.state().alertMessage).toBe(openFormErrorMessage);
+            const alert = carousel.find(Alert);
+            expect(alert.props().message).toBe(carousel.state().alertMessage);
         });
 
-        it("executes the microflow with both microflow and form are specified, on carousel item is clicked", () => {
-            images = [ { onClickForm: lorem.word(), onClickMicroflow: lorem.word(), url: image.imageUrl() } ];
+        it("executes the microflow with both microflow and form specified, on carousel item is clicked", () => {
             spyOn(window.mx.ui, "action").and.callThrough();
             spyOn(window.mx.ui, "openForm").and.callThrough();
-            carousel = shallow(createElement(Carousel, { images, contextGuid: random.uuid() }));
+            carousel = createCarousel(lorem.word(), lorem.word());
 
             carousel.find(CarouselItem).simulate("click");
 
@@ -240,9 +242,8 @@ describe("Carousel", () => {
 
     describe("without click action", () => {
         it("does not open a page when a carousel item is clicked", () => {
-            images = [ { url: image.imageUrl() } ];
             spyOn(window.mx.ui, "openForm").and.callThrough();
-            carousel = shallow(createElement(Carousel, { images, contextGuid: random.uuid() }));
+            carousel = createCarousel();
 
             carousel.find(CarouselItem).simulate("click");
 
@@ -250,9 +251,8 @@ describe("Carousel", () => {
         });
 
         it("does not respond when a carousel item is clicked", () => {
-            images = [ { url: image.imageUrl() } ];
             spyOn(window.mx.ui, "action").and.callThrough();
-            carousel = shallow(createElement(Carousel, { images, contextGuid }));
+            carousel = createCarousel();
 
             carousel.find(CarouselItem).simulate("click");
 
