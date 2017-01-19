@@ -13,15 +13,13 @@ function compareTrees(actual: any, expected: ReactChild, strict: boolean) {
 
 function toBeElement() {
     return {
-        compare: (actual: ReactChild, expected: ReactChild) =>
-            compareTrees(actual, expected, true)
+        compare: (actual: ReactChild, expected: ReactChild) => compareTrees(actual, expected, true)
     };
 }
 
 function toMatchStructure() {
     return {
-        compare: (actual: HTMLElement, expected: ReactChild) =>
-            compareTrees(actual, expected, false)
+        compare: (actual: HTMLElement, expected: ReactChild) => compareTrees(actual, expected, false)
     };
 }
 
