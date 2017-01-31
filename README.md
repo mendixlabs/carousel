@@ -3,6 +3,8 @@ Displays images in a carousel.
 
 ## Features
 * Set static images in the Modeler
+* Retrieve images from the database via XPath
+* Retrieve images via a microflow
 * Navigate to the next or the previous image
 * Execute a microflow or open a page when an image is clicked
 * Swipe through the images on mobile devices
