@@ -4,9 +4,19 @@
     <description>Carousel displaying images</description>
     <icon/>
     <properties>
+        <property key="dataSource" type="enumeration" defaultValue="static">
+            <caption>Data source</caption>
+            <category>Data source</category>
+            <description>Where should the images be retrieved from?</description>
+            <enumerationValues>
+                <enumerationValue key="static">Static</enumerationValue>
+                <enumerationValue key="XPath">XPath</enumerationValue>
+                <enumerationValue key="microflow">Microflow</enumerationValue>
+            </enumerationValues>
+        </property>
         <property key="staticImages" type="object" isList="true" required="false">
-            <caption>Images</caption>
-            <category>Images</category>
+            <caption>Static images</caption>
+            <category>Data source</category>
             <description/>
             <properties>
                 <property key="url" type="image" required="true">
@@ -26,6 +36,16 @@
                     <description>Page to open when the image is clicked</description>
                 </property>
             </properties>
+        </property>
+        <property key="imagesEntity" type="entity" required="false">
+            <caption>Images entity</caption>
+            <category>Data source</category>
+            <description>The entity from which the images will be retrieved for the XPath and microflow options</description>
+        </property>
+        <property key="entityConstraint" type="entityConstraint" entityProperty="imagesEntity" required="false">
+            <caption>XPath</caption>
+            <category>Data source</category>
+            <description>Constraint on the images entity</description>
         </property>
     </properties>
 </widget>

@@ -19,7 +19,8 @@
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "skipLibCheck": false,
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        "noUnusedLocals": true
     },
     "exclude": [
         "dist/",

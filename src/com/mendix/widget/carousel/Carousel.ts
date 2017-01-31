@@ -4,16 +4,22 @@ import * as WidgetBase from "mxui/widget/_WidgetBase";
 import { createElement } from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
-import { Carousel, Image } from "./components/Carousel";
+import { Carousel, DataSource, Image } from "./components/Carousel";
 
 class CarouselDojo extends WidgetBase {
     // Properties from Mendix modeler
     staticImages: Image[];
+    dataSource: DataSource;
+    imagesEntity: string;
+    entityConstraint: string;
 
     update(contextObject: mendix.lib.MxObject, callback?: Function) {
         render(createElement(Carousel, {
             contextGuid: contextObject ? contextObject.getGuid() : undefined,
-            images: this.staticImages
+            dataSource: this.dataSource,
+            entityConstraint: this.entityConstraint,
+            imagesEntity: this.imagesEntity,
+            staticImages: this.staticImages
         }), this.domNode);
 
         if (callback) callback();

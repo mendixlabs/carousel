@@ -7,19 +7,23 @@ import { CarouselItem, ItemStatus } from "./CarouselItem";
 
 import "../ui/Carousel.css";
 
-export interface Image {
+interface Image {
     url: string;
     onClickMicroflow?: string;
     onClickForm?: string;
 }
 
-export interface CarouselProps {
-    images: Image[];
+interface CarouselProps {
     contextGuid?: string;
+    dataSource: string;
+    entityConstraint?: string;
+    staticImages: Image[];
+    imagesEntity?: string;
 }
 
 interface CarouselState {
     activeIndex: number;
+    images?: Image[];
     alertMessage?: string;
     showControls?: boolean;
     position?: number;
@@ -37,9 +41,13 @@ interface CustomEvent extends Event {
 }
 
 type Direction = "right" | "left";
+type DataSource = "static" | "XPath" | "microflow";
 
-export class Carousel extends Component<CarouselProps, CarouselState> {
-    static defaultProps: CarouselProps = { images: [] };
+class Carousel extends Component<CarouselProps, CarouselState> {
+    static defaultProps: CarouselProps = {
+        dataSource: "static",
+        staticImages: []
+    };
     private moveToTheLeft: MouseEventHandler<HTMLDivElement>;
     private moveToTheRight: MouseEventHandler<HTMLDivElement>;
     private carouselWidth: number;
@@ -56,9 +64,11 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
         this.moveToTheRight = () => this.moveInDirection("right");
         this.state = {
             activeIndex: 0,
+            alertMessage: this.validateDataSourceProps(),
             animate: false,
+            images: this.getCarouselImages(),
             position: 0,
-            showControls: this.props.images.length > 1
+            showControls: this.props.staticImages.length > 1
         };
     }
 
@@ -71,7 +81,7 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
                         className: classNames("widget-carousel-item-wrapper", { animate: this.state.animate }),
                         style: { transform: `translate3d(${this.state.position}%, 0px, 0px)` }
                     },
-                    this.createCarouselItems(this.props.images, this.state.activeIndex || 0)
+                    this.createCarouselItems(this.state.images, this.state.activeIndex || 0)
                 ),
                 this.createCarouselControls()
             )
@@ -83,7 +93,27 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
         this.registerSwipeEvents();
     }
 
-    private createCarouselItems(images: Image[], activeIndex: number) {
+    private validateDataSourceProps(): string {
+        const { contextGuid, dataSource, imagesEntity, staticImages } = this.props;
+        if (dataSource === "static" && !staticImages.length) {
+            return "At least one static image is required";
+        }
+        if (dataSource === "XPath" && !imagesEntity) {
+            return "The images entity is required";
+        }
+        if (!contextGuid && this.requiresContext()) {
+            return "Invalid XPath: requires a context object but no context is available";
+        }
+
+        return "";
+    }
+
+    private requiresContext(): boolean {
+        const { dataSource, entityConstraint } = this.props;
+        return dataSource === "XPath" && !!entityConstraint && entityConstraint.indexOf("[%CurrentObject%]") > -1;
+    }
+
+    private createCarouselItems(images: Image[] = [], activeIndex: number) {
         return images.map((image, index) => {
             const { position, status } = this.getItemStatus(index, activeIndex);
             return createElement(CarouselItem, {
@@ -112,7 +142,8 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
     private createCarouselControls() {
         if (!this.state.showControls) return null;
 
-        const directions: Direction[] = this.state.activeIndex === this.props.images.length - 1
+        const images = this.state.images || [];
+        const directions: Direction[] = this.state.activeIndex === images.length - 1
             ? [ "left" ]
             : this.state.activeIndex === 0 ? [ "right" ] : [ "right", "left" ];
 
@@ -123,6 +154,44 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
                 onClick: direction === "right" ? this.moveToTheRight : this.moveToTheLeft
             })
         );
+    }
+
+    private getCarouselImages(): Image[] {
+        if (this.props.dataSource === "static") {
+            return this.props.staticImages;
+        }
+        if (this.props.dataSource === "XPath" && this.props.imagesEntity) {
+            this.fetchImagesByXPath();
+        }
+
+        return [];
+    }
+
+    private fetchImagesByXPath() {
+        if (!this.props.contextGuid && this.requiresContext()) return;
+
+        const constraint = this.props.entityConstraint
+            ? this.props.entityConstraint.replace("[%CurrentObject%]", this.props.contextGuid || "")
+            : "";
+
+        window.mx.data.get({
+            callback: (mxObjects: mendix.lib.MxObject[]) => this.setImagesFromMxObjects(mxObjects),
+            error: (error) =>
+                this.setState({ alertMessage: `An error occurred while retrieving items: ${error}` }),
+            xpath: `//${this.props.imagesEntity}${constraint}`
+        });
+    }
+
+    private setImagesFromMxObjects(mxObjects: mendix.lib.MxObject[]): void {
+        const images: Image[] = mxObjects.map((mxObject) => ({ url: this.getFileUrl(mxObject.getGuid()) }));
+
+        if (images.length) this.setState({ images, showControls: !!images.length });
+    }
+
+    private getFileUrl(guid: string): string {
+        return guid
+            ? `file?target=window&guid=${guid}&csrfToken=${window.mx.session.getCSRFToken()}&time=${Date.now()}`
+            : "";
     }
 
     private addCarouselItem(carouselItem: HTMLElement) {
@@ -212,3 +281,5 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
         }
     }
 }
+
+export { Carousel, CarouselProps, Image, DataSource };
