@@ -1,6 +1,6 @@
 {
   "name": "carousel",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Displays images in a carousel",
   "scripts": {
     "pretest": "tsc",
