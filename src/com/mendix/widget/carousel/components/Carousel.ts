@@ -15,10 +15,14 @@ interface Image {
 
 interface CarouselProps {
     contextGuid?: string;
-    dataSource: string;
+    dataSource: DataSource;
+    dataSourceMicroflow?: string;
     entityConstraint?: string;
     staticImages: Image[];
     imagesEntity?: string;
+    onClickOptions?: ClickOptions;
+    onClickMicroflow?: string;
+    onClickForm?: string;
 }
 
 interface CarouselState {
@@ -42,6 +46,7 @@ interface CustomEvent extends Event {
 
 type Direction = "right" | "left";
 type DataSource = "static" | "XPath" | "microflow";
+type ClickOptions = "doNothing" | "callMicroflow" | "showPage";
 
 class Carousel extends Component<CarouselProps, CarouselState> {
     static defaultProps: CarouselProps = {
@@ -104,6 +109,9 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         if (!contextGuid && this.requiresContext()) {
             return "Invalid XPath: requires a context object but no context is available";
         }
+        if (dataSource === "microflow" && !this.props.dataSourceMicroflow) {
+            return "A data source microflow is required";
+        }
 
         return "";
     }
@@ -162,6 +170,8 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         }
         if (this.props.dataSource === "XPath" && this.props.imagesEntity) {
             this.fetchImagesByXPath();
+        } else if (this.props.dataSource === "microflow" && this.props.dataSourceMicroflow) {
+            this.fetchImagesByMicroflow(this.props.dataSourceMicroflow);
         }
 
         return [];
@@ -182,8 +192,25 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         });
     }
 
+    private fetchImagesByMicroflow(microflow: string) {
+        if (microflow) {
+            window.mx.ui.action(microflow, {
+                callback: (mxObjects: mendix.lib.MxObject[]) => this.setImagesFromMxObjects(mxObjects),
+                error: (error: Error) =>
+                    this.setState({ alertMessage: `An error occurred while retrieving images: ${error.message}` }),
+                params: {
+                    guids: this.props.contextGuid ? [ this.props.contextGuid ] : []
+                }
+            });
+        }
+    }
+
     private setImagesFromMxObjects(mxObjects: mendix.lib.MxObject[]): void {
-        const images: Image[] = mxObjects.map((mxObject) => ({ url: this.getFileUrl(mxObject.getGuid()) }));
+        const images: Image[] = mxObjects.map((mxObject) => ({
+            onClickForm: this.props.onClickOptions === "showPage" ? this.props.onClickForm : undefined,
+            onClickMicroflow: this.props.onClickOptions === "callMicroflow" ? this.props.onClickMicroflow : undefined,
+            url: this.getFileUrl(mxObject.getGuid())
+        }));
 
         if (images.length) this.setState({ images, showControls: !!images.length });
     }
@@ -282,4 +309,4 @@ class Carousel extends Component<CarouselProps, CarouselState> {
     }
 }
 
-export { Carousel, CarouselProps, Image, DataSource };
+export { Carousel, CarouselProps, ClickOptions, Image, DataSource };
