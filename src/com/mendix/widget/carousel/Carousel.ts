@@ -4,7 +4,9 @@ import * as WidgetBase from "mxui/widget/_WidgetBase";
 import { createElement } from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
-import { Carousel, ClickOptions, DataSource, Image } from "./components/Carousel";
+import { Carousel, Image } from "./components/Carousel";
+import { Alert } from "./components/Alert";
+import { CarouselData, CarouselDataOptions, ClickOptions, DataSource } from "./CarouselData";
 
 class CarouselDojo extends WidgetBase {
     // Properties from Mendix modeler
@@ -17,9 +19,11 @@ class CarouselDojo extends WidgetBase {
     onClickMicroflow: string;
     onClickForm: string;
 
-    update(contextObject: mendix.lib.MxObject, callback?: Function) {
-        render(createElement(Carousel, {
-            contextGuid: contextObject ? contextObject.getGuid() : undefined,
+    private contextObject: mendix.lib.MxObject;
+    private dataHandler: CarouselData;
+
+    postCreate() {
+        const dataOptions: CarouselDataOptions = {
             dataSource: this.dataSource,
             dataSourceMicroflow: this.dataSourceMicroflow,
             entityConstraint: this.entityConstraint,
@@ -28,7 +32,16 @@ class CarouselDojo extends WidgetBase {
             onClickMicroflow: this.onClickMicroflow,
             onClickOptions: this.onClickOptions,
             staticImages: this.staticImages
-        }), this.domNode);
+        };
+        this.dataHandler = new CarouselData(dataOptions, (alert, images) =>
+            this.updateRendering(alert, images)
+        );
+    }
+
+    update(contextObject: mendix.lib.MxObject, callback?: Function) {
+        this.contextObject = contextObject;
+        this.resetSubscriptions();
+        this.dataHandler.setContext(contextObject).validateAndFetch();
 
         if (callback) callback();
     }
@@ -37,6 +50,28 @@ class CarouselDojo extends WidgetBase {
         unmountComponentAtNode(this.domNode);
 
         return true;
+    }
+
+    private updateRendering(alert?: string, images: Image[] = []) {
+        if (alert) {
+            render(createElement(Alert as any, { message: alert }), this.domNode);
+        } else {
+            render(createElement(Carousel, {
+                contextGuid: this.contextObject ? this.contextObject.getGuid() : undefined,
+                images
+            }), this.domNode);
+        }
+    }
+
+    private resetSubscriptions() {
+        this.unsubscribeAll();
+
+        if (this.contextObject) {
+            this.subscribe({
+                callback: () => this.dataHandler.validateAndFetch(),
+                guid: this.contextObject.getGuid()
+            });
+        }
     }
 }
 

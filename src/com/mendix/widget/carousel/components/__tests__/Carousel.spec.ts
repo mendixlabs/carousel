@@ -33,7 +33,7 @@ describe("Carousel", () => {
 
         expect(carousel).toBeElement(
             DOM.div({ className: "widget-carousel-wrapper" },
-                createElement(Alert),
+                createElement(Alert as any),
                 DOM.div({ className: "widget-carousel" },
                     DOM.div({
                         className: "widget-carousel-item-wrapper",
