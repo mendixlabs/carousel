@@ -15,6 +15,7 @@ class CarouselDojo extends WidgetBase {
     dataSourceMicroflow: string;
     imagesEntity: string;
     entityConstraint: string;
+    urlAttribute: string;
     onClickOptions: ClickOptions;
     onClickMicroflow: string;
     onClickForm: string;
@@ -31,7 +32,8 @@ class CarouselDojo extends WidgetBase {
             onClickForm: this.onClickForm,
             onClickMicroflow: this.onClickMicroflow,
             onClickOptions: this.onClickOptions,
-            staticImages: this.staticImages
+            staticImages: this.staticImages,
+            urlAttribute: this.urlAttribute
         };
         this.dataHandler = new CarouselData(dataOptions, (alert, images) =>
             this.updateRendering(alert, images)
@@ -54,7 +56,7 @@ class CarouselDojo extends WidgetBase {
 
     private updateRendering(alert?: string, images: Image[] = []) {
         if (alert) {
-            render(createElement(Alert as any, { message: alert }), this.domNode);
+            render(createElement(Alert, { message: alert }), this.domNode);
         } else {
             render(createElement(Carousel, {
                 contextGuid: this.contextObject ? this.contextObject.getGuid() : undefined,

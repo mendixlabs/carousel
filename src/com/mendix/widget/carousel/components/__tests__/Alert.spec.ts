@@ -6,7 +6,7 @@ import { Alert } from "../Alert";
 describe("Alert", () => {
     it("renders the structure", () => {
         const message = "This is an error";
-        const alert = shallow(createElement(Alert as any, { message }));
+        const alert = shallow(createElement(Alert, { message }));
 
         expect(alert).toBeElement(
             DOM.div({ className: "alert alert-danger widget-carousel-alert" }, message)
@@ -14,7 +14,7 @@ describe("Alert", () => {
     });
 
     it("renders no structure when the alert message is not specified", () => {
-        const alert = shallow(createElement(Alert as any));
+        const alert = shallow(createElement(Alert));
 
         expect(alert).toBeElement(null);
     });

@@ -40,7 +40,7 @@
         <property key="imagesEntity" type="entity" required="false">
             <caption>Images entity</caption>
             <category>Data source</category>
-            <description>The entity from which the images will be retrieved for the XPath and microflow options</description>
+            <description>The entity from which the images will be retrieved for the XPath and microflow options. Should extend System.Image or provide a url attribute.</description>
         </property>
         <property key="entityConstraint" type="entityConstraint" entityProperty="imagesEntity" required="false">
             <caption>XPath</caption>
@@ -48,10 +48,18 @@
             <description>Constraint on the images entity</description>
         </property>
         <property key="dataSourceMicroflow" type="microflow" required="false">
-            <caption>Microflow </caption>
+            <caption>Microflow</caption>
             <category>Data source</category>
             <description>Returns the images to display</description>
             <returnType type="Object" entityProperty="imagesEntity" isList="true"/>
+        </property>
+        <property key="urlAttribute" type="attribute" required="false" entityProperty="imagesEntity">
+            <caption>URL attribute</caption>
+            <category>Data source</category>
+            <description>The attribute holding the image urls. Overwrites url generation from System.Image</description>
+            <attributeTypes>
+                <attributeType name="String"/>
+            </attributeTypes>
         </property>
         <property key="onClickOptions" type="enumeration" defaultValue="doNothing">
             <caption>On click</caption>
@@ -64,13 +72,13 @@
             </enumerationValues>
         </property>
         <property key="onClickMicroflow" type="microflow" required="false" entityProperty="imagesEntity">
-            <caption>Microflow</caption>
+            <caption>On click microflow</caption>
             <category>Behavior</category>
             <description>The microflow to call when an image is clicked.</description>
             <returnType type="Void"/>
         </property>
         <property key="onClickForm" type="form" required="false">
-            <caption>Page</caption>
+            <caption>On click page</caption>
             <category>Behavior</category>
             <description>The page to open when an image is Clicked</description>
         </property>

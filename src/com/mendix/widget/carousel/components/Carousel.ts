@@ -67,7 +67,7 @@ class Carousel extends Component<CarouselProps, CarouselState> {
 
     render() {
         return DOM.div({ className: "widget-carousel-wrapper" },
-            createElement(Alert as any, { message: this.state.alertMessage }),
+            createElement(Alert, { message: this.state.alertMessage }),
             DOM.div({ className: "widget-carousel" },
                 DOM.div(
                     {

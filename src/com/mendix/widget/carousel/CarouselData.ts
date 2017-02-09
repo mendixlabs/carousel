@@ -6,6 +6,7 @@ interface CarouselDataOptions {
     dataSourceMicroflow: string;
     entityConstraint: string;
     imagesEntity: string;
+    urlAttribute: string;
     onClickOptions: ClickOptions;
     onClickMicroflow: string;
     onClickForm: string;
@@ -95,7 +96,9 @@ class CarouselData {
         const images = mxObjects.map((mxObject) => ({
             onClickForm: onClickOptions === "showPage" ? onClickForm : undefined,
             onClickMicroflow: onClickOptions === "callMicroflow" ? onClickMicroflow : undefined,
-            url: this.getFileUrl(mxObject.getGuid())
+            url: this.options.urlAttribute
+                ? mxObject.get(this.options.urlAttribute) as string
+                : this.getFileUrl(mxObject.getGuid())
         }));
 
         this.callback(undefined, images);
