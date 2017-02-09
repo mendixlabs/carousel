@@ -186,7 +186,7 @@ export class Carousel extends Component<CarouselProps, CarouselState> {
     private calculateSwipePercentage(event: CustomEvent, width: number): number {
         const maxPercentage = 100;
         const swipeOffset = event.detail.pageX - event.detail.originPageX;
-        return Math.floor(maxPercentage / width * swipeOffset);
+        return maxPercentage / width * swipeOffset;
     }
 
     private shouldSwipe(percentage: number) {
