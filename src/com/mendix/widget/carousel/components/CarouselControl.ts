@@ -1,4 +1,4 @@
-import { DOM, MouseEventHandler } from "react";
+import { DOM, MouseEventHandler, StatelessComponent } from "react";
 import * as classNames from "classnames";
 
 export interface CarouselControlProps {
@@ -6,7 +6,7 @@ export interface CarouselControlProps {
     onClick?: MouseEventHandler<HTMLDivElement>;
 }
 
-export const CarouselControl = (props: CarouselControlProps) =>
+export const CarouselControl: StatelessComponent<CarouselControlProps> = (props) =>
     DOM.div({ className: classNames("widget-carousel-control", props.direction), onClick: props.onClick },
         DOM.span({ className: classNames("glyphicon", "glyphicon-chevron-" + props.direction) })
     );

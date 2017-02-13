@@ -44,4 +44,19 @@ describe("CarouselItem", () => {
         expect(carouselItem.instance().props.active).toBe(false);
         expect(carouselItem.hasClass("active")).toBe(false);
     });
+
+    describe("image", () => {
+        const onClickSpy = jasmine.createSpy("onClick");
+        it("should respond to a single click", () => {
+            carouselItem = shallow(createElement(CarouselItem, {
+                url,
+                active: true,
+                onClick: onClickSpy
+            }));
+
+            carouselItem.simulate("click");
+
+            expect(onClickSpy).toHaveBeenCalled();
+        });
+    });
 });
