@@ -19,7 +19,7 @@
             <category>Data source</category>
             <description/>
             <properties>
-                <property key="url" type="image" required="true">
+                <property key="url" type="image">
                     <caption>Image</caption>
                     <category>Image</category>
                     <description>Image to add to the carousel</description>
@@ -40,7 +40,7 @@
         <property key="imagesEntity" type="entity" required="false">
             <caption>Images entity</caption>
             <category>Data source</category>
-            <description>The entity from which the images will be retrieved for the XPath and microflow options. Should extend System.Image or provide a url attribute.</description>
+            <description>The entity from which the images will be retrieved. Should extend System.Image or provide a url attribute.</description>
         </property>
         <property key="entityConstraint" type="entityConstraint" entityProperty="imagesEntity" required="false">
             <caption>XPath</caption>

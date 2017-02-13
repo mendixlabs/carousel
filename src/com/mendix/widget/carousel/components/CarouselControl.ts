@@ -14,3 +14,5 @@ export const CarouselControl: StatelessComponent<CarouselControlProps> = (props)
         },
         DOM.span({ className: classNames("glyphicon", "glyphicon-chevron-" + props.direction) })
     );
+
+CarouselControl.displayName = "CarouselControl";

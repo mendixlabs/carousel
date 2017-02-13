@@ -4,11 +4,10 @@ import * as WidgetBase from "mxui/widget/_WidgetBase";
 import { createElement } from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
-import { Carousel, Image } from "./components/Carousel";
-import { Alert } from "./components/Alert";
-import { CarouselData, CarouselDataOptions, ClickOptions, DataSource } from "./CarouselData";
+import { Image } from "./components/Carousel";
+import CarouselContainer, { ClickOptions, DataSource } from "./components/CarouselContainer";
 
-class CarouselDojo extends WidgetBase {
+class Carousel extends WidgetBase {
     // Properties from Mendix modeler
     staticImages: Image[];
     dataSource: DataSource;
@@ -20,30 +19,8 @@ class CarouselDojo extends WidgetBase {
     onClickMicroflow: string;
     onClickForm: string;
 
-    private contextObject: mendix.lib.MxObject;
-    private dataHandler: CarouselData;
-
-    postCreate() {
-        const dataOptions: CarouselDataOptions = {
-            dataSource: this.dataSource,
-            dataSourceMicroflow: this.dataSourceMicroflow,
-            entityConstraint: this.entityConstraint,
-            imagesEntity: this.imagesEntity,
-            onClickForm: this.onClickForm,
-            onClickMicroflow: this.onClickMicroflow,
-            onClickOptions: this.onClickOptions,
-            staticImages: this.staticImages,
-            urlAttribute: this.urlAttribute
-        };
-        this.dataHandler = new CarouselData(dataOptions, (alert, images) =>
-            this.updateRendering(alert, images)
-        );
-    }
-
-    update(contextObject: mendix.lib.MxObject, callback?: Function) {
-        this.contextObject = contextObject;
-        this.resetSubscriptions();
-        this.dataHandler.setContext(contextObject).validateAndFetch();
+    update(contextObject: mendix.lib.MxObject, callback?: () => void) {
+        this.updateRendering(contextObject);
 
         if (callback) callback();
     }
@@ -54,26 +31,19 @@ class CarouselDojo extends WidgetBase {
         return true;
     }
 
-    private updateRendering(alert?: string, images: Image[] = []) {
-        if (alert) {
-            render(createElement(Alert, { message: alert }), this.domNode);
-        } else {
-            render(createElement(Carousel, {
-                contextGuid: this.contextObject ? this.contextObject.getGuid() : undefined,
-                images
-            }), this.domNode);
-        }
-    }
-
-    private resetSubscriptions() {
-        this.unsubscribeAll();
-
-        if (this.contextObject) {
-            this.subscribe({
-                callback: () => this.dataHandler.validateAndFetch(),
-                guid: this.contextObject.getGuid()
-            });
-        }
+    private updateRendering(contextObject: mendix.lib.MxObject) {
+        render(createElement(CarouselContainer, {
+            contextObject,
+            dataSource: this.dataSource,
+            dataSourceMicroflow: this.dataSourceMicroflow,
+            entityConstraint: this.entityConstraint,
+            imagesEntity: this.imagesEntity,
+            onClickForm: this.onClickForm,
+            onClickMicroflow: this.onClickMicroflow,
+            onClickOptions: this.onClickOptions,
+            staticImages: this.staticImages,
+            urlAttribute: this.urlAttribute
+        }), this.domNode);
     }
 }
 
@@ -88,4 +58,4 @@ dojoDeclare("com.mendix.widget.carousel.Carousel", [ WidgetBase ], function(Sour
         }
     }
     return result;
-}(CarouselDojo));
+}(Carousel));

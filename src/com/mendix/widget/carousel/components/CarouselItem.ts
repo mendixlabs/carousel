@@ -23,3 +23,5 @@ export const CarouselItem: StatelessComponent<CarouselItemProps> = (props) =>
         },
         DOM.img({ alt: "Carousel image", src: props.url })
     );
+
+CarouselItem.displayName = "CarouselItem";

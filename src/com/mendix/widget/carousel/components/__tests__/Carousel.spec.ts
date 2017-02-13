@@ -21,7 +21,7 @@ describe("Carousel", () => {
             onClickMicroflow,
             url: image.imageUrl()
         } ];
-        return shallow(createElement(Carousel, { images, contextGuid }));
+        return shallow(createElement(Carousel, { images }));
     };
 
     beforeAll(() => {

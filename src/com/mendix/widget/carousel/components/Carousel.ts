@@ -8,19 +8,20 @@ import { CarouselItem, ItemStatus } from "./CarouselItem";
 import "../ui/Carousel.css";
 
 interface Image {
+    guid?: string;
     url: string;
     onClickMicroflow?: string;
     onClickForm?: string;
 }
 
 interface CarouselProps {
+    alertMessage?: string;
     images: Image[];
-    contextGuid?: string;
+    onClickAction?: (image: Image) => void;
 }
 
 interface CarouselState {
     activeIndex: number;
-    images?: Image[];
     alertMessage?: string;
     showControls?: boolean;
     position?: number;
@@ -59,6 +60,7 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         this.moveToTheRight = () => this.moveInDirection("right");
         this.state = {
             activeIndex: 0,
+            alertMessage: props.alertMessage,
             animate: false,
             position: 0,
             showControls: this.props.images.length > 1
@@ -86,13 +88,17 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         this.registerSwipeEvents();
     }
 
+    componentWillReceiveProps(newProps: CarouselProps) {
+        this.setState({ alertMessage: newProps.alertMessage, showControls: newProps.images.length > 1 });
+    }
+
     private createCarouselItems(images: Image[], activeIndex: number) {
         return images.map((image, index) => {
             const { position, status } = this.getItemStatus(index, activeIndex);
             return createElement(CarouselItem, {
                 getItemNode: (node: HTMLElement) => this.addCarouselItem(node),
                 key: index,
-                onClick: () => this.executeAction(image.onClickMicroflow, image.onClickForm),
+                onClick: () => { if (this.props.onClickAction) this.props.onClickAction(image); },
                 position,
                 status,
                 url: image.url
@@ -196,23 +202,6 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         return percentage > 0
             ? this.state.activeIndex > 0
             : this.state.activeIndex < this.carouselItems.length - 1;
-    }
-
-    private executeAction(microflow?: string, form?: string) {
-        if (microflow) {
-            window.mx.ui.action(microflow, {
-                error: (error: Error) =>
-                    this.setState({ alertMessage: `An error occurred while executing action: ${error.message}` }),
-                params: {
-                    guids: this.props.contextGuid ? [ this.props.contextGuid ] : []
-                }
-            });
-        } else if (form) {
-            window.mx.ui.openForm(form, {
-                error: (error: Error) =>
-                    this.setState({ alertMessage: `An error occurred while opening form: ${error.message}` })
-            });
-        }
     }
 }
 
