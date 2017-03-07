@@ -1,4 +1,4 @@
-import { Component, createElement } from "react";
+import { Component, DOM, createElement } from "react";
 import { Carousel, Image } from "./Carousel";
 import { Alert } from "./Alert";
 
@@ -18,6 +18,7 @@ interface CarouselContainerProps {
 interface CarouselContainerState {
     alertMessage?: string;
     images: Image[];
+    isLoading?: boolean;
     showAlert?: boolean;
 }
 
@@ -34,6 +35,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         this.state = {
             alertMessage,
             images: [],
+            isLoading: true,
             showAlert: !!alertMessage
         };
         this.resetSubscription(props.contextObject);
@@ -43,13 +45,19 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
     render() {
         if (this.state.showAlert) {
             return createElement(Alert as any, { message: this.state.alertMessage });
-        } else {
-            return createElement(Carousel, {
-                alertMessage: this.state.alertMessage,
-                images: this.state.images,
-                onClickAction: this.executeAction
-            });
         }
+        if (this.state.isLoading) {
+            return DOM.div(null,
+                DOM.i({ className: "glyphicon glyphicon-cog glyph-spin" }),
+                DOM.span(null, " Loading ...")
+            );
+        }
+
+        return createElement(Carousel, {
+            alertMessage: this.state.alertMessage,
+            images: this.state.images,
+            onClickAction: this.executeAction
+        });
     }
 
     componentDidMount() {
@@ -58,6 +66,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
 
     componentWillReceiveProps(nextProps: CarouselContainerProps) {
         this.resetSubscription(nextProps.contextObject);
+        this.setState({ isLoading: true });
         this.fetchData(nextProps.contextObject);
     }
 
@@ -100,7 +109,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
 
     private fetchData(contextObject: mendix.lib.MxObject) {
         if (this.props.dataSource === "static") {
-            this.setState({ images: this.props.staticImages });
+            this.setState({ images: this.props.staticImages, isLoading: false });
         } else if (this.props.dataSource === "XPath" && this.props.imagesEntity) {
             this.fetchImagesByXPath(contextObject ? contextObject.getGuid() : "");
         } else if (this.props.dataSource === "microflow" && this.props.dataSourceMicroflow) {
@@ -156,7 +165,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
                 : this.getFileUrl(mxObject.getGuid())
         }));
 
-        this.setState({ images });
+        this.setState({ images, isLoading: false });
     }
 
     private getFileUrl(guid: string): string {

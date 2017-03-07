@@ -48,16 +48,19 @@
         -moz-perspective: 1000px;
         perspective: 1000px;
     }
+
     .widget-carousel-item.next {
         -webkit-transform: translate3d(100%, 0, 0);
         transform: translate3d(100%, 0, 0);
         left: 0;
     }
+
     .widget-carousel-item.prev {
         -webkit-transform: translate3d(-100%, 0, 0);
         transform: translate3d(-100%, 0, 0);
         left: 0;
     }
+
     .widget-carousel-item.active {
         -webkit-transform: translate3d(0, 0, 0);
         transform: translate3d(0, 0, 0);
@@ -125,7 +128,7 @@
 @media screen and (min-width: 768px) {
     .widget-carousel-control .glyphicon-chevron-left,
     .widget-carousel-control .glyphicon-chevron-right {
-        width:30px;
+        width: 30px;
         height: 30px;
         margin-top: -15px;
         font-size: 30px
@@ -137,5 +140,50 @@
 
     .widget-carousel-control .glyphicon-chevron-right {
         margin-right: -15px
+    }
+}
+
+.glyph-spin {
+    -webkit-animation: spin 2s infinite linear;
+    -moz-animation: spin 2s infinite linear;
+    -o-animation: spin 2s infinite linear;
+    animation: spin 2s infinite linear;
+}
+
+@-moz-keyframes spin {
+    0% {
+        -moz-transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(359deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+    }
+}
+
+@-o-keyframes spin {
+    0% {
+        -o-transform: rotate(0deg);
+    }
+    100% {
+        -o-transform: rotate(359deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
     }
 }
