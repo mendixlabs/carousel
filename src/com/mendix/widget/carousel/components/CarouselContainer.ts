@@ -26,6 +26,7 @@ type ClickOptions = "doNothing" | "callMicroflow" | "showPage";
 
 class CarouselContainer extends Component<CarouselContainerProps, CarouselContainerState> {
     private subscriptionHandle: number;
+
     constructor(props: CarouselContainerProps) {
         super(props);
 

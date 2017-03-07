@@ -46,18 +46,21 @@ class Carousel extends Component<CarouselProps, CarouselState> {
     };
     private moveToTheLeft: MouseEventHandler<HTMLDivElement>;
     private moveToTheRight: MouseEventHandler<HTMLDivElement>;
+    private handleSwipeRightEnd: (event: Event) => void;
+    private handleSwipeLeftEnd: (event: Event) => void;
     private carouselWidth: number;
     private carouselItems: HTMLElement[];
-    private allItemsAdded: boolean;
 
     constructor(props: CarouselProps) {
         super(props);
 
         this.carouselWidth = 0;
         this.carouselItems = [];
-        this.allItemsAdded = false;
         this.moveToTheLeft = () => this.moveInDirection("left");
         this.moveToTheRight = () => this.moveInDirection("right");
+        this.handleSwipe = this.handleSwipe.bind(this);
+        this.handleSwipeLeftEnd = (event: CustomEvent) => this.handleSwipeEnd(event, "left");
+        this.handleSwipeRightEnd = (event: CustomEvent) => this.handleSwipeEnd(event, "right");
         this.state = {
             activeIndex: 0,
             alertMessage: props.alertMessage,
@@ -83,13 +86,17 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         );
     }
 
-    componentDidMount() {
-        this.allItemsAdded = true;
-        this.registerSwipeEvents();
+    componentWillReceiveProps(newProps: CarouselProps) {
+        if (this.carouselItems.length) {
+            this.removeSwipeEvents();
+            this.carouselItems = [];
+        }
+
+        this.setState({ alertMessage: newProps.alertMessage, showControls: newProps.images.length > 1 });
     }
 
-    componentWillReceiveProps(newProps: CarouselProps) {
-        this.setState({ alertMessage: newProps.alertMessage, showControls: newProps.images.length > 1 });
+    componentWillUnmount() {
+        this.removeSwipeEvents();
     }
 
     private createCarouselItems(images: Image[], activeIndex: number) {
@@ -135,8 +142,9 @@ class Carousel extends Component<CarouselProps, CarouselState> {
     }
 
     private addCarouselItem(carouselItem: HTMLElement) {
-        if (!this.allItemsAdded) {
+        if (carouselItem && (this.carouselItems.length < this.props.images.length)) {
             this.carouselItems.push(carouselItem);
+            this.registerSwipeEvents(carouselItem);
         }
     }
 
@@ -152,12 +160,19 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         });
     }
 
-    private registerSwipeEvents() {
+    private registerSwipeEvents(carouselItem: HTMLElement) {
+        carouselItem.addEventListener("swipeleft", this.handleSwipe);
+        carouselItem.addEventListener("swipeleftend", this.handleSwipeLeftEnd);
+        carouselItem.addEventListener("swiperight", this.handleSwipe);
+        carouselItem.addEventListener("swiperightend", this.handleSwipeRightEnd);
+    }
+
+    private removeSwipeEvents() {
         this.carouselItems.forEach((carouselItem: HTMLElement) => {
-            carouselItem.addEventListener("swipeleft", (event: CustomEvent) => this.handleSwipe(event));
-            carouselItem.addEventListener("swipeleftend", (event: CustomEvent) => this.handleSwipeEnd(event, "left"));
-            carouselItem.addEventListener("swiperight", (event: CustomEvent) => this.handleSwipe(event));
-            carouselItem.addEventListener("swiperightend", (event: CustomEvent) => this.handleSwipeEnd(event, "right"));
+            carouselItem.removeEventListener("swipeleft", this.handleSwipe);
+            carouselItem.removeEventListener("swipeleftend", this.handleSwipeLeftEnd);
+            carouselItem.removeEventListener("swiperight", this.handleSwipe);
+            carouselItem.removeEventListener("swiperightend", this.handleSwipeRightEnd);
         });
     }
 
@@ -174,22 +189,22 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         });
     }
 
-     private handleSwipeEnd(event: CustomEvent, direction: Direction) {
-         const swipeOutThreshold = 20;
-         const currentPercentage = this.calculateSwipePercentage(event, this.carouselWidth);
-         if (!this.shouldSwipe(currentPercentage)) { return; }
-         this.carouselWidth = 0;
-         const swipingOut = Math.abs(currentPercentage) > swipeOutThreshold;
-         if (swipingOut) {
-             this.moveInDirection(direction === "right" ? "left" : "right", true);
-         }
+    private handleSwipeEnd(event: CustomEvent, direction: Direction) {
+        const swipeOutThreshold = 20;
+        const currentPercentage = this.calculateSwipePercentage(event, this.carouselWidth);
+        if (!this.shouldSwipe(currentPercentage)) { return; }
+        this.carouselWidth = 0;
+        const swipingOut = Math.abs(currentPercentage) > swipeOutThreshold;
+        if (swipingOut) {
+            this.moveInDirection(direction === "right" ? "left" : "right", true);
+        }
 
-         this.setState({
-             activeIndex: this.state.activeIndex,
-             animate: true,
-             position: 0,
-             showControls: !this.state.showControls && !!this.carouselItems.length
-         });
+        this.setState({
+            activeIndex: this.state.activeIndex,
+            animate: true,
+            position: 0,
+            showControls: !this.state.showControls && !!this.carouselItems.length
+        });
     }
 
     private calculateSwipePercentage(event: CustomEvent, width: number): number {
