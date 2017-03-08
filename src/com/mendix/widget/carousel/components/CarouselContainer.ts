@@ -78,13 +78,13 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
     private validateProps(): string {
         let message = "";
         if (this.props.dataSource === "static" && !this.props.staticImages.length) {
-            message = "At least one static image is required";
+            message = "Configuration error: for data source static; at least one static image is required";
         }
         if (this.props.dataSource === "XPath" && !this.props.imagesEntity) {
-            message = "The images entity is required";
+            message = "Configuration error: for data source XPath; the images entity is required";
         }
         if (this.props.dataSource === "microflow" && !this.props.dataSourceMicroflow) {
-            message = "A data source microflow is required";
+            message = "Configuration error: for data source microflow; a data source microflow is required";
         }
 
         return message;
