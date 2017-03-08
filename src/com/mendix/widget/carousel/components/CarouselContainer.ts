@@ -1,6 +1,7 @@
 import { Component, DOM, createElement } from "react";
 import { Carousel, Image } from "./Carousel";
 import { Alert } from "./Alert";
+import { UrlHelper } from "../UrlHelper";
 
 interface CarouselContainerProps {
     contextObject: mendix.lib.MxObject;
@@ -109,7 +110,11 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
 
     private fetchData(contextObject: mendix.lib.MxObject) {
         if (this.props.dataSource === "static") {
-            this.setState({ images: this.props.staticImages, isLoading: false });
+            const images = this.props.staticImages.map((image) => {
+                image.url = UrlHelper.getStaticResourceUrl(image.url);
+                return image;
+            });
+            this.setState({ images, isLoading: false });
         } else if (this.props.dataSource === "XPath" && this.props.imagesEntity) {
             this.fetchImagesByXPath(contextObject ? contextObject.getGuid() : "");
         } else if (this.props.dataSource === "microflow" && this.props.dataSourceMicroflow) {
@@ -162,16 +167,10 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
             onClickMicroflow: onClickOptions === "callMicroflow" ? onClickMicroflow : undefined,
             url: this.props.urlAttribute
                 ? mxObject.get(this.props.urlAttribute) as string
-                : this.getFileUrl(mxObject.getGuid())
+                : UrlHelper.getDynamicResourceUrl(mxObject.getGuid(), mxObject.get("changeDate") as number)
         }));
 
         this.setState({ images, isLoading: false });
-    }
-
-    private getFileUrl(guid: string): string {
-        return guid
-            ? `file?target=window&guid=${guid}&csrfToken=${window.mx.session.getCSRFToken()}&time=${Date.now()}`
-            : "";
     }
 
     private executeAction(image: Image) {
