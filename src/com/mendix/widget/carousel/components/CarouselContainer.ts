@@ -126,7 +126,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         const { entityConstraint } = this.props;
         const requiresContext = entityConstraint && entityConstraint.indexOf("[%CurrentObject%]") > -1;
         if (!contextGuid && requiresContext) {
-            this.setState({ images: [] });
+            this.setState({ images: [], isLoading: false });
             return;
         }
 
@@ -161,6 +161,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
     }
 
     private setImagesFromMxObjects(mxObjects: mendix.lib.MxObject[]): void {
+        mxObjects = mxObjects || [];
         const { onClickOptions, onClickForm, onClickMicroflow } = this.props;
         const images = mxObjects.map((mxObject) => ({
             guid: mxObject.getGuid(),
@@ -179,18 +180,22 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         if (image.onClickMicroflow) {
             window.mx.ui.action(image.onClickMicroflow, {
                 context,
-                error: error => window.mx.ui.error(`An error occurred while executing action ${image.onClickMicroflow} : ${error.message}`)
+                error: error => window.mx.ui.error(
+                    `An error occurred while executing action ${image.onClickMicroflow} : ${error.message}`
+                )
             });
         } else if (image.onClickForm) {
             window.mx.ui.openForm(image.onClickForm, {
                 context,
-                error: error => window.mx.ui.error(`An error occurred while opening form ${image.onClickForm} : ${error.message}`)
+                error: error => window.mx.ui.error(
+                    `An error occurred while opening form ${image.onClickForm} : ${error.message}`
+                )
             });
         }
     }
 
     private getContext(image: Image): mendix.lib.MxContext | undefined {
-        const guid = image.guid ? image.guid : this.props.contextObject ? this.props.contextObject.getGuid() : undefined;
+        const guid = image.guid || this.props.contextObject ? this.props.contextObject.getGuid() : undefined;
         if (!guid) return;
 
         const entity = image.guid ? this.props.imagesEntity : this.props.contextObject.getEntity();
@@ -200,6 +205,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
 
         return context;
     }
+
 }
 
 export { CarouselContainer as default, CarouselContainerProps, ClickOptions, DataSource };
