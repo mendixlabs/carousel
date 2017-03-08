@@ -153,6 +153,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
                         images: []
                     }),
                 params: {
+                    applyto: "selection",
                     guids: this.props.contextObject ? [ this.props.contextObject.getGuid() ] : []
                 }
             });
@@ -174,21 +175,30 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
     }
 
     private executeAction(image: Image) {
-        const guids = image.guid
-            ? [ image.guid ]
-            : this.props.contextObject ? [ this.props.contextObject.getGuid() ] : [];
+        const context = this.getContext(image);
         if (image.onClickMicroflow) {
             window.mx.ui.action(image.onClickMicroflow, {
-                error: error =>
-                    window.mx.ui.error(`An error occurred while executing action: ${error.message}`),
-                params: { guids }
+                context,
+                error: error => window.mx.ui.error(`An error occurred while executing action ${image.onClickMicroflow} : ${error.message}`)
             });
         } else if (image.onClickForm) {
             window.mx.ui.openForm(image.onClickForm, {
-                error: error =>
-                    window.mx.ui.error(`An error occurred while opening form: ${error.message}`)
+                context,
+                error: error => window.mx.ui.error(`An error occurred while opening form ${image.onClickForm} : ${error.message}`)
             });
         }
+    }
+
+    private getContext(image: Image): mendix.lib.MxContext | undefined {
+        const guid = image.guid ? image.guid : this.props.contextObject ? this.props.contextObject.getGuid() : undefined;
+        if (!guid) return;
+
+        const entity = image.guid ? this.props.imagesEntity : this.props.contextObject.getEntity();
+        const context = new mendix.lib.MxContext();
+        context.setTrackId(guid);
+        context.setTrackEntity(entity);
+
+        return context;
     }
 }
 
