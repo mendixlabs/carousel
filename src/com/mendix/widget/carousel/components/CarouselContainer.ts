@@ -142,7 +142,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         });
     }
 
-    private fetchImagesByMicroflow(microflow: string) {
+    private fetchImagesByMicroflow(microflow: string, contextObject?: mendix.lib.MxObject) {
         if (microflow) {
             window.mx.ui.action(microflow, {
                 callback: (mxObjects: mendix.lib.MxObject[]) => this.setImagesFromMxObjects(mxObjects),
@@ -154,7 +154,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
                     }),
                 params: {
                     applyto: "selection",
-                    guids: this.props.contextObject ? [ this.props.contextObject.getGuid() ] : []
+                    guids: contextObject ? [ contextObject.getGuid() ] : []
                 }
             });
         }
@@ -194,18 +194,16 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         }
     }
 
-    private getContext(image: Image): mendix.lib.MxContext | undefined {
-        const guid = image.guid || this.props.contextObject ? this.props.contextObject.getGuid() : undefined;
-        if (!guid) return;
-
-        const entity = image.guid ? this.props.imagesEntity : this.props.contextObject.getEntity();
+    private getContext(image: Image): mendix.lib.MxContext {
         const context = new mendix.lib.MxContext();
-        context.setTrackId(guid);
-        context.setTrackEntity(entity);
+        if (image.guid) {
+            context.setContext(this.props.imagesEntity, image.guid);
+        } else if (this.props.contextObject) {
+            context.setContext(this.props.contextObject.getEntity(), this.props.contextObject.getGuid());
+        }
 
         return context;
     }
-
 }
 
 export { CarouselContainer as default, CarouselContainerProps, ClickOptions, DataSource };
