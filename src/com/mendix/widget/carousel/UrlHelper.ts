@@ -1,10 +1,9 @@
 export class UrlHelper {
-    static getAbsoluteUrl(url: string) {
-        return this.startsWith(url, "data:") ? url : window.mx.appUrl + url;
-    }
 
-    static getStaticResourceUrlFromPath(t: string) {
-        return this.getAbsoluteUrl(t);
+    static getStaticResourceUrlFromPath(path: string) {
+        if (this.startsWith(path, "data:")) return path;
+        // Static resource path should already contain cachebust from the modeler.
+        return mx.appUrl + path;
     }
 
     static getStaticResourceUrl(url: string) {
@@ -13,28 +12,34 @@ export class UrlHelper {
         if (!/^\w+:\/\//.test(url)) {
             url = this.getStaticResourceUrlFromPath(url);
         }
-        const cacheBurst = window.mx.server.getCacheBust();
-        if (this.startsWith(url, mx.appUrl) && !this.endsWith(url, cacheBurst)) {
-            return url += (/\?/.test(url) ? "&" : "?") + cacheBurst;
-        } else {
-            return url;
+
+        const cacheBust = mx.server.getCacheBust();
+
+        // Only add a cache bust if it's not already there and it's a Mendix url
+        if (this.startsWith(url, mx.appUrl) && !this.endsWith(url, cacheBust)) {
+            url += (/\?/.test(url) ? "&" : "?") + cacheBust;
         }
+
+        return url;
     }
 
-    static getDynamicResourcePath(guid: string, changeDate: number, thumbnail: boolean) {
-        let i = "file?" + [ "guid=" + guid, "changedDate=" + changeDate ].join("&");
-        if (thumbnail)
-            return i += "&thumb=true";
-        else
-            return i;
+    static getDynamicResourcePath(guid: string, changedDate: number, isThumbnail: boolean) {
+        let url = "file?" + [
+                "guid=" + guid,
+                "changedDate=" + changedDate
+            ].join("&");
+
+        if (isThumbnail) url += "&thumb=true";
+
+        return url;
     }
 
-    static getDynamicResourceUrl(guid: string, changeDate: number, thumbnail = false) {
-        return this.getAbsoluteUrl(this.getDynamicResourcePath(guid, changeDate, thumbnail));
+    static getDynamicResourceUrl(guid: string, changeDate: number, isThumbnail = false) {
+        return mx.remoteUrl + this.getDynamicResourcePath(guid, changeDate, isThumbnail);
     }
 
     private static startsWith(searchString: string, prefix: string) {
-        return 0 === searchString.indexOf(prefix);
+        return searchString.indexOf(prefix) === 0;
     }
 
     private static endsWith(searchString: string, suffix: string) {
