@@ -6,27 +6,12 @@ import { Carousel, CarouselProps, Image } from "../Carousel";
 import { CarouselControl } from "../CarouselControl";
 import { CarouselItem } from "../CarouselItem";
 
-import { image, lorem, random } from "faker";
-import { mockMendix } from "tests/mocks/Mendix";
+import { image } from "faker";
 
 describe("Carousel", () => {
     let images: Image[];
     let carousel: ShallowWrapper<CarouselProps, any>;
     let carouselWrapper: ShallowWrapper<CarouselProps, any>;
-    const defaultMx = window.mx;
-    const contextGuid = random.uuid();
-    const createCarousel = (onClickMicroflow?: string, onClickForm?: string) => {
-        images = [ {
-            onClickForm,
-            onClickMicroflow,
-            url: image.imageUrl()
-        } ];
-        return shallow(createElement(Carousel, { images }));
-    };
-
-    beforeAll(() => {
-        window.mx = mockMendix;
-    });
 
     it("renders the structure correctly", () => {
         carousel = shallow(createElement(Carousel));
@@ -193,72 +178,6 @@ describe("Carousel", () => {
         });
     });
 
-    describe("with click action", () => {
-        it("executes the specified microflow when a carousel item is clicked", () => {
-            spyOn(window.mx.ui, "action").and.callThrough();
-            carousel = createCarousel(lorem.word());
-
-            carousel.find(CarouselItem).simulate("click");
-
-            expect(window.mx.ui.action).toHaveBeenCalledWith(images[0].onClickMicroflow, {
-                error: jasmine.any(Function),
-                params: {
-                    guids: [ contextGuid ]
-                }
-            });
-        });
-
-        it("shows an error when a carousel item is clicked with an invalid microflow", () => {
-            const actionErrorMessage = "An error occurred while executing action: mx.ui.action error mock";
-            spyOn(window.mx.ui, "action").and.callFake((actionname: string, action: { error: (e: Error) => void}) => {
-                action.error(new Error("mx.ui.action error mock"));
-            });
-            carousel = createCarousel(lorem.word());
-
-            carousel.find(CarouselItem).simulate("click");
-
-            expect(carousel.state().alertMessage).toBe(actionErrorMessage);
-            const alert = carousel.find(Alert);
-            expect(alert.props().message).toBe(carousel.state().alertMessage);
-        });
-
-        it("opens the specified page when a carousel item is clicked", () => {
-            spyOn(window.mx.ui, "openForm").and.callThrough();
-            carousel = createCarousel(undefined, lorem.word());
-            const carouselItem = carousel.find(CarouselItem);
-
-            carouselItem.simulate("click");
-
-            expect(window.mx.ui.openForm).toHaveBeenCalledWith(images[0].onClickForm, { error: jasmine.any(Function) });
-        });
-
-        it("shows an error when a carousel item is clicked with an invalid form", () => {
-            const openFormErrorMessage = "An error occurred while opening form: mx.ui.openForm error mock";
-
-            spyOn(window.mx.ui, "openForm").and.callFake((path: string, args: { error: (e: Error) => void}) => {
-                args.error(new Error("mx.ui.openForm error mock"));
-            });
-            carousel = createCarousel(undefined, lorem.word());
-
-            carousel.find(CarouselItem).simulate("click");
-
-            expect(carousel.state().alertMessage).toBe(openFormErrorMessage);
-            const alert = carousel.find(Alert);
-            expect(alert.props().message).toBe(carousel.state().alertMessage);
-        });
-
-        it("executes the microflow with both microflow and form specified, on carousel item is clicked", () => {
-            spyOn(window.mx.ui, "action").and.callThrough();
-            spyOn(window.mx.ui, "openForm").and.callThrough();
-            carousel = createCarousel(lorem.word(), lorem.word());
-
-            carousel.find(CarouselItem).simulate("click");
-
-            expect(window.mx.ui.action).toHaveBeenCalled();
-            expect(window.mx.ui.openForm).not.toHaveBeenCalled();
-        });
-    });
-
     describe("on a mobile device", () => {
         const swipeEventMock = (swipeEvent: "right" | "left" | "rightend" | "leftend", pageX = 100) =>
             new CustomEvent(`swipe${swipeEvent}`, {
@@ -292,21 +211,19 @@ describe("Carousel", () => {
 
         it("registers swipe events on carousel items", () => {
             const carouselInstance = carousel.instance() as any;
-            carouselInstance.addCarouselItem(carouselItem1Mock);
             spyOn(carouselItem1Mock, "addEventListener").and.callThrough();
-            spyOn(carouselInstance, "registerSwipeEvents").and.callThrough();
+            spyOn(carouselInstance, "registerEvents").and.callThrough();
 
-            carouselInstance.componentDidMount();
+            carouselInstance.addCarouselItem(carouselItem1Mock);
 
-            expect(carouselInstance.registerSwipeEvents).toHaveBeenCalled();
-            expect(carouselItem1Mock.addEventListener).toHaveBeenCalledTimes(4);
+            expect(carouselInstance.registerEvents).toHaveBeenCalled();
+            expect(carouselItem1Mock.addEventListener).toHaveBeenCalledTimes(5);
         });
 
         it("does not show controls while swiping", () => {
             const carouselInstance = carousel.instance() as any;
             addCarouselItems(carouselInstance);
 
-            carouselInstance.componentDidMount();
             carouselItem1Mock.dispatchEvent(swipeEventMock("left"));
 
             expect(carousel.state("showControls")).toBe(false);
@@ -316,7 +233,6 @@ describe("Carousel", () => {
             const carouselInstance = carousel.instance() as any;
             addCarouselItems(carouselInstance);
 
-            carouselInstance.componentDidMount();
             carouselItem1Mock.dispatchEvent(swipeEventMock("left"));
 
             expect(carousel.state("animate")).toBe(false);
@@ -327,7 +243,6 @@ describe("Carousel", () => {
             addCarouselItems(carouselInstance);
             const currentPosition = 100;
 
-            carouselInstance.componentDidMount();
             carouselItem1Mock.dispatchEvent(swipeEventMock("left", currentPosition));
 
             expect(carousel.state("position")).toBeLessThan(0);
@@ -342,7 +257,6 @@ describe("Carousel", () => {
             addCarouselItems(carouselInstance);
             const currentPosition = 70;
 
-            carouselInstance.componentDidMount();
             carouselItem1Mock.dispatchEvent(swipeEventMock("left", currentPosition));
             carouselItem1Mock.dispatchEvent(swipeEventMock("leftend", currentPosition));
 
@@ -355,7 +269,6 @@ describe("Carousel", () => {
             addCarouselItems(carouselInstance);
             const currentPosition = 120;
 
-            carouselInstance.componentDidMount();
             carouselItem1Mock.dispatchEvent(swipeEventMock("right", currentPosition));
             carouselItem1Mock.dispatchEvent(swipeEventMock("rightend", currentPosition));
 
@@ -368,7 +281,6 @@ describe("Carousel", () => {
             addCarouselItems(carouselInstance);
             const currentPosition = 120;
 
-            carouselInstance.componentDidMount();
             carouselItem1Mock.dispatchEvent(swipeEventMock("rightend", currentPosition));
 
             expect(carousel.state("animate")).toBe(true);
@@ -380,7 +292,6 @@ describe("Carousel", () => {
             addCarouselItems(carouselInstance);
             const currentPosition = 120;
 
-            carouselInstance.componentDidMount();
             carouselItem1Mock.dispatchEvent(swipeEventMock("right", currentPosition));
             carouselItem1Mock.dispatchEvent(swipeEventMock("rightend", currentPosition));
 
@@ -392,7 +303,6 @@ describe("Carousel", () => {
             addCarouselItems(carouselInstance);
             const currentPosition = 120;
 
-            carouselInstance.componentDidMount();
             carouselItem1Mock.dispatchEvent(swipeEventMock("right", currentPosition));
             carouselItem1Mock.dispatchEvent(swipeEventMock("rightend", currentPosition));
 
@@ -405,13 +315,10 @@ describe("Carousel", () => {
             addCarouselItems(carouselInstance);
             const currentPosition = 70;
 
-            carouselInstance.componentDidMount();
             carouselItem1Mock.dispatchEvent(swipeEventMock("left", currentPosition));
             carouselItem1Mock.dispatchEvent(swipeEventMock("leftend", currentPosition));
 
             expect(carousel.state("activeIndex")).toBe(2);
         });
     });
-
-    afterAll(() => window.mx = defaultMx);
 });
