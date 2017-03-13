@@ -34,7 +34,7 @@
     left: 0
 }
 
-@media all and (transform-3d), (-webkit-transform-3d) {
+@media all {
     .widget-carousel-item-wrapper.animate,
     .widget-carousel-item-wrapper.animate > .widget-carousel-item {
         -webkit-transition: -webkit-transform 0.6s ease-in-out;
