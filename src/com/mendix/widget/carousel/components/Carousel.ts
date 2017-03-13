@@ -88,7 +88,7 @@ class Carousel extends Component<CarouselProps, CarouselState> {
 
     componentWillReceiveProps(newProps: CarouselProps) {
         if (this.carouselItems.length) {
-            this.removeSwipeEvents();
+            this.removeEvents();
             this.carouselItems = [];
         }
 
@@ -96,7 +96,7 @@ class Carousel extends Component<CarouselProps, CarouselState> {
     }
 
     componentWillUnmount() {
-        this.removeSwipeEvents();
+        this.removeEvents();
     }
 
     private createCarouselItems(images: Image[], activeIndex: number) {
@@ -144,7 +144,7 @@ class Carousel extends Component<CarouselProps, CarouselState> {
     private addCarouselItem(carouselItem: HTMLElement) {
         if (carouselItem && (this.carouselItems.length < this.props.images.length)) {
             this.carouselItems.push(carouselItem);
-            this.registerSwipeEvents(carouselItem);
+            this.registerEvents(carouselItem);
         }
     }
 
@@ -160,14 +160,15 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         });
     }
 
-    private registerSwipeEvents(carouselItem: HTMLElement) {
+    private registerEvents(carouselItem: HTMLElement) {
         carouselItem.addEventListener("swipeleft", this.handleSwipe);
         carouselItem.addEventListener("swipeleftend", this.handleSwipeLeftEnd);
         carouselItem.addEventListener("swiperight", this.handleSwipe);
         carouselItem.addEventListener("swiperightend", this.handleSwipeRightEnd);
+        carouselItem.addEventListener("touchmove", (event) => event.preventDefault());
     }
 
-    private removeSwipeEvents() {
+    private removeEvents() {
         this.carouselItems.forEach((carouselItem: HTMLElement) => {
             carouselItem.removeEventListener("swipeleft", this.handleSwipe);
             carouselItem.removeEventListener("swipeleftend", this.handleSwipeLeftEnd);
