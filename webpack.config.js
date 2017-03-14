@@ -4,11 +4,11 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-    entry: "./src/com/mendix/widget/carousel/Carousel.ts",
+    entry: "./src/components/CarouselContainer.ts",
     output: {
         path: path.resolve(__dirname, "dist/tmp"),
-        filename: "src/com/mendix/widget/carousel/Carousel.js",
-        libraryTarget:  "umd"
+        filename: "src/com/mendix/widget/custom/carousel/Carousel.js",
+        libraryTarget: "umd"
     },
     resolve: {
         extensions: [ ".ts", ".js", ".json" ],
@@ -26,7 +26,7 @@ module.exports = {
         ]
     },
     devtool: "source-map",
-    externals: [ "mxui/widget/_WidgetBase", "dojo/_base/declare" ],
+    externals: [ "react", "react-dom" ],
     plugins: [
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },
@@ -34,7 +34,7 @@ module.exports = {
         ], {
             copyUnmodified: true
         }),
-        new ExtractTextPlugin({ filename: "./src/com/mendix/widget/carousel/ui/Carousel.css" }),
+        new ExtractTextPlugin({ filename: "./src/com/mendix/widget/custom/carousel/ui/Carousel.css" }),
         new webpack.LoaderOptionsPlugin({
             debug: true
         })

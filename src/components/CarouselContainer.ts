@@ -4,7 +4,7 @@ import { Alert } from "./Alert";
 import { UrlHelper } from "../UrlHelper";
 
 interface CarouselContainerProps {
-    contextObject: mendix.lib.MxObject;
+    mxObject: mendix.lib.MxObject;
     dataSource: DataSource;
     dataSourceMicroflow: string;
     entityConstraint: string;
@@ -39,7 +39,6 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
             isLoading: true,
             showAlert: !!alertMessage
         };
-        this.resetSubscription(props.contextObject);
         this.executeAction = this.executeAction.bind(this);
     }
 
@@ -61,14 +60,10 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         });
     }
 
-    componentDidMount() {
-        if (!this.state.showAlert) this.fetchData(this.props.contextObject);
-    }
-
     componentWillReceiveProps(nextProps: CarouselContainerProps) {
-        this.resetSubscription(nextProps.contextObject);
+        this.resetSubscription(nextProps.mxObject);
         this.setState({ isLoading: true });
-        this.fetchData(nextProps.contextObject);
+        this.fetchData(nextProps.mxObject);
     }
 
     componentWillUnmount() {
@@ -118,7 +113,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         } else if (this.props.dataSource === "XPath" && this.props.imagesEntity) {
             this.fetchImagesByXPath(contextObject ? contextObject.getGuid() : "");
         } else if (this.props.dataSource === "microflow" && this.props.dataSourceMicroflow) {
-            this.fetchImagesByMicroflow(this.props.dataSourceMicroflow);
+            this.fetchImagesByMicroflow(this.props.dataSourceMicroflow, contextObject);
         }
     }
 
@@ -198,8 +193,8 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         const context = new mendix.lib.MxContext();
         if (image.guid) {
             context.setContext(this.props.imagesEntity, image.guid);
-        } else if (this.props.contextObject) {
-            context.setContext(this.props.contextObject.getEntity(), this.props.contextObject.getGuid());
+        } else if (this.props.mxObject) {
+            context.setContext(this.props.mxObject.getEntity(), this.props.mxObject.getGuid());
         }
 
         return context;
