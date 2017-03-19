@@ -174,6 +174,7 @@ class Carousel extends Component<CarouselProps, CarouselState> {
             carouselItem.removeEventListener("swipeleftend", this.handleSwipeLeftEnd);
             carouselItem.removeEventListener("swiperight", this.handleSwipe);
             carouselItem.removeEventListener("swiperightend", this.handleSwipeRightEnd);
+            carouselItem.removeEventListener("touchmove", (event) => event.preventDefault());
         });
     }
 

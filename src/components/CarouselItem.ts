@@ -17,11 +17,13 @@ export const CarouselItem: StatelessComponent<CarouselItemProps> = (props) =>
             className: classNames("widget-carousel-item", props.status),
             onClick: props.onClick,
             ref: (node: HTMLElement) => { if (props.getItemNode) { props.getItemNode(node); } },
-            style: typeof props.position !== "undefined"
-                ? { transform: `translate3d(${props.position}%, 0px, 0px)` }
-                : undefined
+            style: { transform: `translate3d(${props.position}%, 0px, 0px)` }
         },
         DOM.img({ alt: "Carousel image", src: props.url })
     );
+
+CarouselItem.defaultProps = {
+    position: 0
+};
 
 CarouselItem.displayName = "CarouselItem";

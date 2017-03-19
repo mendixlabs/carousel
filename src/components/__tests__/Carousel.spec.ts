@@ -209,7 +209,7 @@ describe("Carousel", () => {
             carousel = shallow(createElement(Carousel, { images }));
         });
 
-        it("registers swipe events on carousel items", () => {
+        it("registers events on carousel items", () => {
             const carouselInstance = carousel.instance() as any;
             spyOn(carouselItem1Mock, "addEventListener").and.callThrough();
             spyOn(carouselInstance, "registerEvents").and.callThrough();
@@ -218,6 +218,19 @@ describe("Carousel", () => {
 
             expect(carouselInstance.registerEvents).toHaveBeenCalled();
             expect(carouselItem1Mock.addEventListener).toHaveBeenCalledTimes(5);
+        });
+
+        it("removes registered events on carousel items when updated", () => {
+            const carouselInstance = carousel.instance() as any;
+            carouselInstance.componentWillReceiveProps({ alertMessage: "", images: [] });
+            spyOn(carouselItem1Mock, "removeEventListener").and.callThrough();
+            spyOn(carouselInstance, "removeEvents").and.callThrough();
+
+            carouselInstance.addCarouselItem(carouselItem1Mock);
+            carouselInstance.componentWillReceiveProps({ alertMessage: "", images: [] });
+
+            expect(carouselInstance.removeEvents).toHaveBeenCalled();
+            expect(carouselItem1Mock.removeEventListener).toHaveBeenCalledTimes(5);
         });
 
         it("does not show controls while swiping", () => {
@@ -319,6 +332,18 @@ describe("Carousel", () => {
             carouselItem1Mock.dispatchEvent(swipeEventMock("leftend", currentPosition));
 
             expect(carousel.state("activeIndex")).toBe(2);
+        });
+
+        it("removes registered events on carousel items when unmounting", () => {
+            const carouselInstance = carousel.instance() as any;
+            spyOn(carouselItem1Mock, "removeEventListener").and.callThrough();
+            spyOn(carouselInstance, "removeEvents").and.callThrough();
+
+            carouselInstance.addCarouselItem(carouselItem1Mock);
+            carouselInstance.componentWillUnmount();
+
+            expect(carouselInstance.removeEvents).toHaveBeenCalled();
+            expect(carouselItem1Mock.removeEventListener).toHaveBeenCalledTimes(5);
         });
     });
 });
