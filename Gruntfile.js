@@ -1,5 +1,13 @@
 "use strict";
-var webpackConfig = require("./webpack.config");
+const webpack = require("webpack");
+const webpackConfig = require("./webpack.config");
+const webpackConfigRelease = {};
+let plugins = webpackConfig.plugins.slice(0);
+plugins.push(new webpack.optimize.UglifyJsPlugin());
+Object.assign(webpackConfigRelease, webpackConfig, { 
+    devtool: false,
+    plugins: plugins
+});
 
 module.exports = function (grunt) {
     var pkg = grunt.file.readJSON("package.json");
@@ -10,7 +18,7 @@ module.exports = function (grunt) {
         watch: {
             updateWidgetFiles: {
                 "files": [ "./dist/tmp/src/**/*" ],
-                "tasks": [  "webpack", "compress:dist", "copy:distDeployment", "copy:mpk" ],
+                "tasks": [  "webpack:develop", "compress:dist", "copy:distDeployment", "copy:mpk" ],
                 options: {
                     debounceDelay: 250,
                     livereload: true
@@ -68,7 +76,8 @@ module.exports = function (grunt) {
         },
 
         webpack: {
-            renderer: webpackConfig
+            develop: webpackConfig,
+            release: webpackConfigRelease
         },
 
         clean: {
@@ -96,7 +105,12 @@ module.exports = function (grunt) {
     grunt.registerTask(
         "clean build",
         "Compiles all the assets and copies the files to the build directory.",
-        [ "checkDependencies", "clean:build", "webpack", "compress:dist", "copy:mpk" ]
+        [ "checkDependencies", "clean:build", "webpack:develop", "compress:dist", "copy:mpk" ]
+    );
+    grunt.registerTask(
+        "release",
+        "Compiles all the assets and copies the files to the build directory.",
+        [ "checkDependencies", "clean:build", "webpack:release", "compress:dist", "copy:mpk" ]
     );
     grunt.registerTask("build", [ "clean build" ]);
 };
