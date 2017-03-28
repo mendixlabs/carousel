@@ -36,6 +36,36 @@ The widget requires a context.
   
   For the microflow and XPath data source options, specifying a URL attribute will make the value of the URL attribute the priority. 
 
+## Developer
+
+To contribute, fork and clone.
+
+    git clone https://github.com/FlockOfBirds/carousel.git
+
+The code is in typescript. Use a typescript IDE of your choice, like Visual Studio Code or WebStorm.
+
+To set up the development environment, run:
+
+    npm install
+    
+Create a folder named dist in the project root.
+
+Create a Mendix test project in the dist folder and rename its root folder to MxTestProject. Changes to the widget code shall be automatically pushed to this test project.
+
+    dist/MxTestProject
+    
+To automatically compile, bundle and push code changes to the running test project, run:
+
+    grunt
+    
+To run the project unit tests, run:
+
+    npm test
+    
+or
+
+    karma start
+
 ## Issues
 Please report issues at https://github.com/mendixlabs/carousel/issues.
 
