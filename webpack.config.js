@@ -30,7 +30,8 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },
-            { from: "src/**/*.xml" }
+            { from: "src/**/*.xml" },
+            { from: "src/**/*.png" }
         ], {
             copyUnmodified: true
         }),
