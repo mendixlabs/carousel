@@ -2,7 +2,7 @@
 Displays images in a carousel.
 
 ## Features
-* Support different datasource:
+* Supports different data sources:
     * Set static images in the Modeler
     * Retrieve images from the database via XPath
     * Retrieve images via a microflow
@@ -28,20 +28,20 @@ The widget requires a context.
  ### Data source: XPath
  - On the Data source option of the Data source tab, select the XPath option.
  - Specify the image entity and the XPath constraint (if any).
- - In the Behaviour tab, you can configure on click behaviour i.e Do nothing, call microflow or show page.
+ - In the behavior tab, you can configure on click behavior i.e Do nothing, call microflow or show page.
  - For options call microflow and show page, a microflow or page must be specified respectively.
  
  ### Data source: Microflow
   - On the Data source option of the Data source tab, select the Microflow option.
   - Specify the image entity and the microflow to retrieve the carousel images from (both required).
-  - Refer to the XPath section for configuring click behaviour.
+  - Refer to the XPath section for configuring click behavior.
   
   For the microflow and XPath data source options, specifying a URL attribute will make the value of the URL attribute the priority. 
 
 ## Issues, suggestions and feature requests
 We are actively maintaining this widget, please report any issues or suggestion for improvement at https://github.com/mendixlabs/carousel/issues.
 
-## Developer
+## Development
 Prerequisite: Install git, node package manager, webpack CLI, grunt CLI, Karma CLI
 
 To contribute, fork and clone.
@@ -64,11 +64,11 @@ To automatically compile, bundle and push code changes to the running test proje
 
     grunt
     
-To run the project unit tests, run:
+To run the project unit tests with code coverage, results can be found at dist/testresults/coverage/index.html, run:
 
     npm test
     
-or
+or run the test continuously during development:
 
     karma start
 
