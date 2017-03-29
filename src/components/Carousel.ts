@@ -1,9 +1,9 @@
-import { Component, DOM, MouseEventHandler, createElement } from "react";
+import { Component, DOM, MouseEventHandler, SFCElement, createElement } from "react";
 import * as classNames from "classnames";
 
 import { Alert } from "./Alert";
-import { CarouselControl } from "./CarouselControl";
-import { CarouselItem, ItemStatus } from "./CarouselItem";
+import { CarouselControl, CarouselControlProps } from "./CarouselControl";
+import { CarouselItem, CarouselItemProps, ItemStatus } from "./CarouselItem";
 
 import "../ui/Carousel.css";
 
@@ -99,13 +99,15 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         this.removeEvents();
     }
 
-    private createCarouselItems(images: Image[], activeIndex: number) {
+    private createCarouselItems(images: Image[], activeIndex: number): Array<SFCElement<CarouselItemProps>> {
         return images.map((image, index) => {
             const { position, status } = this.getItemStatus(index, activeIndex);
             return createElement(CarouselItem, {
                 getItemNode: (node: HTMLElement) => this.addCarouselItem(node),
                 key: index,
-                onClick: () => { if (this.props.onClickAction) this.props.onClickAction(image); },
+                onClick: () => {
+                    if (this.props.onClickAction) this.props.onClickAction(image);
+                },
                 position,
                 status,
                 url: image.url
@@ -125,7 +127,7 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         };
     }
 
-    private createCarouselControls() {
+    private createCarouselControls(): Array<SFCElement<CarouselControlProps>> | null {
         if (!this.state.showControls) return null;
 
         const directions: Direction[] = this.state.activeIndex === this.props.images.length - 1
@@ -212,10 +214,11 @@ class Carousel extends Component<CarouselProps, CarouselState> {
     private calculateSwipePercentage(event: CustomEvent, width: number): number {
         const maxPercentage = 100;
         const swipeOffset = event.detail.pageX - event.detail.originPageX;
+
         return maxPercentage / width * swipeOffset;
     }
 
-    private shouldSwipe(percentage: number) {
+    private shouldSwipe(percentage: number): boolean {
         return percentage > 0
             ? this.state.activeIndex > 0
             : this.state.activeIndex < this.carouselItems.length - 1;

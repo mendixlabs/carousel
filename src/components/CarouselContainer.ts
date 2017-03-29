@@ -44,7 +44,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
 
     render() {
         if (this.state.showAlert) {
-            return createElement(Alert as any, { message: this.state.alertMessage });
+            return createElement(Alert, { message: this.state.alertMessage });
         }
         if (this.state.isLoading) {
             return DOM.div(null,

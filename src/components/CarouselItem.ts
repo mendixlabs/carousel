@@ -1,4 +1,4 @@
-import { DOM, MouseEvent, StatelessComponent } from "react";
+import { DOM, MouseEvent, SFC } from "react";
 import * as classNames from "classnames";
 
 export interface CarouselItemProps {
@@ -11,12 +11,12 @@ export interface CarouselItemProps {
 
 export type ItemStatus = "active" | "next" | "prev";
 
-export const CarouselItem: StatelessComponent<CarouselItemProps> = (props) =>
+export const CarouselItem: SFC<CarouselItemProps> = (props) =>
     DOM.div(
         {
             className: classNames("widget-carousel-item", props.status),
             onClick: props.onClick,
-            ref: (node: HTMLElement) => { if (props.getItemNode) { props.getItemNode(node); } },
+            ref: node => { if (props.getItemNode) { props.getItemNode(node); } },
             style: { transform: `translate3d(${props.position}%, 0px, 0px)` }
         },
         DOM.img({ alt: "Carousel image", src: props.url })
