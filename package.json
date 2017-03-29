@@ -1,5 +1,6 @@
 {
   "name": "carousel",
+  "widgetName": "Carousel",
   "version": "0.6.0",
   "description": "Displays images in a carousel",
   "scripts": {
@@ -17,7 +18,7 @@
   "devDependencies": {
     "@types/big.js": "0.0.31",
     "@types/classnames": "0.0.32",
-    "@types/core-js": "~0.9.36",
+    "@types/core-js": "0.9.36",
     "@types/enzyme": "^2.7.4",
     "@types/faker": "^3.1.32",
     "@types/jasmine": "^2.5.41",

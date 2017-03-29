@@ -7,7 +7,7 @@
         <property key="dataSource" type="enumeration" defaultValue="static">
             <caption>Data source</caption>
             <category>Data source</category>
-            <description>Where should the images be retrieved from?</description>
+            <description>Where the images should be retrieved from</description>
             <enumerationValues>
                 <enumerationValue key="static">Static</enumerationValue>
                 <enumerationValue key="XPath">XPath</enumerationValue>
@@ -74,13 +74,13 @@
         <property key="onClickMicroflow" type="microflow" required="false" entityProperty="imagesEntity">
             <caption>On click microflow</caption>
             <category>Behavior</category>
-            <description>The microflow to call when an image is clicked.</description>
+            <description>The microflow to call when an image is clicked</description>
             <returnType type="Void"/>
         </property>
         <property key="onClickForm" type="form" required="false">
             <caption>On click page</caption>
             <category>Behavior</category>
-            <description>The page to open when an image is Clicked</description>
+            <description>The page to open when an image is clicked</description>
         </property>
     </properties>
 </widget>

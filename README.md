@@ -2,9 +2,11 @@
 Displays images in a carousel.
 
 ## Features
-* Set static images in the Modeler
-* Retrieve images from the database via XPath
-* Retrieve images via a microflow
+* Support different datasource:
+    * Set static images in the Modeler
+    * Retrieve images from the database via XPath
+    * Retrieve images via a microflow
+* Image from mendix System.Images or from a URL
 * Navigate to the next or the previous image
 * Execute a microflow or open a page when an image is clicked
 * Swipe through the images on mobile devices
@@ -36,7 +38,11 @@ The widget requires a context.
   
   For the microflow and XPath data source options, specifying a URL attribute will make the value of the URL attribute the priority. 
 
+## Issues, suggestions and feature requests
+We are actively maintaining this widget, please report any issues or suggestion for improvement at https://github.com/mendixlabs/carousel/issues.
+
 ## Developer
+Prerequisite: Install git, node package manager, webpack CLI, grunt CLI, Karma CLI
 
 To contribute, fork and clone.
 
@@ -50,7 +56,7 @@ To set up the development environment, run:
     
 Create a folder named dist in the project root.
 
-Create a Mendix test project in the dist folder and rename its root folder to MxTestProject. Changes to the widget code shall be automatically pushed to this test project.
+Create a Mendix test project in the dist folder and rename its root folder to MxTestProject. Changes to the widget code shall be automatically pushed to this test project. Or get the test project from https://github.com/MendixLabs/carousel/releases/download/V1.0.0/Test.mpk
 
     dist/MxTestProject
     
@@ -65,9 +71,6 @@ To run the project unit tests, run:
 or
 
     karma start
-
-## Issues
-Please report issues at https://github.com/mendixlabs/carousel/issues.
 
 ## Disclaimer
 Status: In development

@@ -57,7 +57,7 @@ describe("Carousel", () => {
             expect(carouselItem.props().url).toBe(images[0].url);
         });
 
-        it("renders navigation controls", () => {
+        it("renders no navigation controls", () => {
             const carouselControls = carousel.find(CarouselControl);
 
             expect(carouselControls.length).toBe(0);
