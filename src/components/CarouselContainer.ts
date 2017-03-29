@@ -155,7 +155,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         }
     }
 
-    private setImagesFromMxObjects(mxObjects: mendix.lib.MxObject[]): void {
+    private setImagesFromMxObjects(mxObjects: mendix.lib.MxObject[]) {
         mxObjects = mxObjects || [];
         const { onClickOptions, onClickForm, onClickMicroflow } = this.props;
         const images = mxObjects.map((mxObject) => ({
@@ -164,7 +164,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
             onClickMicroflow: onClickOptions === "callMicroflow" ? onClickMicroflow : undefined,
             url: this.props.urlAttribute
                 ? mxObject.get(this.props.urlAttribute) as string
-                : UrlHelper.getDynamicResourceUrl(mxObject.getGuid(), mxObject.get("changeDate") as number)
+                : UrlHelper.getDynamicResourceUrl(mxObject.getGuid(), mxObject.get("changedDate") as number)
         }));
 
         this.setState({ images, isLoading: false });

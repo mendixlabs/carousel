@@ -34,8 +34,8 @@ export class UrlHelper {
         return url;
     }
 
-    static getDynamicResourceUrl(guid: string, changeDate: number, isThumbnail = false) {
-        return mx.remoteUrl + this.getDynamicResourcePath(guid, changeDate, isThumbnail);
+    static getDynamicResourceUrl(guid: string, changedDate: number, isThumbnail = false) {
+        return mx.remoteUrl + this.getDynamicResourcePath(guid, changedDate, isThumbnail);
     }
 
     private static startsWith(searchString: string, prefix: string) {
