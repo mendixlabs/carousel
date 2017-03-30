@@ -69,6 +69,7 @@ class MxUiMock implements mx.ui {
     ): void { /* */ }
     showLogin(messageCode: number): void { /* */ }
     translate(lib: string, errorName: string): string { return lib + "_" + errorName };
+    reload(callback?: () => void): void{}
 }
 
 let mxMockObject =  MxMock.prototype;
