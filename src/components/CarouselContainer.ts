@@ -26,8 +26,9 @@ interface CarouselContainerState {
 type DataSource = "static" | "XPath" | "microflow";
 type ClickOptions = "doNothing" | "callMicroflow" | "showPage";
 
-class CarouselContainer extends Component<CarouselContainerProps, CarouselContainerState> {
+export default class CarouselContainer extends Component<CarouselContainerProps, CarouselContainerState> {
     private subscriptionHandle: number;
+    private subscriptionCallback: (mxObject: mendix.lib.MxObject) => () => void;
 
     constructor(props: CarouselContainerProps) {
         super(props);
@@ -40,6 +41,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
             showAlert: !!alertMessage
         };
         this.executeAction = this.executeAction.bind(this);
+        this.subscriptionCallback = mxObject => () => this.fetchData(mxObject);
     }
 
     render() {
@@ -67,7 +69,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
     }
 
     componentWillUnmount() {
-        this.unSubscribe();
+        if (this.subscriptionHandle) window.mx.data.unsubscribe(this.subscriptionHandle);
     }
 
     private validateProps(): string {
@@ -85,25 +87,19 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         return message;
     }
 
-    private resetSubscription(contextObject: mendix.lib.MxObject) {
-        this.unSubscribe();
+    private resetSubscription(mxObject: mendix.lib.MxObject) {
+        if (this.subscriptionHandle) window.mx.data.unsubscribe(this.subscriptionHandle);
 
-        if (contextObject) {
+        if (mxObject) {
             this.subscriptionHandle = window.mx.data.subscribe({
-                callback: () => this.fetchData(contextObject),
-                guid: contextObject.getGuid()
+                callback: this.subscriptionCallback(mxObject),
+                guid: mxObject.getGuid()
             });
         }
 
     }
 
-    private unSubscribe() {
-        if (this.subscriptionHandle) {
-            window.mx.data.unsubscribe(this.subscriptionHandle);
-        }
-    }
-
-    private fetchData(contextObject: mendix.lib.MxObject) {
+    private fetchData(mxObject: mendix.lib.MxObject) {
         if (this.props.dataSource === "static") {
             const images = this.props.staticImages.map((image) => {
                 image.url = UrlHelper.getStaticResourceUrl(image.url);
@@ -111,9 +107,9 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
             });
             this.setState({ images, isLoading: false });
         } else if (this.props.dataSource === "XPath" && this.props.imagesEntity) {
-            this.fetchImagesByXPath(contextObject ? contextObject.getGuid() : "");
+            this.fetchImagesByXPath(mxObject ? mxObject.getGuid() : "");
         } else if (this.props.dataSource === "microflow" && this.props.dataSourceMicroflow) {
-            this.fetchImagesByMicroflow(this.props.dataSourceMicroflow, contextObject);
+            this.fetchImagesByMicroflow(this.props.dataSourceMicroflow, mxObject);
         }
     }
 
@@ -137,7 +133,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         });
     }
 
-    private fetchImagesByMicroflow(microflow: string, contextObject?: mendix.lib.MxObject) {
+    private fetchImagesByMicroflow(microflow: string, mxObject?: mendix.lib.MxObject) {
         if (microflow) {
             window.mx.ui.action(microflow, {
                 callback: (mxObjects: mendix.lib.MxObject[]) => this.setImagesFromMxObjects(mxObjects),
@@ -149,7 +145,7 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
                     }),
                 params: {
                     applyto: "selection",
-                    guids: contextObject ? [ contextObject.getGuid() ] : []
+                    guids: mxObject ? [ mxObject.getGuid() ] : []
                 }
             });
         }
@@ -200,5 +196,3 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
         return context;
     }
 }
-
-export { CarouselContainer as default, CarouselContainerProps, ClickOptions, DataSource };

@@ -50,23 +50,29 @@ class Carousel extends Component<CarouselProps, CarouselState> {
     private handleSwipeLeftEnd: (event: Event) => void;
     private carouselWidth: number;
     private carouselItems: HTMLElement[];
+    private onClickAction: (image: Image) => () => void;
 
     constructor(props: CarouselProps) {
         super(props);
 
         this.carouselWidth = 0;
         this.carouselItems = [];
-        this.moveToTheLeft = () => this.moveInDirection("left");
-        this.moveToTheRight = () => this.moveInDirection("right");
-        this.handleSwipe = this.handleSwipe.bind(this);
-        this.handleSwipeLeftEnd = (event: CustomEvent) => this.handleSwipeEnd(event, "left");
-        this.handleSwipeRightEnd = (event: CustomEvent) => this.handleSwipeEnd(event, "right");
         this.state = {
             activeIndex: 0,
             alertMessage: props.alertMessage,
             animate: false,
             position: 0,
             showControls: this.props.images.length > 1
+        };
+
+        this.moveToTheLeft = () => this.moveInDirection("left");
+        this.moveToTheRight = () => this.moveInDirection("right");
+        this.handleSwipe = this.handleSwipe.bind(this);
+        this.addCarouselItem = this.addCarouselItem.bind(this);
+        this.handleSwipeLeftEnd = (event: CustomEvent) => this.handleSwipeEnd(event, "left");
+        this.handleSwipeRightEnd = (event: CustomEvent) => this.handleSwipeEnd(event, "right");
+        this.onClickAction = (image) => () => {
+            if (props.onClickAction) props.onClickAction(image);
         };
     }
 
@@ -103,11 +109,9 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         return images.map((image, index) => {
             const { position, status } = this.getItemStatus(index, activeIndex);
             return createElement(CarouselItem, {
-                getItemNode: (node: HTMLElement) => this.addCarouselItem(node),
+                getItemNode: this.addCarouselItem,
                 key: index,
-                onClick: () => {
-                    if (this.props.onClickAction) this.props.onClickAction(image);
-                },
+                onClick: this.onClickAction(image),
                 position,
                 status,
                 url: image.url
