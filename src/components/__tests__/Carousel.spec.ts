@@ -222,6 +222,7 @@ describe("Carousel", () => {
             const carouselInstance = carousel.instance() as any;
             addCarouselItems(carouselInstance);
             const currentPosition = 100;
+            carouselInstance.swipeStartPosition = 180;
 
             carouselItem1Mock.dispatchEvent(swipeEventMock("left", currentPosition));
 
@@ -236,6 +237,7 @@ describe("Carousel", () => {
             const carouselInstance = carousel.instance() as any;
             addCarouselItems(carouselInstance);
             const currentPosition = 70;
+            carouselInstance.swipeStartPosition = 180;
 
             carouselItem1Mock.dispatchEvent(swipeEventMock("left", currentPosition));
             carouselItem1Mock.dispatchEvent(swipeEventMock("leftend", currentPosition));
@@ -248,6 +250,7 @@ describe("Carousel", () => {
             const carouselInstance = carousel.instance() as any;
             addCarouselItems(carouselInstance);
             const currentPosition = 120;
+            carouselInstance.swipeStartPosition = 12;
 
             carouselItem1Mock.dispatchEvent(swipeEventMock("right", currentPosition));
             carouselItem1Mock.dispatchEvent(swipeEventMock("rightend", currentPosition));

@@ -51,6 +51,7 @@ class Carousel extends Component<CarouselProps, CarouselState> {
     private carouselWidth: number;
     private carouselItems: HTMLElement[];
     private onClickAction: (image: Image) => () => void;
+    private swipeStartPosition: number;
 
     constructor(props: CarouselProps) {
         super(props);
@@ -200,24 +201,27 @@ class Carousel extends Component<CarouselProps, CarouselState> {
     private handleSwipeEnd(event: CustomEvent, direction: Direction) {
         const swipeOutThreshold = 20;
         const currentPercentage = this.calculateSwipePercentage(event, this.carouselWidth);
-        if (!this.shouldSwipe(currentPercentage)) { return; }
-        this.carouselWidth = 0;
-        const swipingOut = Math.abs(currentPercentage) > swipeOutThreshold;
-        if (swipingOut) {
-            this.moveInDirection(direction === "right" ? "left" : "right", true);
+        if (this.shouldSwipe(currentPercentage)) {
+            this.carouselWidth = 0;
+            const swipingOut = Math.abs(currentPercentage) > swipeOutThreshold;
+            if (swipingOut) {
+                this.moveInDirection(direction === "right" ? "left" : "right", true);
+            }
         }
 
+        this.swipeStartPosition = 0;
         this.setState({
             activeIndex: this.state.activeIndex,
             animate: true,
             position: 0,
-            showControls: !this.state.showControls && !!this.carouselItems.length
+            showControls: !!this.carouselItems.length
         });
     }
 
     private calculateSwipePercentage(event: CustomEvent, width: number): number {
         const maxPercentage = 100;
-        const swipeOffset = event.detail.pageX - event.detail.originPageX;
+        if (!this.swipeStartPosition) this.swipeStartPosition = event.detail.pageX;
+        const swipeOffset = event.detail.pageX - this.swipeStartPosition;
 
         return maxPercentage / width * swipeOffset;
     }
