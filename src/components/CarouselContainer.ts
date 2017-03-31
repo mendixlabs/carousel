@@ -186,7 +186,7 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
     }
 
     private getContext(image: Image): mendix.lib.MxContext {
-        const context = new mendix.lib.MxContext();
+        const context = new window.mendix.lib.MxContext();
         if (image.guid) {
             context.setContext(this.props.imagesEntity, image.guid);
         } else if (this.props.mxObject) {

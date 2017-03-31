@@ -71,9 +71,3 @@ To run the project unit tests with code coverage, results can be found at dist/t
 or run the test continuously during development:
 
     karma start
-
-## Disclaimer
-Status: In development
-
-This widget should not be used in a production environment.
-No guarantees are given that this works or keeps working, until it is officially released.
