@@ -3,7 +3,7 @@ const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = {
+const widgetConfig = {
     entry: "./src/components/CarouselContainer.ts",
     output: {
         path: path.resolve(__dirname, "dist/tmp"),
@@ -30,7 +30,8 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },
-            { from: "src/**/*.xml" }
+            { from: "src/**/*.xml" },
+            { from: "src/**/*.png", to: "src/com/mendix/widget/custom/carousel/" }
         ], {
             copyUnmodified: true
         }),
@@ -40,3 +41,28 @@ module.exports = {
         })
     ]
 };
+
+const previewConfig = {
+    entry: "./src/Carousel.webmodeler.ts",
+    output: {
+        path: path.resolve(__dirname, "dist/tmp"),
+        filename: "src/Carousel.webmodeler.js",
+        libraryTarget: "commonjs"
+    },
+    resolve: {
+        extensions: [ ".ts", ".js" ]
+    },
+    module: {
+        rules: [
+            { test: /\.ts$/, use: "ts-loader" },
+            { test: /\.css$/, use: "raw-loader" }
+        ]
+    },
+    devtool: "inline-source-map",
+    externals: [ "react", "react-dom" ],
+    plugins: [
+        new webpack.LoaderOptionsPlugin({ debug: true })
+    ]
+};
+
+module.exports = [ widgetConfig, previewConfig ];
