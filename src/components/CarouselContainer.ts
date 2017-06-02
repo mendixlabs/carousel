@@ -200,4 +200,4 @@ class CarouselContainer extends Component<CarouselContainerProps, CarouselContai
     }
 }
 
-export { CarouselContainer as default, CarouselContainerProps }
+export { CarouselContainer as default, CarouselContainerProps };
