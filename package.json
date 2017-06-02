@@ -10,7 +10,9 @@
   },
   "pre-commit": [
     "pretest",
-    "lint",
+    "lint"
+  ],
+  "pre-push": [
     "test"
   ],
   "repository": {
@@ -65,6 +67,7 @@
     "mendix-client": "git+https://github.com/FlockOfBirds/Mendix-client-typing.git",
     "node-sass": "^4.5.3",
     "pre-commit": "^1.2.2",
+    "pre-push": "^0.1.1",
     "raw-loader": "^0.5.1",
     "react": "^15.5.4",
     "react-addons-test-utils": "^15.5.1",
