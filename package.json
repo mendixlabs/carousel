@@ -5,8 +5,14 @@
   "description": "Displays images in a carousel",
   "scripts": {
     "pretest": "tsc",
-    "test": "karma start --single-run --codeCoverage && node tests/remap.js"
+    "test": "karma start --single-run --codeCoverage && node tests/remap.js",
+    "lint": "tslint -c tslint.json '**/*.ts' '**/*.tsx' --exclude '**/node_modules/**'"
   },
+  "pre-commit": [
+    "pretest",
+    "lint",
+    "test"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/mendixlabs/carousel"
@@ -56,11 +62,14 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.3",
     "mendix-client": "git+https://github.com/FlockOfBirds/Mendix-client-typing.git",
+    "node-sass": "^4.5.3",
+    "pre-commit": "^1.2.2",
     "raw-loader": "^0.5.1",
     "react": "^15.4.2",
     "react-addons-test-utils": "^15.4.2",
     "react-dom": "^15.4.2",
     "remap-istanbul": "^0.9.0",
+    "sass-loader": "^6.0.5",
     "source-map-loader": "^0.2.0",
     "style-loader": "^0.13.2",
     "ts-loader": "^2.0.3",

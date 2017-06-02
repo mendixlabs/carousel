@@ -4,9 +4,9 @@ import { Carousel, Image } from "./components/Carousel";
 import CarouselContainer, { CarouselContainerProps } from "./components/CarouselContainer";
 import { Alert } from "./components/Alert";
 
-import * as css from "./ui/Carousel.css";
+import * as css from "./ui/Carousel.scss";
 // tslint:disable-next-line
-const image = require("base64-image-loader!../assets/Screenshot_carousel.png");
+const image = require("base64-image-loader!./img/Preview.jpg");
 
 declare function require(url: string): string;
 
