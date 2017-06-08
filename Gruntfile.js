@@ -2,21 +2,16 @@
 const webpack = require("webpack");
 const webpackConfig = require("./webpack.config");
 const webpackConfigRelease = [ {}, {} ];
-const widgetPlugins = webpackConfig[0].plugins.slice();
-widgetPlugins.push(new webpack.optimize.UglifyJsPlugin());
-Object.assign(webpackConfigRelease[0], webpackConfig[0], {
-    devtool: false,
-    plugins: widgetPlugins
-});
-const previewPlugins = webpackConfig[1].plugins.slice();
-previewPlugins.push(new webpack.optimize.UglifyJsPlugin());
-Object.assign(webpackConfigRelease[1], webpackConfig[1], {
-    devtool: false,
-    plugins: previewPlugins
+webpackConfig.forEach(function (config, index) {
+    config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+    Object.assign(webpackConfigRelease[index], config, {
+        devtool: false,
+        plugins: config.plugins
+    });
 });
 
 module.exports = function (grunt) {
-    var pkg = grunt.file.readJSON("package.json");
+    const pkg = grunt.file.readJSON("package.json");
     grunt.initConfig({
 
         watch: {
@@ -80,8 +75,8 @@ module.exports = function (grunt) {
         file_append: {
             addSourceURL: {
                 files: [ {
-                    append: "\n\n//# sourceURL=Carousel.webmodeler.js\n",
-                    input: "dist/tmp/src/Carousel.webmodeler.js"
+                    append: `\n\n//# sourceURL=${pkg.widgetName}.webmodeler.js\n`,
+                    input: `dist/tmp/src/${pkg.widgetName}.webmodeler.js`
                 } ]
             }
         },
