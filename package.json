@@ -1,7 +1,7 @@
 {
   "name": "carousel",
   "widgetName": "Carousel",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Displays images in a carousel",
   "scripts": {
     "pretest": "tsc",
