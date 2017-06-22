@@ -3,11 +3,6 @@ import { Component, createElement } from "react";
 import { Carousel, Image } from "./components/Carousel";
 import CarouselContainer, { CarouselContainerProps } from "./components/CarouselContainer";
 
-// tslint:disable-next-line
-const image = require("base64-image-loader!./img/Preview.jpg");
-
-declare function require(url: string): string;
-
 // tslint:disable class-name
 export class preview extends Component<CarouselContainerProps, {}> {
     render() {
@@ -20,7 +15,7 @@ export class preview extends Component<CarouselContainerProps, {}> {
     }
 
     private getImages(props: CarouselContainerProps): Image[] {
-        const defaultImages = [ { url: image } ];
+        const defaultImages = [ { url: require("./img/Preview.jpg") } ];
         if (props.dataSource === "static") {
             return props.staticImages && props.staticImages.length
                 ? props.staticImages
