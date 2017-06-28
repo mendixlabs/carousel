@@ -19,7 +19,7 @@ export class preview extends Component<CarouselContainerProps, {}> {
     }
 
     private getImages(props: CarouselContainerProps): Image[] {
-        const defaultImages = [ { url: require("./img/Preview.jpg") } ];
+        const defaultImages = [ { url: require("./img/Preview.png") } ];
         if (props.dataSource === "static") {
             return props.staticImages && props.staticImages.length
                 ? props.staticImages
