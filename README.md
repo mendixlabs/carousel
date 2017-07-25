@@ -12,7 +12,7 @@ Displays images in a carousel.
 * Swipe through the images on mobile devices
 
 ## Dependencies
-Mendix 7.1
+Mendix 7.4
 
 ## Demo project
 http://carouselwidget.mxapps.io
@@ -21,7 +21,7 @@ http://carouselwidget.mxapps.io
 The widget requires a context.
  ### Data source: Static
  - On the Data source option of the Data source tab, select the static option if its not already selected by default.
- - On the Static images option of the same tab, click new to add static images from the modeller and also configure an onclick action.
+ - On the Static images option of the same tab, click new to add static images from the modeler and also configure an onclick action.
  - For the on click options, configure only one of the two (either calling a microflow or a page).
  - Configuring both options will only trigger the microflow.
  
