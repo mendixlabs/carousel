@@ -19,7 +19,7 @@ export const CarouselItem: SFC<CarouselItemProps> = (props) =>
             ref: node => { if (props.getItemNode) { props.getItemNode(node); } },
             style: { transform: `translate3d(${props.position}%, 0px, 0px)` }
         },
-        createElement("img", { className: "Carousel image", alt: "Carousel image", src: props.url })
+        createElement("img", { className: "carousel-image", alt: "Carousel image", src: props.url })
     );
 
 CarouselItem.defaultProps = {

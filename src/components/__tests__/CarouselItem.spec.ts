@@ -26,7 +26,7 @@ describe("CarouselItem", () => {
                     className: "widget-carousel-item active",
                     style: { transform: "translate3d(100%, 0px, 0px)" }
                 },
-                createElement("img", { className: "Carousel image", alt: "Carousel image", src: url })
+                createElement("img", { className: "carousel-image", alt: "Carousel image", src: url })
             ));
     });
 

@@ -6,7 +6,11 @@ import { Alert } from "../Alert";
 describe("Alert", () => {
     it("renders the structure", () => {
         const message = "This is an error";
-        const alert = shallow(createElement(Alert, { message }));
+        const alert = shallow(createElement(Alert, {
+            bootstrapStyle: "danger",
+            className: "widget-carousel-alert",
+            message
+        }));
 
         expect(alert).toBeElement(
             createElement("div", { className: "alert alert-danger widget-carousel-alert" }, message)

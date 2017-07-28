@@ -83,7 +83,11 @@ class Carousel extends Component<CarouselProps, CarouselState> {
         const { className, images, style } = this.props;
 
         return createElement("div", { className: classNames("widget-carousel-wrapper", className), style },
-            createElement(Alert, { message: this.state.alertMessage }),
+            createElement(Alert as any, {
+                bootstrapStyle: "danger",
+                className: "widget-carousel-alert",
+                message: this.state.alertMessage
+            }),
             createElement("div", { className: "widget-carousel" },
                 createElement("div",
                     {
