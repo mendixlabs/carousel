@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.org/mendixlabs/carousel.svg?branch=master)](https://travis-ci.org/mendixlabs/carousel)
+[![Dependency Status](https://david-dm.org/mendixlabs/carousel.svg)](https://david-dm.org/mendixlabs/carousel)
+[![Dev Dependency Status](https://david-dm.org/mendixlabs/carousel.svg#info=devDependencies)](https://david-dm.org/mendixlabs/carousel#info=devDependencies)
+[![codecov](https://codecov.io/gh/mendixlabs/carousel/branch/master/graph/badge.svg)](https://codecov.io/gh/mendixlabs/carousel)
+
 # Carousel
 Displays images in a carousel.
 
