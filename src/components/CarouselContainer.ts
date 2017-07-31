@@ -53,7 +53,11 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
 
     render() {
         if (this.state.showAlert) {
-            return createElement(Alert as any, { bootstrapStyle: "danger", message: this.state.alertMessage });
+            return createElement(Alert, {
+                bootstrapStyle: "danger",
+                className: "widget-carousel-alert",
+                message: this.state.alertMessage
+            });
         }
         if (this.state.isLoading) {
             return createElement("div", {},

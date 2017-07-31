@@ -18,7 +18,7 @@ describe("Carousel", () => {
 
         expect(carousel).toBeElement(
             createElement("div", { className: "widget-carousel-wrapper" },
-                createElement(Alert as any, { bootstrapStyle: "danger", className: "widget-carousel-alert" }),
+                createElement(Alert, { bootstrapStyle: "danger", className: "widget-carousel-alert" }),
                 createElement("div", { className: "widget-carousel" },
                     createElement("div", {
                         className: "widget-carousel-item-wrapper",
