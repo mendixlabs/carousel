@@ -3,6 +3,10 @@ class HomePage {
     public get carouselLeftArrow() {
         return browser.element("#mxui_widget_ReactCustomWidgetWrapper_0 > div > div.widget-carousel-control.left");
     }
+    public get lastImage() {
+        // tslint:disable-next-line:max-line-length
+        return browser.element("#mxui_widget_ReactCustomWidgetWrapper_0 > div > div.widget-carousel-item-wrapper.animate > div.widget-carousel-item.active > img");
+    }
     public get carouselRightArrow() {
         return browser.element("#mxui_widget_ReactCustomWidgetWrapper_0 > div > div.widget-carousel-control.right");
     }
@@ -13,7 +17,7 @@ class HomePage {
         return browser.isExisting("#mxui_widget_ReactCustomWidgetWrapper_0 > div > div.widget-carousel-control.right");
     }
     public open(): void {
-        browser.url("/");
+        browser.url("/p/differentArrows");
     }
 }
 

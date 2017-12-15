@@ -20,15 +20,18 @@ describe("Carousel", () => {
         expect (defaultPage.leftArrowExist as boolean).toBe(true);
     });
 
-    it("should disable the right arrow when it navigates to the last image", () => {
-        defaultPage.carousel.waitForVisible();
-        defaultPage.carouselRightArrow.waitForVisible();
-        defaultPage.carouselRightArrow.click();
-        defaultPage.carouselRightArrow.waitForVisible();
-        defaultPage.carouselRightArrow.click();
-        defaultPage.carouselRightArrow.waitForVisible();
-        defaultPage.carouselRightArrow.click();
+    describe("when on the last image item", () => {
+        it("should disable the right arrow", () => {
+            defaultPage.open();
+            defaultPage.carousel.waitForVisible();
+            defaultPage.carouselRightArrow.waitForVisible();
+            defaultPage.carouselRightArrow.click();
 
-        expect (defaultPage.rightArrowExist as boolean).toBe(false);
+            defaultPage.carouselRightArrow.waitForVisible();
+            defaultPage.carouselRightArrow.click();
+
+            defaultPage.lastImage.waitForVisible(10000);
+            expect(defaultPage.rightArrowExist as boolean).toBe(false);
+        });
     });
 });
