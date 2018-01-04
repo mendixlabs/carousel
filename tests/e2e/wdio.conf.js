@@ -14,7 +14,7 @@ exports.config = {
     coloredLogs: true,
     bail: 0,
     screenshotPath: "dist/wdio/",
-    baseUrl: debug ? "http://localhost:8080/" : "https://carouselwidget.mxapps.io/",
+    baseUrl: debug ? "http://localhost:8080/" : "https://carousel.mxapps.io/",
     waitforTimeout: 360000,
     connectionRetryTimeout: 200000,
     connectionRetryCount: 2,

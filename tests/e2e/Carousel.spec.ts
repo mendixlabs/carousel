@@ -30,6 +30,9 @@ describe("Carousel", () => {
             defaultPage.carouselRightArrow.waitForVisible();
             defaultPage.carouselRightArrow.click();
 
+            defaultPage.carouselRightArrow.waitForVisible();
+            defaultPage.carouselRightArrow.click();
+
             defaultPage.lastImage.waitForVisible(10000);
             expect(defaultPage.rightArrowExist as boolean).toBe(false);
         });

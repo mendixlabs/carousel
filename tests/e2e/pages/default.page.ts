@@ -1,23 +1,22 @@
 class HomePage {
-    public get carousel() { return browser.element(".mx-name-carousel3"); }
+    public get carousel() { return browser.element(".mx-name-carousel2"); }
     public get carouselLeftArrow() {
-        return browser.element("#mxui_widget_ReactCustomWidgetWrapper_0 > div > div.widget-carousel-control.left");
+        return browser.element(".widget-carousel-wrapper > div > div.widget-carousel-control.left");
     }
     public get lastImage() {
-        // tslint:disable-next-line:max-line-length
-        return browser.element("#mxui_widget_ReactCustomWidgetWrapper_0 > div > div.widget-carousel-item-wrapper.animate > div.widget-carousel-item.active > img");
+        return browser.element(".widget-carousel-wrapper > div > div.widget-carousel-item-wrapper.animate > div.widget-carousel-item.active > img");
     }
     public get carouselRightArrow() {
-        return browser.element("#mxui_widget_ReactCustomWidgetWrapper_0 > div > div.widget-carousel-control.right");
+        return browser.element(".widget-carousel-wrapper > div > div.widget-carousel-control.right");
     }
     public get leftArrowExist() {
-        return browser.isExisting("#mxui_widget_ReactCustomWidgetWrapper_0 > div > div.widget-carousel-control.left");
+        return browser.isExisting(".widget-carousel-wrapper > div > div.widget-carousel-control.left");
     }
     public get rightArrowExist() {
-        return browser.isExisting("#mxui_widget_ReactCustomWidgetWrapper_0 > div > div.widget-carousel-control.right");
+        return browser.isExisting(".widget-carousel-wrapper > div > div.widget-carousel-control.right");
     }
     public open(): void {
-        browser.url("/p/differentArrows");
+        browser.url("/");
     }
 }
 

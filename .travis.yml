@@ -22,9 +22,9 @@ cache:
   - node_modules
 env:
   global:
-  - MX_APP_NAME=carouselwidget
+  - MX_APP_NAME=carousel
   - MX_BRANCH_NAME=trunk
-  - MX_PROJECT_ID=741ba687-b2e1-4f6e-85aa-25687e217331
+  - MX_PROJECT_ID=de292b0b-ed34-4bb0-abb6-1660b10c0d72
   - MX_ENVIRONMENT=Sandbox
   - MX_USER=ci@flockofbirds.org
 deploy:
