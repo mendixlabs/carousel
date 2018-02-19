@@ -135,10 +135,8 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
                 return image;
             });
             this.setState({ images, isLoading: false });
-        } else if (this.props.dataSource === "XPath" && this.props.imagesEntity) {
-            if (mxObject) {
+        } else if (this.props.dataSource === "XPath" && this.props.imagesEntity && mxObject) {
                 this.fetchImagesByXPath(mxObject);
-            }
         } else if (this.props.dataSource === "microflow" && this.props.dataSourceMicroflow) {
             this.fetchImagesByMicroflow(this.props.dataSourceMicroflow, mxObject);
         }
@@ -153,7 +151,7 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
             return;
         }
 
-        const constraint = entityConstraint ? entityConstraint.replace("[%CurrentObject%]", contextGuid) : "";
+        const constraint = entityConstraint ? entityConstraint.replace(/\[%CurrentObject%\]/g, contextGuid) : "";
 
         window.mx.data.get({
             callback: mxObjects => this.setImagesFromMxObjects(mxObjects),
