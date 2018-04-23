@@ -11,7 +11,13 @@ interface Image {
     guid?: string;
     url: string;
     onClickMicroflow?: string;
+    onClickNanoflow?: Nanoflow;
     onClickForm?: string;
+}
+
+export interface Nanoflow {
+    nanoflow: object[];
+    paramsSpec: { Progress: string };
 }
 
 interface CarouselProps {

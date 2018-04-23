@@ -1,7 +1,7 @@
 import { Component, createElement } from "react";
 import { findDOMNode } from "react-dom";
 
-import { Carousel, Image } from "./Carousel";
+import { Carousel, Image, Nanoflow } from "./Carousel";
 import { Alert } from "./Alert";
 import { UrlHelper } from "../UrlHelper";
 
@@ -20,6 +20,7 @@ export interface CarouselContainerProps extends WrapperProps {
     urlAttribute: string;
     onClickOptions: ClickOptions;
     onClickMicroflow: string;
+    onClickNanoflow: Nanoflow;
     onClickForm: string;
     staticImages: Image[];
 }
@@ -32,7 +33,7 @@ interface CarouselContainerState {
 }
 
 type DataSource = "static" | "XPath" | "microflow";
-type ClickOptions = "doNothing" | "callMicroflow" | "showPage";
+type ClickOptions = "doNothing" | "callMicroflow" | "callNanoflow" | "showPage";
 
 export default class CarouselContainer extends Component<CarouselContainerProps, CarouselContainerState> {
     private subscriptionHandle: number;
@@ -207,12 +208,13 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
     }
 
     private getImageProps(mxObject: mendix.lib.MxObject, url: string) {
-        const { onClickOptions, onClickForm, onClickMicroflow } = this.props;
+        const { onClickOptions, onClickForm, onClickMicroflow, onClickNanoflow } = this.props;
 
         return {
             guid: mxObject.getGuid(),
             onClickForm: onClickOptions === "showPage" ? onClickForm : undefined,
             onClickMicroflow: onClickOptions === "callMicroflow" ? onClickMicroflow : undefined,
+            onClickNanoflow: onClickOptions === "callNanoflow" ? onClickNanoflow : undefined,
             url
         };
     }
@@ -232,12 +234,20 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
 
     private executeAction(image: Image) {
         const context = this.getContext(image);
+
         if (image.onClickMicroflow) {
             window.mx.ui.action(image.onClickMicroflow, {
                 context,
                 error: error => window.mx.ui.error(
                     `An error occurred while executing action ${image.onClickMicroflow} : ${error.message}`
                 )
+            });
+        } else if (image.onClickNanoflow) {
+            window.mx.data.callNanoflow({
+                context,
+                error: error => mx.ui.error(`Error executing nanoflow ${image.onClickNanoflow} : ${error.message}`),
+                nanoflow: image.onClickNanoflow,
+                origin: this.props.mxform
             });
         } else if (image.onClickForm) {
             window.mx.ui.openForm(image.onClickForm, {
