@@ -137,7 +137,7 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
             });
             this.setState({ images, isLoading: false });
         } else if (this.props.dataSource === "XPath" && this.props.imagesEntity && mxObject) {
-                this.fetchImagesByXPath(mxObject);
+            this.fetchImagesByXPath(mxObject);
         } else if (this.props.dataSource === "microflow" && this.props.dataSourceMicroflow) {
             this.fetchImagesByMicroflow(this.props.dataSourceMicroflow, mxObject);
         }
@@ -222,7 +222,7 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
     private getUrl(url: string): string {
         mx.data.getImageUrl(url,
             objectUrl => {
-                    this.xpathUrl = objectUrl;
+                this.xpathUrl = objectUrl;
             },
             error => this.setState({
                 alertMessage: `Error in imageviewer while retrieving image url: ${error.message}`
@@ -242,7 +242,7 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
                     `An error occurred while executing action ${image.onClickMicroflow} : ${error.message}`
                 )
             });
-        } else if (image.onClickNanoflow) {
+        } else if (image.onClickNanoflow && image.onClickNanoflow.nanoflow) {
             window.mx.data.callNanoflow({
                 context,
                 error: error => mx.ui.error(`Error executing nanoflow ${image.onClickNanoflow} : ${error.message}`),
