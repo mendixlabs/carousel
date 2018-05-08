@@ -4,7 +4,7 @@
   "version": "1.4.0",
   "description": "Displays images in a carousel",
   "scripts": {
-    "start": "nodemon --watch webpack.config.js --watch Gruntfile.js --exec \"grunt",
+    "start": "nodemon --watch webpack.config.js --watch Gruntfile.js --exec grunt",
     "emit": "tsc",
     "pretest": "tsc && npm run lint && npm run build",
     "test": "npm run test:unit && npm run test:conditional",
@@ -101,8 +101,8 @@
     "wdio-dot-reporter": "0.0.9",
     "wdio-jasmine-framework": "^0.3.2",
     "wdio-selenium-standalone-service": "0.0.9",
-    "wdio-spec-reporter": "^0.1.2",
-    "webdriverio": "^4.8.0",
+    "wdio-spec-reporter": "^0.1.1",
+    "webdriverio": "^4.10.0",
     "webpack": "^3.4.1",
     "webpack-dev-server": "^2.5.0",
     "webpack-merge": "^4.1.0"

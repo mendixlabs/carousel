@@ -245,7 +245,7 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
         } else if (image.onClickNanoflow && image.onClickNanoflow.nanoflow) {
             window.mx.data.callNanoflow({
                 context,
-                error: error => mx.ui.error(`Error executing nanoflow ${image.onClickNanoflow} : ${error.message}`),
+                error: error => mx.ui.error(`An error occurred while executing the on click nanoflow: ${error.message}`),
                 nanoflow: image.onClickNanoflow,
                 origin: this.props.mxform
             });
