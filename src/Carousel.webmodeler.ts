@@ -19,7 +19,7 @@ export class preview extends Component<CarouselContainerProps, {}> {
     }
 
     private getImages(props: CarouselContainerProps): Image[] {
-        const defaultImages = [ { url: require("./img/Preview.png") } ];
+        const defaultImages = [ { url: require("./img/Preview.png"), openPageAs: props.openPageAs } ];
         if (props.dataSource === "static") {
             return props.staticImages && props.staticImages.length
                 ? props.staticImages
@@ -43,6 +43,7 @@ export function getVisibleProperties(props: CarouselContainerProps, visibilityMa
     visibilityMap.onClickForm = props.onClickOptions === "showPage";
     visibilityMap.onClickMicroflow = props.onClickOptions === "callMicroflow";
     visibilityMap.onClickNanoflow = props.onClickOptions === "callNanoflow";
+    visibilityMap.openPageAs = props.onClickOptions === "showPage";
 
     return visibilityMap;
 }

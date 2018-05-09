@@ -1,7 +1,7 @@
 import { Component, createElement } from "react";
 import { findDOMNode } from "react-dom";
 
-import { Carousel, Image, Nanoflow } from "./Carousel";
+import { Carousel, Image, Nanoflow, PageLocation } from "./Carousel";
 import { Alert } from "./Alert";
 import { UrlHelper } from "../UrlHelper";
 
@@ -22,6 +22,7 @@ export interface CarouselContainerProps extends WrapperProps {
     onClickMicroflow: string;
     onClickNanoflow: Nanoflow;
     onClickForm: string;
+    openPageAs: PageLocation;
     staticImages: Image[];
 }
 
@@ -254,7 +255,10 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
                 context,
                 error: error => window.mx.ui.error(
                     `An error occurred while opening form ${image.onClickForm} : ${error.message}`
-                )
+                ),
+                location: this.props.dataSource === "static"
+                    ? image.openPageAs
+                    : this.props.openPageAs
             });
         }
     }

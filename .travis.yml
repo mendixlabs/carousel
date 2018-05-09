@@ -1,7 +1,13 @@
 sudo: required
 language: node_js
 node_js:
-- "6"
+- "8"
+addons:
+  apt:
+    sources:
+    - google-chrome
+    packages:
+    - google-chrome-stable
 before_install:
 - npm i -g npm
 - npm install grunt-cli -g
@@ -21,9 +27,9 @@ cache:
   - node_modules
 env:
   global:
-  - MX_APP_NAME=carousel
+  - MX_APP_NAME=carouselwidget
   - MX_BRANCH_NAME=trunk
-  - MX_PROJECT_ID=fd556f33-bbc2-4c60-bf68-a36d7f4ef872
+  - MX_PROJECT_ID=741ba687-b2e1-4f6e-85aa-25687e217331
   - MX_ENVIRONMENT=Sandbox
   - MX_USER=ci@flockofbirds.org
 deploy:

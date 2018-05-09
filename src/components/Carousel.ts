@@ -13,6 +13,7 @@ interface Image {
     onClickMicroflow?: string;
     onClickNanoflow?: Nanoflow;
     onClickForm?: string;
+    openPageAs: PageLocation;
 }
 
 export interface Nanoflow {
@@ -47,6 +48,7 @@ interface CustomEvent extends Event {
 }
 
 type Direction = "right" | "left";
+export type PageLocation = "popup" | "modal" | "content";
 
 class Carousel extends Component<CarouselProps, CarouselState> {
     static defaultProps: CarouselProps = {

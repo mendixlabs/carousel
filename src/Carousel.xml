@@ -41,6 +41,16 @@
                     <category>On click action</category>
                     <description>Page to open when the image is clicked</description>
                 </property>
+                <property key="openPageAs" type="enumeration" defaultValue="content">
+                    <caption>Open page as</caption>
+                    <category>On click action</category>
+                    <description/>
+                    <enumerationValues>
+                        <enumerationValue key="content">Full page</enumerationValue>
+                        <enumerationValue key="popup">Popup</enumerationValue>
+                        <enumerationValue key="modal">Blocking popup</enumerationValue>
+                    </enumerationValues>
+                </property>
             </properties>
         </property>
         <property key="imagesEntity" type="entity" required="false">
@@ -94,6 +104,16 @@
             <caption>On click page</caption>
             <category>Behavior</category>
             <description>The page to open when an image is clicked</description>
+        </property>
+        <property key="openPageAs" type="enumeration" defaultValue="content">
+            <caption>Open page as</caption>
+            <category>Behavior</category>
+            <description/>
+            <enumerationValues>
+                <enumerationValue key="content">Full page</enumerationValue>
+                <enumerationValue key="popup">Popup</enumerationValue>
+                <enumerationValue key="modal">Blocking popup</enumerationValue>
+            </enumerationValues>
         </property>
     </properties>
 </widget>
