@@ -48,7 +48,7 @@ interface CustomEvent extends Event {
 }
 
 type Direction = "right" | "left";
-export type PageLocation = "popup" | "modal" | "content";
+export type PageLocation = "content" | "popup" | "modal";
 
 class Carousel extends Component<CarouselProps, CarouselState> {
     static defaultProps: CarouselProps = {

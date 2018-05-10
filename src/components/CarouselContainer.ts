@@ -209,14 +209,16 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
     }
 
     private getImageProps(mxObject: mendix.lib.MxObject, url: string) {
-        const { onClickOptions, onClickForm, onClickMicroflow, onClickNanoflow } = this.props;
+        const { onClickOptions, onClickForm, onClickMicroflow, onClickNanoflow, openPageAs } = this.props;
 
         return {
             guid: mxObject.getGuid(),
             onClickForm: onClickOptions === "showPage" ? onClickForm : undefined,
             onClickMicroflow: onClickOptions === "callMicroflow" ? onClickMicroflow : undefined,
             onClickNanoflow: onClickOptions === "callNanoflow" ? onClickNanoflow : undefined,
+            openPageAs,
             url
+
         };
     }
 
@@ -256,9 +258,7 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
                 error: error => window.mx.ui.error(
                     `An error occurred while opening form ${image.onClickForm} : ${error.message}`
                 ),
-                location: this.props.dataSource === "static"
-                    ? image.openPageAs
-                    : this.props.openPageAs
+                location: image.openPageAs
             });
         }
     }

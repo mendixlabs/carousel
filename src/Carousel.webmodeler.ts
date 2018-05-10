@@ -41,9 +41,9 @@ export function getVisibleProperties(props: CarouselContainerProps, visibilityMa
     visibilityMap.imagesEntity = props.dataSource === "microflow";
 
     visibilityMap.onClickForm = props.onClickOptions === "showPage";
+    visibilityMap.openPageAs = props.onClickOptions === "showPage";
     visibilityMap.onClickMicroflow = props.onClickOptions === "callMicroflow";
     visibilityMap.onClickNanoflow = props.onClickOptions === "callNanoflow";
-    visibilityMap.openPageAs = props.onClickOptions === "showPage";
 
     return visibilityMap;
 }
