@@ -71,6 +71,15 @@
                 <enumerationValue key="showPage">Show page</enumerationValue>
             </enumerationValues>
         </property>
+        <property key="onClickRotation" type="enumeration" defaultValue="rotateBothSide">
+            <caption>On click rotation</caption>
+            <category>Behavior</category>
+            <description>The action will rotate images one side or both side</description>
+            <enumerationValues>
+                <enumerationValue key="rotateSingleSide">Rotate One Side</enumerationValue>
+                <enumerationValue key="rotateBothSide">Rotate Both Side</enumerationValue>
+            </enumerationValues>
+        </property>
         <property key="onClickMicroflow" type="microflow" required="false" entityProperty="imagesEntity">
             <caption>On click microflow</caption>
             <category>Behavior</category>

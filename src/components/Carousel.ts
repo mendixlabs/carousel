@@ -20,6 +20,7 @@ interface CarouselProps {
     onClickAction?: (image: Image) => void;
     className?: string;
     style?: object;
+    onClickRotation?: string;
 }
 
 interface CarouselState {
@@ -143,9 +144,11 @@ class Carousel extends Component<CarouselProps, CarouselState> {
     private createCarouselControls(): Array<SFCElement<CarouselControlProps>> | null {
         if (!this.state.showControls) return null;
 
-        const directions: Direction[] = this.state.activeIndex === this.props.images.length - 1
+        const directions: Direction[] = this.props.onClickRotation === "rotateSingleSide"
+            ? (this.state.activeIndex === this.props.images.length - 1
             ? [ "left" ]
-            : this.state.activeIndex === 0 ? [ "right" ] : [ "right", "left" ];
+            : this.state.activeIndex === 0 ? [ "right" ] : [ "right", "left" ])
+            : [ "right", "left" ];
 
         return directions.map((direction, index) =>
             createElement(CarouselControl, {
@@ -165,12 +168,27 @@ class Carousel extends Component<CarouselProps, CarouselState> {
 
     private moveInDirection(direction: Direction, swiping = false) {
         const { activeIndex } = this.state;
-        const newActiveIndex = direction === "right" ? activeIndex + 1 : activeIndex - 1;
+        let newActiveIndex: number;
+        if (direction === "left") {
+            newActiveIndex = activeIndex;
+            const slidesLength = this.props.images.length;
+            if (newActiveIndex < 1) {
+                newActiveIndex = slidesLength;
+            }
+            --newActiveIndex;
+        } else {
+            newActiveIndex = activeIndex;
+            const slidesLength = this.props.images.length - 1;
+            if (newActiveIndex === slidesLength) {
+                newActiveIndex = -1;
+            }
+            ++newActiveIndex;
+        }
 
         this.setState({
             activeIndex: newActiveIndex,
             alertMessage: "",
-            animate: true,
+            animate: false,
             position: swiping ? this.state.position : 0
         });
     }

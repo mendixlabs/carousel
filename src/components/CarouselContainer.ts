@@ -14,6 +14,7 @@ interface WrapperProps {
 
 export interface CarouselContainerProps extends WrapperProps {
     dataSource: DataSource;
+    onClickRotation: ClickRotation;
     dataSourceMicroflow: string;
     entityConstraint: string;
     imagesEntity: string;
@@ -33,6 +34,7 @@ interface CarouselContainerState {
 
 type DataSource = "static" | "XPath" | "microflow";
 type ClickOptions = "doNothing" | "callMicroflow" | "showPage";
+type ClickRotation = "rotateSingleSide" | "rotateBothSide";
 
 export default class CarouselContainer extends Component<CarouselContainerProps, CarouselContainerState> {
     private subscriptionHandle: number;
@@ -70,12 +72,12 @@ export default class CarouselContainer extends Component<CarouselContainerProps,
                 createElement("span", {}, " Loading ...")
             );
         }
-
         return createElement(Carousel, {
             alertMessage: this.state.alertMessage,
             className: this.props.class,
             images: this.state.images,
             onClickAction: this.executeAction,
+            onClickRotation: this.props.onClickRotation,
             style: CarouselContainer.parseStyle(this.props.style, this.onParseStyleError)
         });
     }
