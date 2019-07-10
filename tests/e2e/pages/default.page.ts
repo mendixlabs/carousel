@@ -1,5 +1,5 @@
 class HomePage {
-    public get carousel() { return browser.element(".mx-name-carousel2"); }
+    public get carousel() { return browser.element(".mx-name-carousel3"); }
     public get carouselLeftArrow() {
         return browser.element(".widget-carousel-wrapper > div > div.widget-carousel-control.left");
     }
